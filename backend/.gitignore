@@ -1,0 +1,13 @@
+skedge/db.sqlite3
+skedge/contacts/__pycache__/__init__.cpython-37.pyc
+skedge/contacts/__pycache__/admin.cpython-37.pyc
+skedge/contacts/__pycache__/apps.cpython-37.pyc
+skedge/contacts/__pycache__/models.cpython-37.pyc
+skedge/contacts/__pycache__/urls.cpython-37.pyc
+skedge/contacts/__pycache__/views.cpython-37.pyc
+skedge/contacts/migrations/__pycache__/__init__.cpython-37.pyc
+skedge/contacts/migrations/__pycache__/0001_initial.cpython-37.pyc
+skedge/skedge/__pycache__/__init__.cpython-37.pyc
+skedge/skedge/__pycache__/settings.cpython-37.pyc
+skedge/skedge/__pycache__/urls.cpython-37.pyc
+skedge/skedge/__pycache__/wsgi.cpython-37.pyc

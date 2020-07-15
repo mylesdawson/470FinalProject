@@ -1,6 +1,11 @@
 # Project Back-end
 
-URL: http://localhost:8080/
+Run with:
+```
+docker-compose build && docker-compose up
+```
+
+URL: http://localhost:8080/contacts
 
 Admin user:  
 ```

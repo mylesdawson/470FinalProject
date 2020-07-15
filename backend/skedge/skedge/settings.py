@@ -125,3 +125,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/static'
+
+
+# REST Framework
+# https://www.django-rest-framework.org/
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10 # max objects per page (optional)
+}
