@@ -7,7 +7,7 @@ COPY requirements.txt /tmp/
 RUN pip install -r /tmp/requirements.txt
 ADD ./ /code
 CMD /wait.sh db 5432 \
-  && python mysite/manage.py collectstatic --noinput \
-  && python mysite/manage.py migrate \
-  && python mysite/manage.py loaddata data.json \
-  && /usr/local/bin/uwsgi --ini /code/mysite/mysite/uwsgi.ini
+  && python skedge/manage.py collectstatic --noinput \
+  && python skedge/manage.py migrate \
+  && python skedge/manage.py loaddata data.json \
+  && /usr/local/bin/uwsgi --ini /code/skedge/skedge/uwsgi.ini
