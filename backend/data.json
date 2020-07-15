@@ -1,0 +1,1 @@
+[{"model": "contacts.Contact", "pk": 1, "fields": {"first_name": "Carter", "last_name": "Kelly", "email": "carterk@sfu.ca", "phone_number": "1-800-BIG-TEST", "notes": "test note"}}]

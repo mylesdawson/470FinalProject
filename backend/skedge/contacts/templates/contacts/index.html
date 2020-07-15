@@ -1,0 +1,14 @@
+<h1>Contact List</h1>
+
+{% if latest_contact_list %}
+    <ul>
+    {% for contact in latest_contact_list %}
+    <li><a href="{% url 'contacts:detail' contact.id %}">{{ contact }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No contacts are available.</p>
+{% endif %}
+
+<p><a href="{% url 'contacts:new' %}">Add new contact</a></p>
+ 
