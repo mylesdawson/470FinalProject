@@ -1,0 +1,21 @@
+<h1>Contact List: {{ contact }}</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<p>
+    <strong>First name:</strong><br>
+    &nbsp;&nbsp;&nbsp;&nbsp; {{ contact.first_name }}<br>
+    <strong>Last name:</strong><br>
+    &nbsp;&nbsp;&nbsp;&nbsp; {{ contact.last_name }}<br>
+    <strong>Email:</strong><br>
+    &nbsp;&nbsp;&nbsp;&nbsp; {{ contact.email }}<br>
+    <strong>Phone number:</strong><br>
+    &nbsp;&nbsp;&nbsp;&nbsp; {{ contact.phone_number }}<br>
+    <strong>Notes:</strong><br>
+    &nbsp;&nbsp;&nbsp;&nbsp; {{ contact.notes }}<br>
+</p>
+
+<p>
+    <a href="{% url 'contacts:index' %}">List of people</a> | 
+    <a href="{% url 'contacts:edit' contact.id %}">Edit contact</a>
+</p>
