@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { login } from '../api/api.js'
+import { login, users } from '../api/api.js'
 
 export default {
   name: 'login-page',
@@ -30,7 +30,12 @@ export default {
   },
   methods: {
     logon: async function() {
-      await login(this.username, this.password)
+      try {
+        await users()
+        // await login(this.username, this.password)
+      } catch(e) {
+        console.log(e)
+      }
     }
   }
 }
