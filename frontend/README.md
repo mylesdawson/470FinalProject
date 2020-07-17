@@ -8,7 +8,7 @@
 # install dependencies
 npm install
 
-# serve with hot reload at localhost:8080
+# serve with hot reload at localhost:3000
 npm run dev
 
 # build for production with minification
@@ -18,7 +18,10 @@ npm run build
 npm run build --report
 ```
 
-## Help
+## Dev-Help
+
+#### Pages
+See src/router/index.js file for all routes
 
 For an explanation of Vue see: [guide](https://vuejs.org/v2/guide/index.html)
 
