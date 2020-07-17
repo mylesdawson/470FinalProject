@@ -23,7 +23,7 @@ services:
       - "8080:80"
     volumes:
       - static:/static:ro
-
+    
 volumes:
   static:
   db:
