@@ -18,4 +18,12 @@ npm run build
 npm run build --report
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## Help
+
+For an explanation of Vue see: [guide](https://vuejs.org/v2/guide/index.html)
+
+For an explanation of Vue components: [single file components](https://vuejs.org/v2/guide/single-file-components.html)
+
+Vue Router: [router](https://router.vuejs.org/)
+
+For a detailed explanation on how things related to webpack work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
