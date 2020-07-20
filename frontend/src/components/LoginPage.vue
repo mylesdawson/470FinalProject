@@ -1,20 +1,19 @@
 <template>
-  <div>
-    <h1>Login Page!</h1>
+  <div class="login-container">
+        <b-overlay :show="show" rounded="sm">
+         <b-card class="text-center" title="Login" :aria-hidden="show ? 'true' : null">
 
-    <div>
-      <p>Username: </p>
-      <input v-model="username" type="text" placeholder="username">
+            <input v-model="username" type="text" placeholder="username" class="form-control login-input">
+            <input v-model="password" type="text" placeholder="password" class="form-control login-input">
+            <button type="button" class="btn btn-primary btn-lg login-input" v-on:click="logon">Login</button>
+          
+         </b-card>
+      </b-overlay>  
     </div>
-    <div class="password-section">
-      <p>Password: </p>
-      <input v-model="password" type="text" placeholder="password">
-    </div>
-    <div>
-      <button v-on:click="logon">Login!</button>
-    </div>
-  </div>
 </template>
+
+
+
 
 <script>
 import { login, users } from '../api/api.js'
@@ -25,12 +24,14 @@ export default {
     return ({
       username: '',
       password: '',
-
+      show: false
     })
   },
   methods: {
     logon: async function() {
+      
       try {
+        this.show = true;
         await users()
         // await login(this.username, this.password)
       } catch(e) {
@@ -42,7 +43,13 @@ export default {
 </script>
 
 <style scoped>
-div.password-section {
-  margin-bottom: 1rem;
-}
+  div.login-container {
+    max-width: 500px;
+    margin: auto;
+  }
+
+  .login-input {
+    margin-top: 24px;
+  }
+
 </style>
