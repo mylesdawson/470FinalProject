@@ -1,11 +1,15 @@
-from .models import User
-
 from rest_framework import viewsets
-from .serializers import UserSerializer
+from .models import User, Business, Service
+from .serializers import UserSerializer, BusinessSerializer, ServiceSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+class BusinessViewSet(viewsets.ModelViewSet):
+    queryset = Business.objects.all()
+    serializer_class = BusinessSerializer
+
+class ServiceViewSet(viewsets.ModelViewSet):
+    queryset = Service.objects.all()
+    serializer_class = ServiceSerializer
