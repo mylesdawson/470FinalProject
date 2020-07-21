@@ -3,12 +3,13 @@
     <b-card>
       <b-row>
         <b-col>
-          <p>10 members</p>
+          <h3>Members</h3>
         </b-col>
         <b-col>
-          <b-input-group
-            prepend="Search"
-          >
+          <b-input-group>
+            <b-input-group-prepend is-text>
+              <b-icon icon="search"></b-icon>
+            </b-input-group-prepend>
             <b-form-input></b-form-input>
           </b-input-group>
         </b-col>
