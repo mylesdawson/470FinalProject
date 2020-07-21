@@ -6,17 +6,17 @@
       </b-navbar-brand>
 
       <b-navbar-nav>
-        <b-nav-item>Home</b-nav-item>
+        <b-nav-item to="/">Home</b-nav-item>
         <b-nav-item>Inbox</b-nav-item>
         <b-nav-item>Services</b-nav-item>
         <b-nav-item>Calendar</b-nav-item>
         <b-nav-item>Listings</b-nav-item>
-        <b-nav-item>Team</b-nav-item>
+        <b-nav-item to="/team">Team</b-nav-item>
       </b-navbar-nav>
 
       <b-navbar-nav class="ml-auto">
         <b-nav-item>
-          <b-button class="btn-success" type="submit">Create New Appointment</b-button>
+          <b-button variant="outline-primary" type="submit" to="/new-listing">Create New Listing</b-button>
         </b-nav-item>
         <b-nav-item>
           <b-nav-item-dropdown

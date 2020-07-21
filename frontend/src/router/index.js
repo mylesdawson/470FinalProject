@@ -2,10 +2,12 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import LoginPage from '@/components/LoginPage'
+import TeamPage from '@/components/TeamPage'
+import NewListingPage from '@/components/NewListingPage'
 
 
-import { 
-          BootstrapVue, 
+import {
+          BootstrapVue,
           IconsPlugin,
           LayoutPlugin,
           ModalPlugin,
@@ -38,6 +40,16 @@ export default new Router({
       path: '/login',
       name: 'LoginPage',
       component: LoginPage
+    },
+    {
+      path: '/team',
+      name: 'TeamPage',
+      component: TeamPage
+    },
+    {
+      path: '/new-listing',
+      name: 'NewListingPage',
+      component: NewListingPage
     }
   ],
   // turn this on if we want to get rid of # in url
