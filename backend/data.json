@@ -1,1 +1,55 @@
-[{"model": "booking.User", "pk": 1, "fields": {"first_name": "Carter", "last_name": "Kelly", "email": "carterk@sfu.ca", "phone_number": "1-800-BIG-TEST", "password": "password"}}]
+[
+    {
+        "model": "booking.User",
+        "pk": 1,
+        "fields":
+        {
+            "first_name": "Carter",
+            "last_name": "Kelly",
+            "email": "carterk@sfu.ca",
+            "phone_number": "1-800-BIG-TEST",
+            "password": "password",
+            "business_id": 0
+        }
+    },
+
+    {
+        "model": "booking.User",
+        "pk": 2,
+        "fields":
+        {
+            "first_name": "Bob",
+            "last_name": "Barber",
+            "email": "bob@barber.ca",
+            "phone_number": "1-800-BOB-BARB",
+            "password": "password",
+            "business_id": 1
+        }
+    },
+
+    {
+        "model": "booking.Business",
+        "pk": 1,
+        "fields":
+        {
+            "name": "Bob's Barber Shop",
+            "description": "A friendly local barber shop for all your barby needs.",
+            "email": "bob@barber.ca",
+            "phone_number": "1-800-BOB-BARB"
+        }
+    },
+
+    {
+        "model": "booking.Service",
+        "pk": 1,
+        "fields":
+        {
+            "name": "Fade",
+            "description": "Simple fade cut",
+            "price": 20,
+            "duration": 30,
+            "business_id": 1,
+            "last_updated": "2020-07-20 18:00"
+        }
+    }
+]
