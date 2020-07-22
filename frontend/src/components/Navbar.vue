@@ -5,13 +5,13 @@
         <img  src="../assets/logo.png" id="skedge-logo" alt="Skedge">
       </b-navbar-brand>
       
-      <template v-if="main">
+      <template v-if="showtabs">
         <b-navbar-nav>
-          <b-nav-item to="/home">Home</b-nav-item>
-          <b-nav-item to="/services">Services</b-nav-item>
-          <b-nav-item to="/calendar">Calendar</b-nav-item>
-          <b-nav-item to="/listings">Listings</b-nav-item>
-          <b-nav-item to="/team">Team</b-nav-item>
+          <b-nav-item :active='$route.name =="HomePage"' to="/home">Home</b-nav-item>
+          <b-nav-item :active='$route.name =="ServicesPage"' to="/services">Services</b-nav-item>
+          <b-nav-item :active='$route.name =="CalendarPage"' to="/calendar">Calendar</b-nav-item>
+          <b-nav-item :active='$route.name =="ListingsPage"' to="/listings">Listings</b-nav-item>
+          <b-nav-item :active='$route.name =="TeamPage"' to="/team">Team</b-nav-item>
         </b-navbar-nav>
 
         <b-navbar-nav class="ml-auto">
@@ -39,9 +39,10 @@
 export default {
   name: 'Navbar',
   computed:{
-      main(){
+      showtabs(){
           return this.$route.path != '/login'
-      }
+      },
+      
   }
 }
 
