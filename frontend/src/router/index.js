@@ -3,8 +3,11 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import LoginPage from '@/components/LoginPage'
 import TeamPage from '@/components/TeamPage'
+import HomePage from '@/components/HomePage'
+import ServicesPage from '@/components/ServicesPage'
 import NewListingPage from '@/components/NewListingPage'
-
+import CalendarPage from '@/components/CalendarPage'
+import ListingsPage from '@/components/ListingsPage'
 
 import {
           BootstrapVue,
@@ -32,9 +35,10 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      path: '/home',
+      name: 'HomePage',
+      component: HomePage,
+      alias: '/' 
     },
     {
       path: '/login',
@@ -45,6 +49,21 @@ export default new Router({
       path: '/team',
       name: 'TeamPage',
       component: TeamPage
+    },
+    {
+      path: '/services',
+      name: 'ServicesPage',
+      component: ServicesPage
+    },
+    {
+      path: '/calendar',
+      name: 'CalendarPage',
+      component: CalendarPage
+    },
+    {
+      path: '/listings',
+      name: 'ListingsPage',
+      component: ListingsPage
     },
     {
       path: '/new-listing',
