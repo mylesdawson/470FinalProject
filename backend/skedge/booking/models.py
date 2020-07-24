@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.conf import settings
 from django.db import models
 
@@ -5,14 +6,11 @@ from django.db import models
 # for both customer and business accounts
 
 class Customer(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    phone_number = models.CharField(max_length=14)
-    email = models.EmailField(max_length=254)
-    last_updated = models.DateTimeField()
-    created = models.DateTimeField()
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    phone_number = models.CharField(max_length=14)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.first_name + " " + self.last_name
@@ -24,7 +22,9 @@ class Business(models.Model):
         ('beauty', 'Beauty'),
     )
 
-    name = models.CharField(max_length=50) # Business name
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    business_name = models.CharField(max_length=50)
     short_description = models.CharField(max_length=200) # A short description shown in search results
     long_description = models.CharField(max_length=3000) # A longer description shown on the business page, supports markdown
     address = models.CharField(max_length=200) # The business address, excluding city, state, and country
@@ -32,15 +32,14 @@ class Business(models.Model):
     state = models.CharField(max_length=100) # State or province
     postal_code = models.CharField(max_length=6)
     country = models.CharField(max_length=100)
-    email = models.CharField(max_length=50) # Email for customers to contact, can be different from the email used to login
+    contact_email = models.CharField(max_length=50) # Email for customers to contact, can be different from the email used to login
     phone_number = models.CharField(max_length=14) # Phone number for customers to call
     category = models.CharField(max_length=50, choices=CATEGORIES) # Business type
     multiple_employees = models.BooleanField() # Whether the business has multiple employees with different schedules
     exclusive_customers = models.BooleanField() # Whether the business only allows appointments from whitelisted customers (clients)
-    last_updated = models.DateTimeField()
-    created = models.DateTimeField()
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -60,8 +59,8 @@ class Service(models.Model):
     description = models.CharField(max_length=200) # A short description
     price = models.DecimalField(max_digits=8, decimal_places=2) # Cost to customer
     duration = models.IntegerField() # Duration in minutes
-    last_updated = models.DateTimeField()
-    created = models.DateTimeField()
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     models.ForeignKey(Business, on_delete=models.CASCADE)
 
@@ -79,7 +78,7 @@ class Appointment(models.Model):
 
 # A client is a customer that has been whitelisted for a specific business
 class Client(models.Model):
-    created = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     models.ForeignKey(Customer, on_delete=models.CASCADE)
     models.ForeignKey(Business, on_delete=models.CASCADE)
