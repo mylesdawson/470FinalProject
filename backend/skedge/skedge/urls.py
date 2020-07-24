@@ -5,7 +5,7 @@ from rest_framework import routers
 from booking import views
 
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
+router.register(r'customers', views.CustomerViewSet)
 router.register(r'businesses', views.BusinessViewSet)
 router.register(r'services', views.ServiceViewSet)
 
