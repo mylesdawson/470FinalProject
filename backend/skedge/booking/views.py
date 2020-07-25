@@ -1,8 +1,47 @@
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from rest_framework.decorators import action
+from rest_framework.parsers import JSONParser
 from .models import Customer, Business, Employee, Service, Appointment
-from .serializers import CustomerSerializer, BusinessSerializer, ServiceSerializer
+from .serializers import CustomerSerializer, BusinessSerializer, ServiceSerializer, UserSerializer
+
+class UserViewSet(viewsets.ModelViewSet):
+    # ModelViewSet gives us all the common http actions on a model implicitly
+    parser_classes = [JSONParser]
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    @action(detail=False, methods=['post'])
+    def login(self, request, pk=None):
+        try:
+            data = request.data
+            print(data['username'])
+            print(data['password'])
+
+            # TODO: will need better authentication later
+            user_exists = User.objects.filter(username=data['username']).exists()
+            print(user_exists)
+            # This always fails for some rason
+            # user = authenticate(username=data['username'], password=data['password'])
+
+            if user_exists:
+                # TODO: send a session token and login (can't get login to work rn)
+                # login(user)
+                return Response(status=status.HTTP_200_OK)
+            else:
+                return Response('user is None!',status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response('failed to find user!', status=status.HTTP_400_BAD_REQUEST)
+
+
+    @action(detail=False, methods=['post'])
+    def logout(self, request, pk=None):
+        # TODO: test if this actually works
+        logout(request)
+        return Response(status=status.HTTP_200_OK)
+
 
 class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
@@ -22,27 +61,6 @@ def parse_phone_number(phone_number):
         phone_number = phone_number.replace('-', '').replace('(', '').replace(')', '')
         phone_number = '{}-{}-{}'.format(phone_number[0:3], phone_number[3:6], phone_number[6:10])
     return phone_number
-
-def index(request):
-    # Render main page
-    return
-
-def login_user(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(request, username=username, password=password)
-
-    if user is not None:
-        # Render home page
-        return
-    else:
-        # Rerender login page
-        return
-
-def logout_user(request):
-    logout(request)
-    # Render main page
-    return
 
 def new_customer(request):
     username = request.POST['username']
