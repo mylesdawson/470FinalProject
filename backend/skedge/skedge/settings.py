@@ -31,14 +31,20 @@ ALLOWED_HOSTS = ['app', 'localhost']
 # Application definition
 
 INSTALLED_APPS = [
+    # Local Apps
     'booking.apps.BookingConfig',
+
+    # Django Apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third-Party Apps
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
 ]
 
@@ -137,3 +143,9 @@ REST_FRAMEWORK = {
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/static'
+
+#Authentication backends
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+)
+AUTH_USER_MODEL = 'auth.User'

@@ -1,9 +1,10 @@
-from django.contrib.auth import logout
+from django.contrib.auth import logout, authenticate
 from django.contrib.auth.models import User
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.parsers import JSONParser
+from rest_framework.authtoken.models import Token
 from .models import Customer, Business, Employee, Service, Appointment
 from .serializers import CustomerSerializer, BusinessSerializer, ServiceSerializer, UserSerializer
 
@@ -20,20 +21,21 @@ class UserViewSet(viewsets.ModelViewSet):
             print(data['username'])
             print(data['password'])
 
-            # TODO: will need better authentication later
-            user_exists = User.objects.filter(username=data['username']).exists()
-            print(user_exists)
-            # This always fails for some rason
-            # user = authenticate(username=data['username'], password=data['password'])
+            # TODO: This is always None for some rason
+            user = authenticate(username=data['username'], password=data['password'])
+            print(user)
 
-            if user_exists:
+            if user:
                 # TODO: send a session token and login (can't get login to work rn)
                 # login(user)
-                return Response(status=status.HTTP_200_OK)
+                print("user exists")
+                token, _ = Token.objects.get_or_create(user=user)
+                print("managed to make a token!")
+                return Response({'token': token.key}, status=status.HTTP_200_OK)
             else:
                 return Response('user is None!',status=status.HTTP_400_BAD_REQUEST)
-        except:
-            return Response('failed to find user!', status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response(e, status=status.HTTP_400_BAD_REQUEST)
 
 
     @action(detail=False, methods=['post'])

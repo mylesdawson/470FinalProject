@@ -30,3 +30,7 @@ For an explanation of Vue components: [single file components](https://vuejs.org
 Vue Router: [router](https://router.vuejs.org/)
 
 For a detailed explanation on how things related to webpack work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+The API requests will need to follow the format described here:
+[drf-authentication](https://www.django-rest-framework.org/api-guide/authentication/)
+
