@@ -18,11 +18,13 @@ class UserViewSet(viewsets.ModelViewSet):
     def login(self, request, pk=None):
         try:
             data = request.data
-            print(data['username'])
-            print(data['password'])
+            username = data['username']
+            password = data['password']
+            print(username)
+            print(password)
 
-            # TODO: This is always None for some rason
-            user = authenticate(username=data['username'], password=data['password'])
+            # TODO: This is always None for some reason
+            user = authenticate(username=username, password=password)
             print(user)
 
             if user:
