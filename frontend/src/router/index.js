@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 import LoginPage from '@/components/LoginPage'
+import BusinessPage from '@/components/BusinessPage'
 import TeamPage from '@/components/TeamPage'
 import HomePage from '@/components/HomePage'
 import ServicesPage from '@/components/ServicesPage'
@@ -21,6 +21,14 @@ import {
         } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+import FullCalendar from "vue-full-calendar";
+import "fullcalendar/dist/fullcalendar.min.css";
+import VModal from 'vue-js-modal'
+
+Vue.use(VModal)
+Vue.use(FullCalendar);
+Vue.config.productionTip = false;
 
 Vue.use(DropdownPlugin)
 Vue.use(TablePlugin)
@@ -69,6 +77,11 @@ export default new Router({
       path: '/new-listing',
       name: 'NewListingPage',
       component: NewListingPage
+    },
+    {
+      path: '/business',
+      name: 'BusinessPage',
+      component: BusinessPage
     }
   ],
   // turn this on if we want to get rid of # in url

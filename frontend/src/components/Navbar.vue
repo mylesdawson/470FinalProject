@@ -8,10 +8,11 @@
       <template v-if="showtabs">
         <b-navbar-nav>
           <b-nav-item :active='$route.name =="HomePage"' to="/home">Home</b-nav-item>
-          <b-nav-item :active='$route.name =="ServicesPage"' to="/services">Services</b-nav-item>
           <b-nav-item :active='$route.name =="CalendarPage"' to="/calendar">Calendar</b-nav-item>
-          <b-nav-item :active='$route.name =="ListingsPage"' to="/listings">Listings</b-nav-item>
+          <b-nav-item :active='$route.name =="ServicesPage"' to="/services">Services</b-nav-item>
           <b-nav-item :active='$route.name =="TeamPage"' to="/team">Team</b-nav-item>
+          <b-nav-item :active='$route.name =="ListingsPage"' to="/listings">Listings</b-nav-item>
+          <b-nav-item :active='$route.name =="BusinessPage"' to="/business">Business</b-nav-item>
         </b-navbar-nav>
 
         <b-navbar-nav class="ml-auto">

@@ -20,42 +20,72 @@
 
               <br>
               
-              <b-table striped hover :items="appointments"></b-table>
+              <b-table striped hover :items="apps.appointments"></b-table>
             </b-card>
         </b-col>
 
 <!-- SECOND COLUMN (CALENDAR) -->
     <b-col cols="12" lg="6">
-            <b-card
-            title="CALENDAR PLACEHOLDER"
-            img-src="https://picsum.photos/600/300/?image=25"
-            img-alt="Image"
-            img-top
-            tag="article"
-           
-            class="mb-2">
-            <b-card-text>
-            Hopefully this will be a calendar soon
-            </b-card-text>
+           <b-card no-body>
+            <b-card-header>
+            <b-row >
+                  <b-col>
+                    <b-dropdown  text="Select Team Calendar" variant="success" >
+                      <b-dropdown-item href="#">Action</b-dropdown-item>
+                      <b-dropdown-item href="#">Another action</b-dropdown-item>
+                      <b-dropdown-item href="#">Something else here</b-dropdown-item>
+                    </b-dropdown>
+                  </b-col>
+                  <b-col style="text-align: right">
+                    <b-button variant="primary"  to="/calendar">Go to calendar</b-button>
+                </b-col>
+            </b-row>
+            </b-card-header>
+            <b-card-body>
+            <full-calendar :config="config" :events="events"/>
+            </b-card-body>
+            </b-card>
+          
 
-            <b-button variant="primary">Go somewhere</b-button>
-        </b-card>
+            
+      
     </b-col>
   </b-row>
 </b-container>
 
 </template>
 
-
-
 <script>
- import appointments from '../api/home.js'
+  import moment from 'moment'
+  import appointments from '../api/home.js'
+ 
   export default {
    
     data () {
-      return appointments.data();
-      
+      return {
+          apps: appointments.data(),
+          events: [
+            {
+              title: 'test',
+              allDay: true,
+              start: moment(),
+              end: moment().add(1, 'd'),
+            },
+            {
+              title: 'another test',
+              start: moment().add(2,'d'),
+              end: moment().add(2, 'd').add(2, 'h'),
+            },
+          ],
+          config: {
+            defaultView: 'month',
+            eventRender: function(event, element) {
+              console.log(event)
+            }
+          },
+        }
     }
+    
   
   }
 </script>
