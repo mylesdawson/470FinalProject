@@ -1,50 +1,27 @@
 from django.contrib.auth import logout, authenticate
 from django.contrib.auth.models import User
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, generics
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.parsers import JSONParser
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 from .models import Customer, Business, Employee, Service, Appointment
 from .serializers import CustomerSerializer, BusinessSerializer, ServiceSerializer, UserSerializer
 
-class UserViewSet(viewsets.ModelViewSet):
-    # ModelViewSet gives us all the common http actions on a model implicitly
-    parser_classes = [JSONParser]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+class Logout(APIView):
+    permission_classes = [IsAuthenticated]
 
-    @action(detail=False, methods=['post'])
-    def login(self, request, pk=None):
+    def post(self, request):
+        # get request username/password
+        print(request)
+        print(request.user)
         try:
-            data = request.data
-            username = data['username']
-            password = data['password']
-            print(username)
-            print(password)
-
-            # TODO: This is always None for some reason
-            user = authenticate(username=username, password=password)
-            print(user)
-
-            if user:
-                # TODO: send a session token and login (can't get login to work rn)
-                # login(user)
-                print("user exists")
-                token, _ = Token.objects.get_or_create(user=user)
-                print("managed to make a token!")
-                return Response({'token': token.key}, status=status.HTTP_200_OK)
-            else:
-                return Response('user is None!',status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            return Response(e, status=status.HTTP_400_BAD_REQUEST)
-
-
-    @action(detail=False, methods=['post'])
-    def logout(self, request, pk=None):
-        # TODO: test if this actually works
-        logout(request)
-        return Response(status=status.HTTP_200_OK)
+            request.user.auth_token.delete()
+            return Response(status=status.HTTP_200_OK)
+        except e:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class CustomerViewSet(viewsets.ModelViewSet):

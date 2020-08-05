@@ -93,6 +93,7 @@ DATABASES = {
         'NAME': 'project',
         'USER': 'project',
         'PASSWORD': 'secret',
+        # Change to 'localhost' for development outside of docker
         'HOST': 'db',
         'PORT': 5432,
     }
@@ -136,6 +137,11 @@ USE_TZ = True
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10, # max objects per page (optional)
+
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # <-- And here
+    ],
 }
 
 # Static files (CSS, JavaScript, Images)
