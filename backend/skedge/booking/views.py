@@ -25,11 +25,11 @@ class Logout(APIView):
 
 
 class CustomerViewSet(viewsets.ModelViewSet):
-    queryset = Customer.objects.all()
+    queryset = User.objects.all()
     serializer_class = CustomerSerializer
 
 class BusinessViewSet(viewsets.ModelViewSet):
-    queryset = Business.objects.all()
+    queryset = User.objects.all()
     serializer_class = BusinessSerializer
 
 class ServiceViewSet(viewsets.ModelViewSet):

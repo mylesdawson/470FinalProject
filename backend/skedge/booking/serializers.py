@@ -18,13 +18,37 @@ class UserSerializer(serializers.ModelSerializer):
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Customer
-        fields = ['first_name', 'last_name', 'email', 'phone_number', 'password']
+        model = User
+        fields = ['username', 'password', 'customer']
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        customer_data = validated_data.pop('customer')
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+
+        Customer.objects.create(user=user, **customer_data)
+        return user
+
+
 
 class BusinessSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Business
-        fields = ['name', 'description', 'email', 'phone_number']
+        model = User
+        fields = ['username', 'password', 'business']
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        business_data = validated_data.pop('business')
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+
+        Business.objects.create(user=user, **business_data)
+        return user
+
 
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:

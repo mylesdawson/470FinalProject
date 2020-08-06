@@ -8,8 +8,8 @@ from booking import views
 router = routers.DefaultRouter()
 # router.register(r'register', views.UserCreate.as_view(), basename="UserCreate")
 # router.register(r'users', views.UserViewSet)
-# router.register(r'customers', views.CustomerViewSet)
-# router.register(r'businesses', views.BusinessViewSet)
+router.register(r'customers', views.CustomerViewSet)
+router.register(r'businesses', views.BusinessViewSet)
 # router.register(r'services', views.ServiceViewSet)
 
 urlpatterns = [
@@ -19,6 +19,6 @@ urlpatterns = [
     path('login/', obtain_auth_token, name='api_token_auth'),
     path('logout/', views.Logout.as_view()),
 
-    # path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
