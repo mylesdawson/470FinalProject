@@ -8,7 +8,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from .models import Customer, Business, Employee, Service, Appointment
-from .serializers import CustomerSerializer, BusinessSerializer, ServiceSerializer, UserSerializer
+from .serializers import CustomerUserSerializer, BusinessUserSerializer, ServiceSerializer
 
 class Logout(APIView):
     permission_classes = [IsAuthenticated]
@@ -26,11 +26,11 @@ class Logout(APIView):
 
 class CustomerViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = CustomerSerializer
+    serializer_class = CustomerUserSerializer
 
 class BusinessViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = BusinessSerializer
+    serializer_class = BusinessUserSerializer
 
 class ServiceViewSet(viewsets.ModelViewSet):
     queryset = Service.objects.all()

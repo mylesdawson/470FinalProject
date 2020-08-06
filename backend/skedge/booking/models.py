@@ -9,12 +9,12 @@ from django.db import models
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    phone_number = models.CharField(max_length=14, null=True)
+    phone_number = models.CharField(max_length=14, default='')
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.first_name + self.user.last_name
+        return self.phone_number
 
 # Represents a business account
 class Business(models.Model):
@@ -42,31 +42,31 @@ class Business(models.Model):
     postal_code = models.CharField(max_length=6)
     country = models.CharField(max_length=100)
 
-    monday_opening_time = models.TimeField()
-    monday_closing_time = models.TimeField()
-    tuesday_opening_time = models.TimeField()
-    tuesday_closing_time = models.TimeField()
-    wednesday_opening_time = models.TimeField()
-    wednesday_closing_time = models.TimeField()
-    thursday_opening_time = models.TimeField()
-    thursday_closing_time = models.TimeField()
-    friday_opening_time = models.TimeField()
-    friday_closing_time = models.TimeField()
-    saturday_opening_time = models.TimeField()
-    saturday_closing_time = models.TimeField()
-    sunday_opening_time = models.TimeField()
-    sunday_closing_time = models.TimeField()
+    # monday_opening_time = models.TimeField()
+    # monday_closing_time = models.TimeField()
+    # tuesday_opening_time = models.TimeField()
+    # tuesday_closing_time = models.TimeField()
+    # wednesday_opening_time = models.TimeField()
+    # wednesday_closing_time = models.TimeField()
+    # thursday_opening_time = models.TimeField()
+    # thursday_closing_time = models.TimeField()
+    # friday_opening_time = models.TimeField()
+    # friday_closing_time = models.TimeField()
+    # saturday_opening_time = models.TimeField()
+    # saturday_closing_time = models.TimeField()
+    # sunday_opening_time = models.TimeField()
+    # sunday_closing_time = models.TimeField()
 
-    days_bookable_in_advance = models.PositiveIntegerField()
+    # days_bookable_in_advance = models.PositiveIntegerField()
 
-    multiple_employees = models.BooleanField() # Whether the business has multiple employees with different schedules
-    exclusive_customers = models.BooleanField() # Whether the business only allows appointments from whitelisted customers (clients)
+    # multiple_employees = models.BooleanField() # Whether the business has multiple employees with different schedules
+    # exclusive_customers = models.BooleanField() # Whether the business only allows appointments from whitelisted customers (clients)
 
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.username
+        return self.business_name
 
 # Represents a specific type of appointment offered by a business
 class Service(models.Model):
