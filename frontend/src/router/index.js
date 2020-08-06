@@ -8,6 +8,8 @@ import ServicesPage from '@/components/ServicesPage'
 import NewListingPage from '@/components/NewListingPage'
 import CalendarPage from '@/components/CalendarPage'
 import ListingsPage from '@/components/ListingsPage'
+import MainPage from '@/components/MainPage'
+import CreateAccountPage from '@/components/CreateAccountPage'
 
 import {
           BootstrapVue,
@@ -44,9 +46,9 @@ export default new Router({
   routes: [
     {
       path: '/home',
-      name: 'HomePage',
-      component: HomePage,
-      alias: '/' 
+      name: 'MainPage',
+      component: MainPage,
+      alias: '/'
     },
     {
       path: '/login',
@@ -77,6 +79,11 @@ export default new Router({
       path: '/new-listing',
       name: 'NewListingPage',
       component: NewListingPage
+    },
+    {
+      path: '/new-account',
+      name: 'CreateAccountPage',
+      component: CreateAccountPage
     },
     {
       path: '/business',

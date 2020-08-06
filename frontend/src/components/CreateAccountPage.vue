@@ -1,0 +1,55 @@
+<template>
+  <div class="login-container">
+        <b-overlay :show="show" rounded="sm">
+         <b-card class="text-center" title="Create an Account" :aria-hidden="show ? 'true' : null">
+
+            <input v-model="username" type="text" placeholder="username" class="form-control login-input">
+            <input v-model="password" type="text" placeholder="password" class="form-control login-input">
+            <button type="button" class="btn btn-primary btn-lg login-input" v-on:click="logon">Create Account!</button>
+
+         </b-card>
+      </b-overlay>
+    </div>
+</template>
+
+
+
+
+<script>
+import { login, users } from '../api/api.js'
+
+export default {
+  name: 'login-page',
+  data: function() {
+    return ({
+      username: '',
+      password: '',
+      show: false
+    })
+  },
+  methods: {
+    logon: async function() {
+
+      try {
+        this.show = true;
+        await users()
+        // await login(this.username, this.password)
+      } catch(e) {
+        console.log(e)
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+  div.login-container {
+    max-width: 500px;
+    margin: auto;
+  }
+
+  .login-input {
+    margin-top: 24px;
+  }
+
+</style>
