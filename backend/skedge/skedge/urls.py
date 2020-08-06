@@ -6,11 +6,9 @@ from rest_framework.authtoken.views import obtain_auth_token
 from booking import views
 
 router = routers.DefaultRouter()
-# router.register(r'register', views.UserCreate.as_view(), basename="UserCreate")
-# router.register(r'users', views.UserViewSet)
 router.register(r'customers', views.CustomerViewSet, 'customers')
 router.register(r'businesses', views.BusinessViewSet, 'businesses')
-# router.register(r'services', views.ServiceViewSet)
+router.register(r'services', views.ServiceViewSet, 'services')
 
 urlpatterns = [
     path('', include(router.urls)),

@@ -32,7 +32,7 @@ class CustomerUserSerializer(serializers.HyperlinkedModelSerializer):
 class BusinessSerializer(serializers.ModelSerializer):
     class Meta:
         model = Business
-        fields = ['business_name', 'short_description', ]
+        fields = ['business_name', 'short_description']
 
 
 class BusinessUserSerializer(serializers.HyperlinkedModelSerializer):
@@ -56,4 +56,4 @@ class BusinessUserSerializer(serializers.HyperlinkedModelSerializer):
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
-        fields = ['name', 'description', 'price', 'duration', 'business_id', 'last_updated']
+        fields = ['name', 'description']
