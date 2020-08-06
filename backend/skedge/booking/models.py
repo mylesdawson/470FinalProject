@@ -14,7 +14,7 @@ class Customer(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.username
+        return self.user.first_name + self.user.last_name
 
 # Represents a business account
 class Business(models.Model):

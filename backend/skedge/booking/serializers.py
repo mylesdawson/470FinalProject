@@ -19,17 +19,17 @@ class UserSerializer(serializers.ModelSerializer):
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'password', 'customer']
+        fields = ['username', 'password']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
         password = validated_data.pop('password')
-        customer_data = validated_data.pop('customer')
+        # customer_data = validated_data.pop('other')
         user = User(**validated_data)
         user.set_password(password)
         user.save()
 
-        Customer.objects.create(user=user, **customer_data)
+        Customer.objects.create(user=user)
         return user
 
 
@@ -37,16 +37,16 @@ class CustomerSerializer(serializers.ModelSerializer):
 class BusinessSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'password', 'business']
+        fields = ['username', 'password']
 
     def create(self, validated_data):
         password = validated_data.pop('password')
-        business_data = validated_data.pop('business')
+        # business_data = validated_data.pop('other')
         user = User(**validated_data)
         user.set_password(password)
         user.save()
 
-        Business.objects.create(user=user, **business_data)
+        Business.objects.create(user=user)
         return user
 
 
