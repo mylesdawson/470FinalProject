@@ -5,7 +5,9 @@ from .models import Customer, Business, Employee, Service, Appointment
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        fields = ['phone_number']
+        # TODO: fill in required Customer fields if needed
+        # For now lets only require a user to enter a username and password
+        fields = []
 
 
 class CustomerUserSerializer(serializers.HyperlinkedModelSerializer):
