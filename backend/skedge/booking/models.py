@@ -17,11 +17,13 @@ ALL = 'all'
 FITNESS = 'fitness'
 WELLNESS = 'wellness'
 BEAUTY = 'beauty'
+MISCELLANEOUS = 'miscellaneous'
 CATEGORIES = [
     (ALL, 'All'),
     (FITNESS, 'Fitness'),
     (WELLNESS, 'Wellness'),
     (BEAUTY, 'Beauty'),
+    (MISCELLANEOUS, 'Miscellaneous')
 ]
 
 
@@ -41,20 +43,20 @@ class Customer(models.Model):
 
 # Represents a business account
 class Business(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
 
     business_name = models.CharField(max_length=50)
-    short_description = models.CharField(max_length=200) # A short description shown in search results
-    long_description = models.CharField(max_length=3000) # A longer description shown on the business page, supports markdown
-    contact_email = models.CharField(max_length=50) # Email for customers to contact, can be different from the email used to login
-    phone_number = models.CharField(max_length=14) # Phone number for customers to call
-    category = models.CharField(max_length=50, choices=CATEGORIES) # Business type
+    short_description = models.CharField(max_length=200, null=True) # A short description shown in search results
+    long_description = models.CharField(max_length=3000, null=True) # A longer description shown on the business page, supports markdown
+    contact_email = models.CharField(max_length=50, null=True) # Email for customers to contact, can be different from the email used to login
+    phone_number = models.CharField(max_length=14, null=True) # Phone number for customers to call
+    category = models.CharField(max_length=50, choices=CATEGORIES, default=MISCELLANEOUS) # Business type
 
-    address = models.CharField(max_length=200) # The business address, excluding city, state, and country
-    city = models.CharField(max_length=100)
-    state = models.CharField(max_length=100) # State or province
-    postal_code = models.CharField(max_length=6)
-    country = models.CharField(max_length=100)
+    address = models.CharField(max_length=200, null=True) # The business address, excluding city, state, and country
+    city = models.CharField(max_length=100, null=True)
+    state = models.CharField(max_length=100, null=True) # State or province
+    postal_code = models.CharField(max_length=6, null=True)
+    country = models.CharField(max_length=100, null=True)
 
     # monday_opening_time = models.TimeField()
     # monday_closing_time = models.TimeField()
