@@ -1,0 +1,69 @@
+<template>
+  <b-container fluid>
+
+    <b-row>
+      <b-col cols="6" ml="1" style="text-align: left">
+      <b-input-group>
+        <b-input-group-prepend is-text>
+        <b-icon icon="search"></b-icon>
+        </b-input-group-prepend>
+        <b-form-input aria-label="First name" placeholder="Search for anything"></b-form-input>
+        <b-form-input aria-label="Last name" placeholder="Location"></b-form-input>
+      </b-input-group>
+      </b-col>
+      <b-col col md="3" style="text-align: left">
+      <b-btn class="ma-2" variant="warning">
+          <b-icon icon="search"></b-icon>
+      </b-btn>
+      </b-col>
+    </b-row>
+
+    <hr class="my-3">
+
+    <b-row>
+      <b-col mr="20" style="text-align: left">
+      </b-col>
+      <b-col col style="text-align: left">
+        <h1><strong>Business Name</strong></h1>
+        <p>Address, number, city, province, ZIP<br>
+        Contact information<br>
+        Email<br>
+        Phone number</p>
+      </b-col>
+    </b-row>
+
+    <hr class="my-3">
+
+    <b-row>
+      <b-col mr="20" style="text-align: left">
+        <h1>Listings</h1>
+      <b-button-group vertical size="lg">
+        <b-button>Listing 1</b-button>
+        <b-button>Listing 2</b-button>
+        <b-button>Listing 3</b-button>
+        <b-button>Listing 4</b-button>
+      </b-button-group>
+      </b-col>
+      <b-col col style="text-align: left">
+        <h1>Services</h1>
+        <b-list-group>
+      <b-list-group-item><strong>Service 1</strong><br>30 min details</b-list-group-item>
+      <b-list-group-item><strong>Service 2</strong><br>30 min details</b-list-group-item>
+      <b-list-group-item><strong>Service 3</strong><br>30 min details</b-list-group-item>
+    </b-list-group>
+      </b-col>
+    </b-row>
+
+
+  </b-container>
+</template>
+
+<script>
+export default {
+  name: 'MainPage'
+}
+</script>
+
+<style scoped>
+
+</style>
