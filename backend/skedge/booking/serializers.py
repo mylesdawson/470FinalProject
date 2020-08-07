@@ -87,16 +87,23 @@ class BusinessBriefSerializer(serializers.ModelSerializer):
         model = Business
         fields = ['id', 'business_name', 'short_description']
 
+class ServiceBriefSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = ['id', 'name', 'description', 'price', 'duration']
+
 class CustomerAppointmentSerializer(serializers.ModelSerializer):
     business = BusinessBriefSerializer(many=False, read_only=True)
+    service = ServiceBriefSerializer(many=False, read_only=True)
 
     class Meta:
         model = Appointment
-        fields = ['start_time', 'end_time', 'duration', 'cancelled', 'cancelled_by_customer', 'cancelled_by_business', 'business']
+        fields = ['start_time', 'end_time', 'duration', 'cancelled', 'cancelled_by_customer', 'cancelled_by_business', 'business', 'service']
 
 class BusinessAppointmentSerializer(serializers.ModelSerializer):
     customer = CustomerBriefSerializer(many=False, read_only=True)
+    service = ServiceBriefSerializer(many=False, read_only=True)
 
     class Meta:
         model = Appointment
-        fields = ['start_time', 'end_time', 'duration', 'cancelled', 'cancelled_by_customer', 'cancelled_by_business', 'customer']
+        fields = ['start_time', 'end_time', 'duration', 'cancelled', 'cancelled_by_customer', 'cancelled_by_business', 'customer', 'service']
