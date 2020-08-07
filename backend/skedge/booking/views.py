@@ -9,7 +9,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from .models import Customer, Business, Service, Appointment, Favorite
-from .serializers import CustomerUserSerializer, BusinessUserSerializer, ServiceSerializer, FavoriteSerializer
+from .serializers import CustomerUserSerializer, BusinessUserSerializer, ServiceSerializer, FavoriteBusinessSerializer
 
 class Logout(APIView):
     permission_classes = [IsAuthenticated]
@@ -205,9 +205,9 @@ def edit_business(request):
     # Render home page
     return
 
-
-def favorite_list(request):
+# Return all of a customer's favorited businesses
+def favorite_businesses(request, customer_id):
     if request.method == 'GET':
-        favorites = Favorite.objects.all()
-        serializer = FavoriteSerializer(favorites, many=True)
+        businesses = Business.objects.filter(favorite__customer=customer_id)
+        serializer = FavoriteBusinessSerializer(businesses, many=True)
         return JsonResponse(serializer.data, safe=False)

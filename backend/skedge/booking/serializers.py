@@ -59,7 +59,7 @@ class ServiceSerializer(serializers.ModelSerializer):
         fields = ['name', 'description']
 
 
-class FavoriteSerializer(serializers.ModelSerializer):
+class FavoriteBusinessSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Favorite
-        fields = ['customer', 'business']
+        model = Business
+        fields = ['id', 'business_name', 'short_description']

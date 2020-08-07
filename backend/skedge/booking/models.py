@@ -112,5 +112,3 @@ class Appointment(models.Model):
 class Favorite(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     business = models.ForeignKey(Business, on_delete=models.CASCADE)
-
-    created_at = models.DateTimeField(auto_now_add=True)
