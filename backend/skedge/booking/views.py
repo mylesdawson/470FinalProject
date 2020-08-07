@@ -239,3 +239,19 @@ def business_appointments_by_week(request, business_id, year, week):
         return JsonResponse(serializer.data, safe=False)
 
     return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+
+# def search_businesses(request, search):
+#     if request.method == 'GET':
+#         businesses = Business.objects.filter()
+
+def businesses_by_category(request, category):
+    if request.method == 'GET' and category in dict(CATEGORIES):
+        if category == ALL:
+            businesses = Business.objects.all()
+        else:
+            businesses = Business.objects.filter(category=category)
+
+        serializer = BusinessSerializer(businesses, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})

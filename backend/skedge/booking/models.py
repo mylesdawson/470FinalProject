@@ -13,6 +13,17 @@ DURATIONS = [
     (180, '3:00'),
 ]
 
+ALL = 'all'
+FITNESS = 'fitness'
+WELLNESS = 'wellness'
+BEAUTY = 'beauty'
+CATEGORIES = [
+    (ALL, 'All'),
+    (FITNESS, 'Fitness'),
+    (WELLNESS, 'Wellness'),
+    (BEAUTY, 'Beauty'),
+]
+
 
 # The Django User model is used to store the username, password,
 # and email for both customer and business accounts
@@ -30,15 +41,6 @@ class Customer(models.Model):
 
 # Represents a business account
 class Business(models.Model):
-    FITNESS = 'fitness'
-    WELLNESS = 'wellness'
-    BEAUTY = 'beauty'
-    CATEGORIES = (
-        (FITNESS, 'Fitness'),
-        (WELLNESS, 'Wellness'),
-        (BEAUTY, 'Beauty'),
-    )
-
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     business_name = models.CharField(max_length=50)
