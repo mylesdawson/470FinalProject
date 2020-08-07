@@ -43,7 +43,13 @@ async function request(url, body = {}, method = 'GET') {
 
 export async function login(username = '', password = '') {
   console.log(`username: ${username}, password: ${password}`)
-  const res = await request('/login', { username, password }, 'POST')
+
+  const body = {
+    username,
+    password
+  }
+
+  const res = await request('/login/', body, 'POST')
   console.log(res)
 }
 
@@ -76,6 +82,6 @@ export async function createBusinessAccount(username, password, accountInfo) {
 
 
 export async function users() {
-  const res = await request('/users')
+  const res = await request('/users/')
   console.log(res)
 }

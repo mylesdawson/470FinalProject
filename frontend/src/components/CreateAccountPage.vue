@@ -30,6 +30,19 @@
             ></b-form-input>
           </b-form-group>
 
+          <b-form-group
+            label="Phone Number"
+            label-for="phoneNumber"
+            v-if="form.selected === 'customer'"
+          >
+            <b-form-input
+              id="phoneNumber"
+              v-model="form.customer.phone_number"
+              required
+              type="tel"
+              placeholder="Enter Phone Number"
+            ></b-form-input>
+          </b-form-group>
 
           <b-form-group
             label="Business Name"
@@ -86,7 +99,7 @@ export default {
         username: '',
         password: '',
         customer: {
-
+          phone_number: ''
         },
         business: {
           name: '',
