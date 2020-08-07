@@ -1,13 +1,12 @@
 from django.contrib.auth.models import User
+from django.utils import timezone
 from rest_framework import serializers
 from .models import *
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        # TODO: fill in required Customer fields if needed
-        # For now lets only require a user to enter a username and password
-        fields = []
+        fields = ['phone_number']
 
 
 class CustomerUserSerializer(serializers.HyperlinkedModelSerializer):
@@ -24,6 +23,7 @@ class CustomerUserSerializer(serializers.HyperlinkedModelSerializer):
         customer_data = validated_data.pop('customer')
         user = User(**validated_data)
         user.set_password(password)
+        user.last_login = timezone.now()
         user.save()
 
         Customer.objects.create(user=user, **customer_data)
@@ -47,6 +47,7 @@ class BusinessUserSerializer(serializers.HyperlinkedModelSerializer):
         business_data = validated_data.pop('business')
         user = User(**validated_data)
         user.set_password(password)
+        user.last_login = timezone.now()
         user.save()
 
         Business.objects.create(user=user, **business_data)
