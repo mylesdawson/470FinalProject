@@ -255,3 +255,15 @@ def businesses_by_category(request, category):
         return JsonResponse(serializer.data, safe=False)
 
     return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+
+def businesses_search(request, category, search):
+    if request.method == 'GET' and category in dict(CATEGORIES):
+        if category == ALL:
+            businesses = Business.objects.filter(business_name__startswith=search)
+        else:
+            businesses = Business.objects.filter(category=category, business_name__startswith=search)
+
+        serializer = BusinessSerializer(businesses, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})

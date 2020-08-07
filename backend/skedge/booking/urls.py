@@ -10,7 +10,8 @@ urlpatterns = [
     path('business/<int:business_id>/appointments/day/<int:year>/<int:month>/<int:day>/', views.business_appointments_by_day),
     path('business/<int:business_id>/appointments/week/<int:year>/<int:week>/', views.business_appointments_by_week),
 
-    path('business/search/<str:category>/', views.businesses_by_category)
+    path('business/search/<str:category>/', views.businesses_by_category),
+    path('business/search/<str:category>/<str:search>/', views.businesses_search),
 
     # path('', views.index, name='index'),
     # path('login/', views.login_user, name='login'),
