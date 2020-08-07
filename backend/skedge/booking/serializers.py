@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Customer, Business, Employee, Service, Appointment
+from .models import Customer, Business, Service, Appointment
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:

@@ -109,27 +109,8 @@ class Appointment(models.Model):
 
 # Represents a favorited relationship between a customer and a business
 # A customer has zero or more favorited businesses
-class Favorites(models.Model):
+class Favorite(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     business = models.ForeignKey(Business, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
-
-
-
-class Employee(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField(max_length=254)
-
-    business = models.ForeignKey(Business, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.first_name + " " + self.last_name
-
-# A client is a customer that has been whitelisted for a specific business
-class Client(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    business = models.ForeignKey(Business, on_delete=models.CASCADE)

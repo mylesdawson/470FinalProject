@@ -7,7 +7,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-from .models import Customer, Business, Employee, Service, Appointment
+from .models import Customer, Business, Service, Appointment, Favorite
 from .serializers import CustomerUserSerializer, BusinessUserSerializer, ServiceSerializer
 
 class Logout(APIView):
