@@ -10,6 +10,8 @@ import CalendarPage from '@/components/CalendarPage'
 import ListingsPage from '@/components/ListingsPage'
 import MainPage from '@/components/MainPage'
 import CreateAccountPage from '@/components/CreateAccountPage'
+import SearchListingsPage from '@/components/SearchListingsPage'
+import SearchPage from '@/components/SearchPage'
 
 import {
           BootstrapVue,
@@ -49,6 +51,16 @@ export default new Router({
       name: 'MainPage',
       component: MainPage,
       alias: '/'
+    },
+    {
+      path: '/search-listings',
+      name: 'SearchListingsPage',
+      component: SearchListingsPage,
+    },
+    {
+      path: '/search',
+      name: 'SearchPage',
+      component: SearchPage,
     },
     {
       path: '/login',

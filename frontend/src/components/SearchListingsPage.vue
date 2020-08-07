@@ -60,7 +60,7 @@
 
 <script>
 export default {
-  name: 'MainPage'
+  name: 'SearchListingsPage'
 }
 </script>
 

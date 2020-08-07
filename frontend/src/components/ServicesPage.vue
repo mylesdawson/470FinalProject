@@ -127,7 +127,7 @@
             <b-card-header>
             <b-row>
                     <b-col >
-                    <h3>{{selectedItem.service}}</h3>
+                    <h3>{{selectedItem.name}}</h3>
                     </b-col>
                  
                   <b-col style="text-align: right">
@@ -146,8 +146,7 @@
           label-for="input-1">
           <b-form-input
             id="input-1"
-            type="text"
-            required
+            v-model="selectedItem.name"
             placeholder="Service name"></b-form-input>
         </b-form-group>
 
@@ -157,8 +156,7 @@
           label-for="input-1">
           <b-form-textarea
             id="input-1"
-            type="text"
-            required
+            v-model="selectedItem.description"
             placeholder="Service description"></b-form-textarea>
         </b-form-group>
 
@@ -171,7 +169,8 @@
           <b-form-spinbutton
               min="0"
               max="100000"
-              step="0.25">
+              step="0.25"
+              v-model="selectedItem.price">
             </b-form-spinbutton>
            
         </b-form-group>
@@ -185,7 +184,8 @@
               wrap
               min="0"
               max="180"
-              step="5">
+              step="5"
+              v-model="selectedItem.duration">
             </b-form-spinbutton>
         </b-form-group>
 
@@ -224,7 +224,13 @@
     },
     methods: {
       showEdit: function(item, index) {
-          this.selectedItem = item;
+          const body = {
+           name: item.name,
+           description: item.description,
+           price: item.price,
+            duration: item.duration
+          };
+          this.selectedItem = body;
           console.log(item, index);
           this.$modal.show('serviceEdit');
       },
@@ -235,18 +241,18 @@
           this.$modal.hide('serviceCreate');
           this.$modal.hide('serviceEdit');
       },
-      createService: function() {
+      createService: async function() {
           console.log(this.newService)
+          try {
+            const res = await createService(this.newService);
+          } catch (error) {
+            console.log(error);
+          }
       },
       cancelCreation: function() {
           var result = confirm("Are you sure cancel creating this service?");
           if (result) {
-              this.newService = {
-                name: '',
-                description: '',
-                price: 0,
-                duration: 0,
-              };
+              this.newService = {name: '', description: '', price: 0, duration: 0 };
               this.hideAll();
           }
       },
