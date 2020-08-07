@@ -56,11 +56,8 @@
            
              <b-form>
         <b-form-group
-          id="input-group-1"
-          label="Name"
-          label-for="input-1">
+          label="Name">
           <b-form-input
-            id="input-1"
             type="text"
             required
             v-model="newService.name"
@@ -68,11 +65,8 @@
         </b-form-group>
 
         <b-form-group
-          id="input-group-1"
-          label="Description"
-          label-for="input-1">
+          label="Description">
           <b-form-textarea
-            id="input-1"
             type="text"
             required
             v-model="newService.description"
@@ -81,10 +75,7 @@
 
 
         <b-form-group
-          id="input-group-1"
-          label="Price $"
-          label-for="input-1">
-         
+          label="Price $">
           <b-form-spinbutton
               min="0"
               max="100000"
@@ -95,10 +86,7 @@
         </b-form-group>
 
         <b-form-group
-       
-          id="input-group-1"
-          label="Duration (minutes)"
-          label-for="input-1">
+          label="Duration (minutes)">
              <b-form-spinbutton
               wrap
               min="0"
@@ -141,31 +129,22 @@
            
              <b-form>
         <b-form-group
-          id="input-group-1"
-          label="Name"
-          label-for="input-1">
+          label="Name">
           <b-form-input
-            id="input-1"
             v-model="selectedItem.name"
             placeholder="Service name"></b-form-input>
         </b-form-group>
 
         <b-form-group
-          id="input-group-1"
-          label="Description"
-          label-for="input-1">
+          label="Description">
           <b-form-textarea
-            id="input-1"
             v-model="selectedItem.description"
             placeholder="Service description"></b-form-textarea>
         </b-form-group>
 
 
         <b-form-group
-          id="input-group-1"
-          label="Price $"
-          label-for="input-1">
-         
+          label="Price $">
           <b-form-spinbutton
               min="0"
               max="100000"
@@ -176,10 +155,7 @@
         </b-form-group>
 
         <b-form-group
-       
-          id="input-group-1"
-          label="Duration (minutes)"
-          label-for="input-1">
+          label="Duration (minutes)">
              <b-form-spinbutton
               wrap
               min="0"
@@ -189,7 +165,7 @@
             </b-form-spinbutton>
         </b-form-group>
 
-        <b-button type="submit" variant="primary">Save</b-button>
+        <b-button type="submit" variant="primary" v-on:click="saveEditedService">Save</b-button>
         <b-button variant="outline" v-on:click="hideAll">Cancel</b-button>
 
       </b-form>
@@ -209,7 +185,12 @@
    
      data: function() {
       return {
-         selectedItem: {},
+         selectedItem: {
+           name: '',
+           description: '',
+           price: 0,
+           duration: 0,
+         },
          newService: {
            name: '',
            description: '',
@@ -224,14 +205,8 @@
     },
     methods: {
       showEdit: function(item, index) {
-          const body = {
-           name: item.name,
-           description: item.description,
-           price: item.price,
-            duration: item.duration
-          };
+          const body = {name: item.name, description: item.description, price: item.price, duration: item.duration};
           this.selectedItem = body;
-          console.log(item, index);
           this.$modal.show('serviceEdit');
       },
       showCreate: function() {
@@ -245,6 +220,8 @@
           console.log(this.newService)
           try {
             const res = await createService(this.newService);
+            //reload data
+            this.hideAll();
           } catch (error) {
             console.log(error);
           }
@@ -256,10 +233,21 @@
               this.hideAll();
           }
       },
+      saveEditedService: async function() {
+        console.log(this.selectedItem);
+        try {
+          const res = await editService(this.selectedItem);
+          //reload data
+          this.hideAll();
+        } catch (error) {
+          console.log(error);
+        }
+      },
       deleteService: function() {
           var result = confirm("Are you sure you want to delete this service?");
           if (result) {
               // delete logic
+              // reload data
               this.hideAll();
           }
       }

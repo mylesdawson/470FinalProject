@@ -12,29 +12,29 @@ export default {
   }
 
 
-// export async function getServices() {
+export async function getServices() {
   
-//   const headers = new Headers()
-//   headers.append("Content-Type", "application/json")
+  const headers = new Headers()
+  headers.append("Content-Type", "application/json")
 
-//   const options = {
-//     method,
-//     headers
-//   };
+  const options = {
+    method,
+    headers
+  };
 
-//   return fetch(host + url, options)
-//     .then(resp => resp.json())
-//     .then(res => {
-//       // console.log(res)
-//       return res
-//     })
-//     .catch(err => {
-//       console.log(err)
-//     })
+  return fetch(host + url, options)
+    .then(resp => resp.json())
+    .then(res => {
+      // console.log(res)
+      return res
+    })
+    .catch(err => {
+      console.log(err)
+    })
 
-// }
+}
 
-export async function editService(name, description, price, duration) {
+export async function editService(service) {
   const body = JSON.stringify(service);
   console.log(body);
 

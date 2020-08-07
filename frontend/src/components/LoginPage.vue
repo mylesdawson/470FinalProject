@@ -33,8 +33,8 @@ export default {
       
       try {
         this.show = true;
-        await users()
-        // await login(this.username, this.password)
+        await users();
+        await login(this.username, this.password)
       } catch(e) {
         console.log(e)
       }
