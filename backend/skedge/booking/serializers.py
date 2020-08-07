@@ -57,7 +57,12 @@ class BusinessUserSerializer(serializers.HyperlinkedModelSerializer):
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
-        fields = ['name', 'description', 'price', 'duration']
+        fields = ['name', 'description', 'price', 'duration', 'business']
+
+    def create(self, validated_data):
+        business = validated_data.pop('business')
+        service = Service.objects.create(business=business, **validated_data)
+        return service
 
 
 class FavoriteBusinessSerializer(serializers.ModelSerializer):
