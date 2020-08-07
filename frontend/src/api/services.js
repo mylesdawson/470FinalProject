@@ -1,3 +1,9 @@
+// URL may remain the same even in production. we may not need this code
+let host = "http://localhost:8080"
+if(process.env.NODE_ENV === "production") {
+  host = "TODO....."
+}
+
 export default {
     data () {
       return {
@@ -13,28 +19,24 @@ export default {
 
 
 export async function getServices() {
-  
-  const headers = new Headers()
-  headers.append("Content-Type", "application/json")
-
-  const options = {
-    method,
-    headers
-  };
-
-  return fetch(host + url, options)
-    .then(resp => resp.json())
-    .then(res => {
-      // console.log(res)
-      return res
+  return fetch(host+'/services', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+      }
     })
-    .catch(err => {
-      console.log(err)
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+      return data.results;
     })
-
+    .catch((error) => {
+      console.error('Error:', error);
+    });
 }
 
 export async function editService(service) {
+  service.price = String(service.price);
   const body = JSON.stringify(service);
   console.log(body);
 
@@ -44,6 +46,7 @@ export async function editService(service) {
 }
 
 export async function createService(service) {
+  service.price = String(service.price);
   const body = JSON.stringify(service);
   console.log(body);
 

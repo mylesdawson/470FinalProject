@@ -30,7 +30,7 @@
                     flex 
                     striped 
                     hover
-                    :items="services.services"
+                    :items="services"
                     @row-clicked="showEdit"
                     ></b-table>
             </b-card>
@@ -180,7 +180,7 @@
 
 
 <script>
- import services from '../api/services.js'
+ import {getServices, createService, editService} from '../api/services.js'
   export default {
    
      data: function() {
@@ -197,15 +197,15 @@
            price: 0,
            duration: 0,
          },
-         services: services.data(),
+         services: []
       } 
     },
     mounted() {
-      
+     this.getServices();
     },
     methods: {
       showEdit: function(item, index) {
-          const body = {name: item.name, description: item.description, price: item.price, duration: item.duration};
+          const body = {name: item.name, description: item.description, price: Number(item.price), duration: item.duration};
           this.selectedItem = body;
           this.$modal.show('serviceEdit');
       },
@@ -215,6 +215,14 @@
       hideAll: function() {
           this.$modal.hide('serviceCreate');
           this.$modal.hide('serviceEdit');
+      },
+      getServices: async function() {
+        try {
+            const res = await getServices();
+            this.services = res;
+          } catch (error) {
+            console.log(error);
+          }
       },
       createService: async function() {
           console.log(this.newService)
