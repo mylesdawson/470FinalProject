@@ -7,7 +7,8 @@ urlpatterns = [
     path('favorites/<int:customer_id>', views.favorite_businesses),
     path('customer/<int:customer_id>/appointments/', views.customer_appointments),
 
-    path('business/<int:business_id>/appointments/day/<int:year>/<int:month>/<int:day>', views.business_appointments_by_day),
+    path('business/<int:business_id>/appointments/day/<int:year>/<int:month>/<int:day>/', views.business_appointments_by_day),
+    path('business/<int:business_id>/appointments/week/<int:year>/<int:week>/', views.business_appointments_by_week),
 
     # path('', views.index, name='index'),
     # path('login/', views.login_user, name='login'),

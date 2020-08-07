@@ -213,7 +213,7 @@ def favorite_businesses(request, customer_id):
         serializer = FavoriteBusinessSerializer(businesses, many=True)
         return JsonResponse(serializer.data, safe=False)
 
-    return JsonResponse(status=400, data={'status':'false', 'message':'Invalid request'})
+    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
 
 def customer_appointments(request, customer_id):
     if request.method == 'GET':
@@ -221,14 +221,21 @@ def customer_appointments(request, customer_id):
         serializer = CustomerAppointmentSerializer(appointments, many=True)
         return JsonResponse(serializer.data, safe=False)
 
-    return JsonResponse(status=400, data={'status':'false', 'message':'Invalid request'})
+    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
 
 
 def business_appointments_by_day(request, business_id, year, month, day):
     if request.method == 'GET':
-        date = datetime.date(year=year, month=month, day=day)
         appointments = Appointment.objects.select_related('customer').filter(business=business_id, date__year=year, date__month=month, date__day=day)
         serializer = BusinessAppointmentSerializer(appointments, many=True)
         return JsonResponse(serializer.data, safe=False)
 
-    return JsonResponse(status=400, data={'status':'false', 'message':'Invalid request'})
+    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+
+def business_appointments_by_week(request, business_id, year, week):
+    if request.method == 'GET':
+        appointments = Appointment.objects.select_related('customer').filter(business=business_id, date__year=year, date__week=week)
+        serializer = BusinessAppointmentSerializer(appointments, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
