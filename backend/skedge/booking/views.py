@@ -207,6 +207,15 @@ def edit_business(request):
     # Render home page
     return
 
+# Return all services of a specific business
+def business_services(request, business_id):
+    if request.method == 'GET':
+        services = Service.objects.filter(business=business_id)
+        serializer = ServiceSerializer(services, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+
 # Return all of a customer's favorited businesses
 def favorite_businesses(request, customer_id):
     if request.method == 'GET':
@@ -241,16 +250,22 @@ def business_appointments_by_week(request, business_id, year, week):
 
     return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
 
+
 def business_appointments_by_month(request, business_id, year, month):
     if request.method == 'GET':
         business = Business.objects.get(pk=business_id)
-        min_duration = Service.objects.filter(business=business_id).aggregate(Min('duration')).duration__min
-        _, days_in_month = monthrange(year, month)
-
-        appointments = Appointment.objects.filter(business=business_id, date__year=year, date__month=month)
-        serializer = BusinessAppointmentSerializer(appointments, many=True)
-
-        return JsonResponse(serializer.data, safe=False)
+        # min_duration = Service.objects.filter(business=business_id).aggregate(Min('duration')).duration__min
+        # _, days_in_month = monthrange(year, month)
+        #
+        # appointments = Appointment.objects.filter(business=business_id, date__year=year, date__month=month)
+        #
+        # for day in range(1, days_in_month+1):
+        #     day_appointments = appointments.filter(date__day=day).order_by('start_time')
+        #
+        #
+        # data = {}
+        #
+        # return JsonResponse(serializer.data, safe=False)
 
     return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
 
