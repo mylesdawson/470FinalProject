@@ -213,14 +213,45 @@ def favorite_businesses(request, customer_id):
         serializer = FavoriteBusinessSerializer(businesses, many=True)
         return JsonResponse(serializer.data, safe=False)
 
+    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+
 def customer_appointments(request, customer_id):
     if request.method == 'GET':
         appointments = Appointment.objects.select_related('business', 'service').filter(customer=customer_id)
         serializer = CustomerAppointmentSerializer(appointments, many=True)
         return JsonResponse(serializer.data, safe=False)
 
-def business_appointments_day(request, business_id, year, month, day):
-    date = datetime.date(year=year, month=month, day=day)
-    appointments = Appointment.select_related('customer').filter(business=business_id, date__year=year, date__month=month, date__day=day)
+    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
 
-    return
+
+def business_appointments_by_day(request, business_id, year, month, day):
+    if request.method == 'GET':
+        appointments = Appointment.objects.select_related('customer').filter(business=business_id, date__year=year, date__month=month, date__day=day)
+        serializer = BusinessAppointmentSerializer(appointments, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+
+def business_appointments_by_week(request, business_id, year, week):
+    if request.method == 'GET':
+        appointments = Appointment.objects.select_related('customer').filter(business=business_id, date__year=year, date__week=week)
+        serializer = BusinessAppointmentSerializer(appointments, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+
+# def search_businesses(request, search):
+#     if request.method == 'GET':
+#         businesses = Business.objects.filter()
+
+def businesses_by_category(request, category):
+    if request.method == 'GET' and category in dict(CATEGORIES):
+        if category == ALL:
+            businesses = Business.objects.all()
+        else:
+            businesses = Business.objects.filter(category=category)
+
+        serializer = BusinessSerializer(businesses, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
