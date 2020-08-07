@@ -3,6 +3,10 @@ from django.utils import timezone
 from rest_framework import serializers
 from .models import *
 
+class UserSerializer(serializers.ModelSerializer):
+    model = User
+    fields = ['username', 'first_name', 'last_name']
+
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
@@ -66,6 +70,13 @@ class FavoriteBusinessSerializer(serializers.ModelSerializer):
         fields = ['id', 'business_name', 'short_description']
 
 
+class CustomerBriefSerializer(serializers.ModelSerializer):
+    user = UserSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Customer
+        fields = ['phone_number', 'user']
+
 class BusinessBriefSerializer(serializers.ModelSerializer):
     class Meta:
         model = Business
@@ -77,3 +88,10 @@ class CustomerAppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = ['start_time', 'end_time', 'duration', 'cancelled', 'cancelled_by_customer', 'cancelled_by_business', 'business']
+
+class BusinessAppointmentSerializer(serializers.ModelSerializer):
+    customer = CustomerBriefSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Appointment
+        fields = ['start_time', 'end_time', 'duration', 'cancelled', 'cancelled_by_customer', 'cancelled_by_business', 'customer']

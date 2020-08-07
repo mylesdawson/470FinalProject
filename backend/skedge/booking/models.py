@@ -97,8 +97,9 @@ class Service(models.Model):
         return self.name
 
 class Appointment(models.Model):
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
 
     cancelled = models.BooleanField(default=False)
     cancelled_by_customer = models.BooleanField(default=False)

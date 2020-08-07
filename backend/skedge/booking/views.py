@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from .models import *
 from .serializers import *
+import datetime
 
 class Logout(APIView):
     permission_classes = [IsAuthenticated]
@@ -217,3 +218,9 @@ def customer_appointments(request, customer_id):
         appointments = Appointment.objects.select_related('business', 'service').filter(customer=customer_id)
         serializer = CustomerAppointmentSerializer(appointments, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+def business_appointments_day(request, business_id, year, month, day):
+    date = datetime.date(year=year, month=month, day=day)
+    appointments = Appointment.select_related('customer').filter(business=business_id, date__year=year, date__month=month, date__day=day)
+
+    return
