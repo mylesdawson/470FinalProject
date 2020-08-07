@@ -35,29 +35,21 @@ export default {
 // }
 
 export async function editService(name, description, price, duration) {
-  const body = {
-    name: name,
-    description: description,
-    price: price,
-    duration: duration
-  }
+  const body = JSON.stringify(service);
+  console.log(body);
 
-  const res = await request(`/services/`, body, 'PUT')
-  console.log(res)
-  return res
+  const res = await request(`/services/`, body, 'PUT');
+  console.log(res);
+  return res;
 }
 
-export async function createService(name, description, price, duration) {
-  const body = {
-    name: name,
-    description: description,
-    price: price,
-    duration: duration
-  }
+export async function createService(service) {
+  const body = JSON.stringify(service);
+  console.log(body);
 
-  const res = await request(`/services/`, body, 'POST')
-  console.log(res)
-  return res
+  const res = await request(`/services/`, body, 'POST');
+  console.log(res);
+  return res;
 }
 
 
