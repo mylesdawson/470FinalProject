@@ -14,26 +14,28 @@ if(process.env.NODE_ENV === "production") {
 async function request(url, body = {}, method = 'GET') {
   console.log(`request to: ${url}`)
 
+  const headers = new Headers()
+  headers.append("Content-Type", "application/json")
+
   const options = {
     method,
-    headers: {
-      'Content-Type': 'application/json'
-    }
+    headers
   };
 
   if (method !== 'GET' && body) {
-      options.body = JSON.stringify(body);
+    options.body = JSON.stringify(body)
   }
 
-  const response = await fetch(host + url, options);
+  return fetch(host + url, options)
+    .then(resp => resp.json())
+    .then(res => {
+      // console.log(res)
+      return res
+    })
+    .catch(err => {
+      console.log(err)
+    })
 
-  if (response.status !== 200) {
-    return Error(`The server responded with an unexpected status: ${response.status}.`);
-  }
-
-  const result = await response.json();
-
-  return result;
 }
 
 
@@ -44,6 +46,34 @@ export async function login(username = '', password = '') {
   const res = await request('/login', { username, password }, 'POST')
   console.log(res)
 }
+
+export async function createCustomerAccount(username, password, accountInfo) {
+  // console.log(`accountType: ${accountType}, username: ${username}, password: ${password}`)
+  // console.log(JSON.stringify(accountInfo))
+
+  const body = {
+    username,
+    password,
+    customer: accountInfo
+  }
+
+  const res = await request(`/customers/`, body, 'POST')
+  console.log(res)
+  return res
+}
+
+export async function createBusinessAccount(username, password, accountInfo) {
+  const body = {
+    username,
+    password,
+    business: accountInfo
+  }
+
+  const res = await request(`/businesses/`, body, 'POST')
+  console.log(res)
+  return res
+}
+
 
 export async function users() {
   const res = await request('/users')

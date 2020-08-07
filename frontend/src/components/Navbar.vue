@@ -36,7 +36,12 @@
 
       <template v-if="!token">
         <b-navbar-nav class="ml-auto">
-          <b-button variant="outline-primary" type="submit" to="/new-account">Create An Account!</b-button>
+          <b-nav-item>
+            <b-button variant="outline-primary" type="submit" to="/new-account">Create An Account</b-button>
+          </b-nav-item>
+          <b-nav-item>
+            <b-button variant="outline-success" type="submit" to="/login">Login</b-button>
+          </b-nav-item>
         </b-navbar-nav>
       </template>
     </b-navbar>

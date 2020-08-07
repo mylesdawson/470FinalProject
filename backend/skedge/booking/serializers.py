@@ -32,7 +32,7 @@ class CustomerUserSerializer(serializers.HyperlinkedModelSerializer):
 class BusinessSerializer(serializers.ModelSerializer):
     class Meta:
         model = Business
-        fields = ['business_name', 'short_description', ]
+        fields = ['business_name', 'category', ]
 
 
 class BusinessUserSerializer(serializers.HyperlinkedModelSerializer):

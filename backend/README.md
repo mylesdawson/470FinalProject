@@ -45,3 +45,5 @@ password: testpassword
 Django REST Framework: https://www.django-rest-framework.org/
 
 If you run into migration problems, try Scenario 2 here: https://simpleisbetterthancomplex.com/tutorial/2016/07/26/how-to-reset-migrations.html
+
+Moderately useful tutorial: [api with drf](https://medium.com/@apogiatzis/create-a-restful-api-with-users-and-jwt-authentication-using-django-1-11-drf-part-2-eb6fdcf71f45)
