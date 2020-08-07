@@ -1,3 +1,4 @@
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import logout, authenticate
 from django.contrib.auth.models import User
 from rest_framework import viewsets, status, generics
@@ -8,7 +9,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from .models import Customer, Business, Service, Appointment, Favorite
-from .serializers import CustomerUserSerializer, BusinessUserSerializer, ServiceSerializer
+from .serializers import CustomerUserSerializer, BusinessUserSerializer, ServiceSerializer, FavoriteSerializer
 
 class Logout(APIView):
     permission_classes = [IsAuthenticated]
@@ -203,3 +204,10 @@ def edit_business(request):
 
     # Render home page
     return
+
+
+def favorite_list(request):
+    if request.method == 'GET':
+        favorites = Favorite.objects.all()
+        serializer = FavoriteSerializer(favorites, many=True)
+        return JsonResponse(serializer.data, safe=False)

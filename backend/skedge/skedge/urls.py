@@ -16,7 +16,7 @@ urlpatterns = [
     # This is essentially our login. It will return a token if login was successful
     path('login/', obtain_auth_token, name='api_token_auth'),
     path('logout/', views.Logout.as_view()),
-
+    path('favorites/', views.favorite_list),
     path('admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
