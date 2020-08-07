@@ -88,10 +88,10 @@ class Service(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2) # Cost to customer
     duration = models.IntegerField(choices=DURATIONS) # Duration in minutes
 
-    #updated_at = models.DateTimeField(auto_now=True)
-    #created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
-    #business = models.ForeignKey(Business, on_delete=models.CASCADE)
+    business = models.ForeignKey(Business, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

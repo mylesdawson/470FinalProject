@@ -33,12 +33,7 @@ When updates to model occur:
 
 `psql -U project`: access postgres db as user project
 
-
-Admin user:
-```
-user: admin
-password: testpassword
-```
+`docker-compose down && docker system prune -f` && `docker volume prune`: reset db when making changes to models
 
 ## Links and Resources
 
