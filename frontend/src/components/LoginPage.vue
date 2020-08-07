@@ -5,7 +5,7 @@
          <b-card class="text-center" title="Login" :aria-hidden="show ? 'true' : null">
             
             <input v-model="username" type="text" placeholder="username" class="form-control login-input">
-            <input v-model="password" type="text" placeholder="password" class="form-control login-input">
+            <input v-model="password" type="password" placeholder="password" class="form-control login-input">
             <button type="button" class="btn btn-primary btn-lg login-input" v-on:click="logon">Login</button>
           
          </b-card>
