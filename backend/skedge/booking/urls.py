@@ -5,6 +5,7 @@ from . import views
 # app_name = 'booking'
 urlpatterns = [
     path('favorites/<int:customer_id>', views.favorite_businesses),
+    path('customer/appointments/<int:customer_id>', views.customer_appointments),
     # path('', views.index, name='index'),
     # path('login/', views.login_user, name='login'),
     # path('logout/', views.logout_user, name='login'),

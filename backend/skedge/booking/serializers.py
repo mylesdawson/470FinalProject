@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Customer, Business, Service, Appointment, Favorite
+from .models import *
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -56,10 +56,23 @@ class BusinessUserSerializer(serializers.HyperlinkedModelSerializer):
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
-        fields = ['name', 'description']
+        fields = ['name', 'description', 'price', 'duration']
 
 
 class FavoriteBusinessSerializer(serializers.ModelSerializer):
     class Meta:
         model = Business
         fields = ['id', 'business_name', 'short_description']
+
+
+class BusinessBriefSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Business
+        fields = ['id', 'business_name', 'short_description']
+
+class CustomerAppointmentSerializer(serializers.ModelSerializer):
+    business = BusinessBriefSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Appointment
+        fields = ['start_time', 'end_time', 'duration', 'cancelled', 'cancelled_by_customer', 'cancelled_by_business', 'business']

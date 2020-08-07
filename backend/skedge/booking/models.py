@@ -2,6 +2,18 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.db import models
 
+DURATIONS = [
+    (15, '15'),
+    (30, '30'),
+    (45, '45'),
+    (60, '1:00'),
+    (90, '1:30'),
+    (120, '2:00'),
+    (150, '2:30'),
+    (180, '3:00'),
+]
+
+
 # The Django User model is used to store the username, password,
 # and email for both customer and business accounts
 
@@ -70,16 +82,6 @@ class Business(models.Model):
 
 # Represents a specific type of appointment offered by a business
 class Service(models.Model):
-    DURATIONS = [
-        (15, 'Quarter hour'),
-        (30, 'Half hour'),
-        (45, 'Three quarters hour'),
-        (60, 'One hour'),
-        (90, 'One and a half hours'),
-        (120, 'Two hours'),
-        (150, 'Two and a half hours'),
-        (180, 'Three hours'),
-    ]
 
     name = models.CharField(max_length=100) # Name of the service
     description = models.CharField(max_length=200) # A short description

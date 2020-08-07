@@ -8,8 +8,8 @@ from rest_framework.parsers import JSONParser
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-from .models import Customer, Business, Service, Appointment, Favorite
-from .serializers import CustomerUserSerializer, BusinessUserSerializer, ServiceSerializer, FavoriteBusinessSerializer
+from .models import *
+from .serializers import *
 
 class Logout(APIView):
     permission_classes = [IsAuthenticated]
@@ -210,4 +210,10 @@ def favorite_businesses(request, customer_id):
     if request.method == 'GET':
         businesses = Business.objects.filter(favorite__customer=customer_id)
         serializer = FavoriteBusinessSerializer(businesses, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+def customer_appointments(request, customer_id):
+    if request.method == 'GET':
+        appointments = Appointment.objects.select_related('business', 'service').filter(customer=customer_id)
+        serializer = CustomerAppointmentSerializer(appointments, many=True)
         return JsonResponse(serializer.data, safe=False)
