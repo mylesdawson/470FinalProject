@@ -12,8 +12,10 @@ router.register(r'appointments', views.AppointmentViewSet, 'appointments')
 urlpatterns = [
     path('', include(router.urls)),
 
+    # Requires customer authentication
     path('favorites/<int:customer_id>', views.favorite_businesses),
 
+    # Requires customer authentication
     path('customer/<int:customer_id>/appointments/', views.customer_appointments),
 
     path('business/<int:business_id>/services/', views.business_services),
