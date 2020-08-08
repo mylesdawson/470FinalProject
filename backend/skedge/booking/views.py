@@ -266,26 +266,34 @@ def business_appointments_by_month(request, business_id, year, month):
         days_open = [business.monday_open, business.tuesday_open, business.wednesday_open, business.thursday_open, business.friday_open, business.saturday_open, business.sunday_open]
 
         try:
-            min_duration = Service.objects.filter(business=business_id).aggregate(Min('duration')).duration__min
+            min_duration = Service.objects.filter(business=business_id).aggregate(Min('duration'))['duration__min']
         except AttributeError:
             return JsonResponse({'status': 'details'}, status=status.HTTP_404_NOT_FOUND)
 
         _, days_in_month = monthrange(year, month)
 
-        appointments = Appointment.objects.filter(business=business_id, date__year=year, date__month=month)
+        appointments = Appointment.objects.filter(business=business_id, date__year=year, date__month=month, cancelled=False)
+        data = {}
+
+        opening_times = [business.monday_opening_time, business.tuesday_opening_time, business.wednesday_opening_time, business.thursday_opening_time, business.friday_opening_time, business.saturday_opening_time, business.sunday_opening_time]
+        closing_times = [business.monday_closing_time, business.tuesday_closing_time, business.wednesday_closing_time, business.thursday_closing_time, business.friday_closing_time, business.saturday_closing_time, business.sunday_closing_time]
 
         for day in range(1, days_in_month+1):
             day_of_week = datetime.datetime(year, month, day).weekday()
 
             if days_open[day_of_week] == True:
-                day_appointments = list(appointments.filter(date__day=day).order_by('start_time'))
+                day_appointments = list(appointments.filter(date__day=day).values('start_time', 'end_time').order_by('start_time'))
+                day_appointments.insert(0, {'end_time': opening_times[day_of_week]})
+                day_appointments.append({'start_time': closing_times[day_of_week]})
+                print(day_appointments)
                 fully_booked = True
-                for i, appointment in enumerate(day_appointments):
-                    if i == 0:
-                        continue
+                for i in range(1, len(day_appointments)):
+                    date = datetime.date(1, 1, 1)
+                    first_time = datetime.datetime.combine(date, day_appointments[i-1]['end_time'])
+                    second_time = datetime.datetime.combine(date, day_appointments[i]['start_time'])
+                    interval = second_time - first_time
 
-                    free_time = appointment.start_time - day_appointments[i-1].end_time
-                    if free_time.total_seconds() // 60 >= min_duration:
+                    if (interval.total_seconds() // 60) >= min_duration:
                         fully_booked = False
                         break
 
@@ -297,9 +305,7 @@ def business_appointments_by_month(request, business_id, year, month):
                 availibility = 'closed'
             data[day] = availibility
 
-        data = {}
-
-        return JsonResponse(serializer.data, safe=False)
+        return JsonResponse(data, safe=False)
 
     return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
 

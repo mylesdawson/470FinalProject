@@ -65,20 +65,22 @@ class Business(models.Model):
     friday_open = models.BooleanField(default=True)
     saturday_open = models.BooleanField(default=False)
     sunday_open = models.BooleanField(default=False)
-    # monday_opening_time = models.TimeField()
-    # monday_closing_time = models.TimeField()
-    # tuesday_opening_time = models.TimeField()
-    # tuesday_closing_time = models.TimeField()
-    # wednesday_opening_time = models.TimeField()
-    # wednesday_closing_time = models.TimeField()
-    # thursday_opening_time = models.TimeField()
-    # thursday_closing_time = models.TimeField()
-    # friday_opening_time = models.TimeField()
-    # friday_closing_time = models.TimeField()
-    # saturday_opening_time = models.TimeField()
-    # saturday_closing_time = models.TimeField()
-    # sunday_opening_time = models.TimeField()
-    # sunday_closing_time = models.TimeField()
+
+    monday_opening_time = models.TimeField(default='9:00')
+    tuesday_opening_time = models.TimeField(default='9:00')
+    wednesday_opening_time = models.TimeField(default='9:00')
+    thursday_opening_time = models.TimeField(default='9:00')
+    friday_opening_time = models.TimeField(default='9:00')
+    saturday_opening_time = models.TimeField(default='9:00')
+    sunday_opening_time = models.TimeField(default='9:00')
+
+    monday_closing_time = models.TimeField(default='17:00')
+    tuesday_closing_time = models.TimeField(default='17:00')
+    wednesday_closing_time = models.TimeField(default='17:00')
+    thursday_closing_time = models.TimeField(default='17:00')
+    friday_closing_time = models.TimeField(default='17:00')
+    saturday_closing_time = models.TimeField(default='17:00')
+    sunday_closing_time = models.TimeField(default='17:00')
 
     # days_bookable_in_advance = models.PositiveIntegerField()
 
@@ -114,7 +116,7 @@ class Appointment(models.Model):
 
     cancelled = models.BooleanField(default=False)
     cancelled_by_customer = models.BooleanField(default=False)
-    cancelled_by_business = models.BooleanField(default=False, )
+    cancelled_by_business = models.BooleanField(default=False)
 
     # A customer has an appointment for a service at a business
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
