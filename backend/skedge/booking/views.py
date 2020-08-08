@@ -15,6 +15,8 @@ from .serializers import *
 import datetime
 from calendar import monthrange
 
+from django.views.decorators.csrf import csrf_exempt
+
 # Helper function to get open status, opening hour, closing hour
 # each day of the week for a business
 def get_business_hours(business):
@@ -435,4 +437,27 @@ def services_available_times(request, business_id, year, month, day):
 
 
 
+    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+
+@csrf_exempt
+def business_cancel_appointment(request, business_id, appointment_id):
+    if request.method == 'POST':
+        try:
+            appointment = Appointment.objects.get(pk=appointment_id, business=business_id)
+        except Business.DoesNotExist:
+            return JsonResponse({'status': 'details'}, status=status.HTTP_404_NOT_FOUND)
+
+        appointment.cancelled = True
+        appointment.cancelled_by_business = True
+        appointment.cancelled_by_customer = False
+        appointment.save()
+
+        serializer = BusinessAppointmentSerializer(appointment, many=False)
+
+        return JsonResponse(serializer.data, safe=False)
+
+    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+
+@csrf_exempt
+def customer_cancel_appointment(request, customer_id, appointment_id):
     return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
