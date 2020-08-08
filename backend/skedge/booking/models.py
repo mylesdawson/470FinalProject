@@ -12,6 +12,7 @@ DURATIONS = [
     (150, '2:30'),
     (180, '3:00'),
 ]
+MIN_DURATION = min([d[0] for d in DURATIONS])
 
 ALL = 'all'
 FITNESS = 'fitness'

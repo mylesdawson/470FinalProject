@@ -14,6 +14,17 @@ from .serializers import *
 import datetime
 from calendar import monthrange
 
+# Helper function to get open status, opening hour, closing hour
+# each day of the week for a business
+def get_business_hours(business):
+    days_open = [business.monday_open, business.tuesday_open, business.wednesday_open, business.thursday_open, business.friday_open, business.saturday_open, business.sunday_open]
+
+    opening_times = [business.monday_opening_time, business.tuesday_opening_time, business.wednesday_opening_time, business.thursday_opening_time, business.friday_opening_time, business.saturday_opening_time, business.sunday_opening_time]
+
+    closing_times = [business.monday_closing_time, business.tuesday_closing_time, business.wednesday_closing_time, business.thursday_closing_time, business.friday_closing_time, business.saturday_closing_time, business.sunday_closing_time]
+
+    return days_open, opening_times, closing_times
+
 class Logout(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -263,7 +274,7 @@ def business_appointments_by_month(request, business_id, year, month):
         except Business.DoesNotExist:
             return JsonResponse({'status': 'details'}, status=status.HTTP_404_NOT_FOUND)
 
-        days_open = [business.monday_open, business.tuesday_open, business.wednesday_open, business.thursday_open, business.friday_open, business.saturday_open, business.sunday_open]
+        days_open, opening_times, closing_times = get_business_hours(business)
 
         try:
             min_duration = Service.objects.filter(business=business_id).aggregate(Min('duration'))['duration__min']
@@ -275,8 +286,6 @@ def business_appointments_by_month(request, business_id, year, month):
         appointments = Appointment.objects.filter(business=business_id, date__year=year, date__month=month, cancelled=False)
         data = {}
 
-        opening_times = [business.monday_opening_time, business.tuesday_opening_time, business.wednesday_opening_time, business.thursday_opening_time, business.friday_opening_time, business.saturday_opening_time, business.sunday_opening_time]
-        closing_times = [business.monday_closing_time, business.tuesday_closing_time, business.wednesday_closing_time, business.thursday_closing_time, business.friday_closing_time, business.saturday_closing_time, business.sunday_closing_time]
 
         for day in range(1, days_in_month+1):
             day_of_week = datetime.datetime(year, month, day).weekday()
@@ -330,5 +339,51 @@ def businesses_search(request, category, search):
 
         serializer = BusinessSerializer(businesses, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+
+
+def services_available_times(request, business_id, year, month, day):
+    if request.method == 'GET':
+        try:
+            business = Business.objects.get(pk=business_id)
+        except Business.DoesNotExist:
+            return JsonResponse({'status': 'details'}, status=status.HTTP_404_NOT_FOUND)
+
+        day_of_week = datetime.datetime(year, month, day).weekday()
+        days_open, opening_times, closing_times = get_business_hours(business)
+
+        if days_open[day_of_week] == False:
+            return JsonResponse([], safe=False)
+
+        services = Service.objects.filter(business=business_id)
+        appointments = list(Appointment.objects.filter(business=business_id, date__year=year, date__month=month, date__day=day).values('start_time', 'end_time').order_by('start_time'))
+        appointments.insert(0, {'end_time': opening_times[day_of_week]})
+        appointments.append({'start_time': closing_times[day_of_week]})
+
+        data = []
+
+        for service in services:
+            serializer = ServiceSerializer(service, many=False)
+            service_data = serializer.data
+            times = []
+
+            for i in range(1, len(appointments)):
+                date = datetime.date(1, 1, 1)
+                first_time = datetime.datetime.combine(date, appointments[i-1]['end_time'])
+                second_time = datetime.datetime.combine(date, appointments[i]['start_time'])
+                interval = second_time - first_time
+
+                while (interval.total_seconds() // 60) >= service.duration:
+                    times.append('{:d}:{:02d}'.format(first_time.hour, first_time.minute))
+                    first_time = first_time + datetime.timedelta(seconds=60*MIN_DURATION)
+                    interval = second_time - first_time
+
+            service_data['times'] = times
+            data.append(service_data)
+
+        return JsonResponse(data, safe=False)
+
+
 
     return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
