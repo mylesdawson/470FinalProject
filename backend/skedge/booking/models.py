@@ -83,10 +83,7 @@ class Business(models.Model):
     saturday_closing_time = models.TimeField(default='17:00')
     sunday_closing_time = models.TimeField(default='17:00')
 
-    # days_bookable_in_advance = models.PositiveIntegerField()
-
-    # multiple_employees = models.BooleanField() # Whether the business has multiple employees with different schedules
-    # exclusive_customers = models.BooleanField() # Whether the business only allows appointments from whitelisted customers (clients)
+    days_bookable_in_advance = models.PositiveIntegerField(default=14)
 
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)

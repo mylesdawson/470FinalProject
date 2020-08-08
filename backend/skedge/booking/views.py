@@ -318,7 +318,7 @@ def business_appointments_by_week(request, business_id, year, week):
     return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
 
-def business_appointments_by_month(request, business_id, year, month):
+def services_available_days(request, business_id, year, month):
     if request.method == 'GET':
         try:
             business = Business.objects.get(pk=business_id)
@@ -336,13 +336,19 @@ def business_appointments_by_month(request, business_id, year, month):
 
         appointments = Appointment.objects.filter(business=business_id, date__year=year, date__month=month, cancelled=False)
         data = {}
-
+        current_date = datetime.datetime.today()
 
         for day in range(1, days_in_month+1):
-            day_of_week = datetime.datetime(year, month, day).weekday()
+            date = datetime.datetime(year, month, day)
+            day_of_week = date.weekday()
+            days_between = (date - current_date).days
 
-            if days_open[day_of_week] == True:
-                # day_appointments = list(appointments.filter(date__day=day).values('start_time', 'end_time').order_by('start_time'))
+            if days_between < 0:
+                availability = 'past'
+            elif days_between > business.days_bookable_in_advance:
+                availability = 'unavailable'
+            elif days_open[day_of_week] == True:
+                day_appointments = list(appointments.filter(date__day=day).values('start_time', 'end_time').order_by('start_time'))
                 day_appointments.insert(0, {'end_time': opening_times[day_of_week]})
                 day_appointments.append({'start_time': closing_times[day_of_week]})
                 print(day_appointments)
@@ -358,12 +364,12 @@ def business_appointments_by_month(request, business_id, year, month):
                         break
 
                 if fully_booked == True:
-                    availibility = 'booked'
+                    availability = 'booked'
                 else:
-                    availibility = 'open'
+                    availability = 'open'
             else:
-                availibility = 'closed'
-            data[day] = availibility
+                availability = 'closed'
+            data[day] = availability
 
         return JsonResponse(data, safe=False)
 
@@ -408,7 +414,7 @@ def services_available_times(request, business_id, year, month, day):
             return JsonResponse([], safe=False)
 
         services = Service.objects.filter(business=business_id)
-        # appointments = list(Appointment.objects.filter(business=business_id, date__year=year, date__month=month, date__day=day).values('start_time', 'end_time').order_by('start_time'))
+        appointments = list(Appointment.objects.filter(business=business_id, date__year=year, date__month=month, date__day=day).values('start_time', 'end_time').order_by('start_time'))
         appointments.insert(0, {'end_time': opening_times[day_of_week]})
         appointments.append({'start_time': closing_times[day_of_week]})
 

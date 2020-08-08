@@ -23,10 +23,11 @@ urlpatterns = [
     path('business/<int:business_id>/services/', views.business_services),
 
     path('business/<int:business_id>/services/available/<int:year>/<int:month>/<int:day>/', views.services_available_times),
+    path('business/<int:business_id>/services/available/<int:year>/<int:month>/', views.services_available_days),
 
     path('business/<int:business_id>/appointments/day/<int:year>/<int:month>/<int:day>/', views.business_appointments_by_day),
     path('business/<int:business_id>/appointments/week/<int:year>/<int:week>/', views.business_appointments_by_week),
-    path('business/<int:business_id>/appointments/month/<int:year>/<int:month>/', views.business_appointments_by_month),
+
 
     # Requires business authentication
     path('business/<int:business_id>/appointments/<int:appointment_id>/cancel/', views.business_cancel_appointment),
