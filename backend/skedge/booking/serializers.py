@@ -68,6 +68,19 @@ class ServiceSerializer(serializers.ModelSerializer):
         service = Service.objects.create(business=business, **validated_data)
         return service
 
+class AppointmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Appointment
+        fields = ['id', 'date', 'start_time', 'end_time', 'customer', 'business', 'service']
+
+    def create(self, validated_data):
+        customer = validated_data.pop('customer')
+        service = validated_data.pop('service')
+        business = validated_data.pop('business')
+
+        appointment = Appointment.objects.create(customer=customer, service=service, business=business, **validated_data)
+        return appointment
+
 
 class FavoriteBusinessSerializer(serializers.ModelSerializer):
     class Meta:

@@ -58,6 +58,13 @@ class Business(models.Model):
     postal_code = models.CharField(max_length=6, null=True)
     country = models.CharField(max_length=100, null=True)
 
+    monday_open = models.BooleanField(default=True)
+    tuesday_open = models.BooleanField(default=True)
+    wednesday_open = models.BooleanField(default=True)
+    thursday_open = models.BooleanField(default=True)
+    friday_open = models.BooleanField(default=True)
+    saturday_open = models.BooleanField(default=False)
+    sunday_open = models.BooleanField(default=False)
     # monday_opening_time = models.TimeField()
     # monday_closing_time = models.TimeField()
     # tuesday_opening_time = models.TimeField()
@@ -107,7 +114,7 @@ class Appointment(models.Model):
 
     cancelled = models.BooleanField(default=False)
     cancelled_by_customer = models.BooleanField(default=False)
-    cancelled_by_business = models.BooleanField(default=False)
+    cancelled_by_business = models.BooleanField(default=False, )
 
     # A customer has an appointment for a service at a business
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)

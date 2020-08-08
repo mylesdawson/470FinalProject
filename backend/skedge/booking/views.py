@@ -1,6 +1,7 @@
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import logout, authenticate
 from django.contrib.auth.models import User
+from django.db.models import Min
 from rest_framework import viewsets, status, generics
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -38,6 +39,10 @@ class BusinessViewSet(viewsets.ModelViewSet):
 class ServiceViewSet(viewsets.ModelViewSet):
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
+
+class AppointmentViewSet(viewsets.ModelViewSet):
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentSerializer
 
 # Parse phone number into standard format
 def parse_phone_number(phone_number):
@@ -253,19 +258,48 @@ def business_appointments_by_week(request, business_id, year, week):
 
 def business_appointments_by_month(request, business_id, year, month):
     if request.method == 'GET':
-        business = Business.objects.get(pk=business_id)
-        # min_duration = Service.objects.filter(business=business_id).aggregate(Min('duration')).duration__min
-        # _, days_in_month = monthrange(year, month)
-        #
-        # appointments = Appointment.objects.filter(business=business_id, date__year=year, date__month=month)
-        #
-        # for day in range(1, days_in_month+1):
-        #     day_appointments = appointments.filter(date__day=day).order_by('start_time')
-        #
-        #
-        # data = {}
-        #
-        # return JsonResponse(serializer.data, safe=False)
+        try:
+            business = Business.objects.get(pk=business_id)
+        except Business.DoesNotExist:
+            return JsonResponse({'status': 'details'}, status=status.HTTP_404_NOT_FOUND)
+
+        days_open = [business.monday_open, business.tuesday_open, business.wednesday_open, business.thursday_open, business.friday_open, business.saturday_open, business.sunday_open]
+
+        try:
+            min_duration = Service.objects.filter(business=business_id).aggregate(Min('duration')).duration__min
+        except AttributeError:
+            return JsonResponse({'status': 'details'}, status=status.HTTP_404_NOT_FOUND)
+
+        _, days_in_month = monthrange(year, month)
+
+        appointments = Appointment.objects.filter(business=business_id, date__year=year, date__month=month)
+
+        for day in range(1, days_in_month+1):
+            day_of_week = datetime.datetime(year, month, day).weekday()
+
+            if days_open[day_of_week] == True:
+                day_appointments = list(appointments.filter(date__day=day).order_by('start_time'))
+                fully_booked = True
+                for i, appointment in enumerate(day_appointments):
+                    if i == 0:
+                        continue
+
+                    free_time = appointment.start_time - day_appointments[i-1].end_time
+                    if free_time.total_seconds() // 60 >= min_duration:
+                        fully_booked = False
+                        break
+
+                if fully_booked == True:
+                    availibility = 'booked'
+                else:
+                    availibility = 'open'
+            else:
+                availibility = 'closed'
+            data[day] = availibility
+
+        data = {}
+
+        return JsonResponse(serializer.data, safe=False)
 
     return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
 
