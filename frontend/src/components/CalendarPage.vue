@@ -19,11 +19,7 @@
                     <h3>{{selectedDateFormatted}}</h3>
                     </b-col>
                  
-                  <b-col style="text-align: right">
-                  <b-button variant="success" v-on:click="showCreate">
-                    Add Event
-                  </b-button>
-                </b-col>
+                  
               </b-row>
             </b-card-header>
             <b-card-body>
@@ -71,80 +67,6 @@
 </template>
 
 
-<!-- CREATE MODAL -->
-<template>
-    <modal name="eventCreate"
-          :width="800"
-          :height="800"
-          :adaptive="true" >
-           <b-card no-body style="border: none" :title="selectedDateFormatted">
-            <b-card-header>
-            <b-row>
-                    <b-col >
-                    <h3>New Event </h3>
-                    </b-col>
-                 
-                  <b-col style="text-align: right">
-                  <b-button variant="outline-secondary" v-on:click="hideAll">
-                      Cancel
-                  </b-button>
-                  <b-button variant="success">
-                    Save
-                  </b-button>
-                </b-col>
-              </b-row>
-            </b-card-header>
-            <b-card-body>
-           
-            <b-form>
-              <b-form-group
-                id="input-group-1"
-                label="Title: "
-                label-for="input-1">
-                <b-form-input
-                  id="input-1"
-                  type="email"
-                  required
-                  placeholder="Title"></b-form-input>
-              </b-form-group>
-
-              <b-form-group
-                id="input-group-1"
-                label="Description: "
-                label-for="input-1">
-                <b-form-textarea
-                  id="input-1"
-                  type="email"
-                  required
-                  placeholder="Description of listing"></b-form-textarea>
-              </b-form-group>
-
-              <b-form-group
-                id="input-group-1"
-                label="Services: "
-                label-for="input-1">
-                <b-form-input
-                  id="input-1"
-                  type="email"
-                  required></b-form-input>
-              </b-form-group>
-
-              <b-form-group
-                id="input-group-1"
-                label="Members: "
-                label-for="input-1">
-                <b-form-input
-                  id="input-1"
-                  type="email"
-                  required></b-form-input>
-              </b-form-group>
-
-           </b-form>
-        </b-card-body>
-      </b-card>
-    </modal>
-</template>
-
 </div>
 
 </template>
@@ -160,13 +82,8 @@
            this.hideAll();
            return this.$modal.show('eventDisplay');
         },
-        showCreate: function() {
-            this.hideAll();
-            return this.$modal.show('eventCreate');
-        },
         hideAll: function() {
             this.$modal.hide('eventDisplay');
-            this.$modal.hide('eventCreate');
         },
         getAppointments: async function() {
           try {
@@ -175,28 +92,28 @@
             } catch (error) {
               console.log(error);
             }
-       },
-       getAppointmentsByDay: async function(dateObj) {
-          try {
-              const res = await getAppointmentsByDay(dateObj);
-              this.appointmentsByDay = res;
-              console.log(this.appointmentsByDay)
-              
-            } catch (error) {
-              console.log(error);
+        },
+        getAppointmentsByDay: async function(dateObj) {
+            try {
+                const res = await getAppointmentsByDay(dateObj);
+                this.appointmentsByDay = res;
+                console.log(this.appointmentsByDay)
+                
+              } catch (error) {
+                console.log(error);
+              }
+        },
+        onCancelSelectedAppointment: function(item) {
+          console.log(item)
+          this.selectedAppointment = item;
+          var result = confirm(`Are you sure you want to cancel\nthe ${item.service.name} appointment \nfrom ${item.start_time}-${item.end_time}?`);
+            if (result) {
+                // cancel logic
+                // reload data
+                this.hideAll();
             }
-       },
-       onCancelSelectedAppointment: function(item) {
-         console.log(item)
-         this.selectedAppointment = item;
-         var result = confirm(`Are you sure you want to cancel\nthe ${item.service.name} appointment \nfrom ${item.start_time}-${item.end_time}?`);
-          if (result) {
-              // cancel logic
-              // reload data
-              this.hideAll();
-          }
-       }
-        
+        }
+          
     },
     mounted() {
      this.getAppointments();
@@ -205,7 +122,6 @@
       return {
           selectedDateObj: null,
           selectedDateFormatted: null,
-          selectedAppointment: {},
           appointmentsByDay: [],
           appointments: [],
           config: {

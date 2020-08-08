@@ -66,3 +66,20 @@ export async function getAppointmentsByDay(dateObj) {
       console.error('Error:', error);
     });
 }
+
+export async function getCustomers() {
+  return fetch(host+'/customers', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+      return data.results;
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+}
