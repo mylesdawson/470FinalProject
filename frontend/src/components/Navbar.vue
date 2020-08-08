@@ -27,7 +27,7 @@
               right
               text="Your Account">
               <b-dropdown-item>Settings</b-dropdown-item>
-              <b-dropdown-item to="/login">Logout</b-dropdown-item>
+              <b-dropdown-item v-on:click="logout">Logout</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-nav-item>
         </b-navbar-nav>
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-const token = '';
+import { logout } from '../api/api'
 
 export default {
   name: 'Navbar',
@@ -59,10 +59,38 @@ export default {
           return this.$route.path != '/login'
       },
   },
-  data: function(){
-    return {
-      token: token
+  mounted() {
+    if (localStorage.token) {
+      this.token = localStorage.token
     }
+    this.timer = window.setInterval(() => {
+      if(localStorage.token) {
+        this.token = localStorage.token
+      } else {
+        this.token = ''
+      }
+    }, 1000)
+  },
+  data() {
+    return {
+      token: '',
+      timer: null
+    }
+  },
+  methods: {
+    logout: async function() {
+      try {
+        const res = await logout()
+        if (res === 200) {
+          this.$router.push('/home')
+        }
+      } catch(err) {
+        console.log(err)
+      }
+    }
+  },
+  beforeDestroy() {
+    window.clearInterval(this.timer)
   }
 }
 
