@@ -1,7 +1,7 @@
-django
+Django==3.1
 uwsgi
-psycopg2
-djangorestframework
+psycopg2-binary==2.8.5
+djangorestframework==3.11.1
 markdown
 django-filter
 django-cors-headers
