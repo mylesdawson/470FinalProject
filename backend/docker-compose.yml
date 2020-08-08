@@ -1,26 +1,29 @@
 version: '3'
 services:
-  db:
-    image: "postgres"
-    environment:
-      - POSTGRES_DB=project
-      - POSTGRES_USER=project
-      - POSTGRES_PASSWORD=secret
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
   app:
     build:
       context: .
-      dockerfile: app.Dockerfile
+      dockerfile: Dockerfile-app
     volumes:
-      - .:/code
-    depends_on:
-      - db
+      - static:/static:rw
+    environment:
+      DJANGO_MODE: production
+  db: 
+    image: "postgres:latest"
+    volumes:
+      - db:/var/lib/postgresql/data:rw
+    environment:
+      POSTGRES_USER: project
+      POSTGRES_PASSWORD: secret
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile-web
     ports:
-      - "8080:8080"
-    # environment:
-    #   DJANGO_MODE: production
-
-
+      - "8080:80"
+    volumes:
+      - static:/static:ro
+    
 volumes:
-  postgres_data:
+  static:
+  db:
