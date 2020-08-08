@@ -4,20 +4,6 @@ if(process.env.NODE_ENV === "production") {
   host = "TODO....."
 }
 
-export default {
-    data () {
-      return {
-        services: [
-          { name: 'Full Service', description: "Haircut, Beard trim or hot shave, and style", price: 35, duration: 40 },
-          { name: 'Fade', description: "Fade haircut", price: 25, duration: 30 },
-          { name: 'Beard Trim', description: "Beard trim and styling service", price: 15, duration: 20 },
-          { name: 'Hair Style', description: "Hair styling service", price: 10, duration: 10 },
-        ]
-      }
-    }
-  }
-
-
 export async function getServices() {
   return fetch(host+'/services', {
         method: 'GET',

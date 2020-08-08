@@ -25,3 +25,44 @@ export default {
     }
   }
   
+let host = "http://localhost:8080"
+if(process.env.NODE_ENV === "production") {
+  host = "TODO....."
+}
+
+export async function getAppointments() {
+  return fetch(host+'/appointments/', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+      return data.results;
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+}
+
+
+export async function getAppointmentsByDay(dateObj) {
+
+  const business_id = 1;
+  return fetch(host+`/business/${business_id}/appointments/day/${dateObj.years}/${dateObj.months+1}/${dateObj.date}/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+      return data.results;
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+}

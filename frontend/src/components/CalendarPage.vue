@@ -1,25 +1,10 @@
 <template>
 <div>
     <b-card no-body>
-            <b-card-header>
-            <b-row >
-                  <b-col>
-                    <b-dropdown  text="Select Team Calendar" variant="success" >
-                      <b-dropdown-item href="#">Action</b-dropdown-item>
-                      <b-dropdown-item href="#">Another action</b-dropdown-item>
-                     
-
-                    </b-dropdown>
-                  </b-col>
-                  <b-col style="text-align: right">
-                    <b-button variant="primary"  v-on:click="show">Action</b-button>
-                </b-col>
-            </b-row>
-            </b-card-header>
-            <b-card-body>
-            <full-calendar :config="config" :events="events"/>
-            </b-card-body>
-            </b-card>
+      <b-card-body>
+        <full-calendar :config="config" :events="appointments"/>
+      </b-card-body>
+    </b-card>
 
 <!-- DISPLAY MODAL -->
 <template>
@@ -222,7 +207,7 @@
 </template>
 
 <script>
-  import events from '../api/events.js'
+  import {getAppointments, getAppointmentsByDay} from '../api/events.js'
   import moment from 'moment'
  
   export default {
@@ -245,13 +230,33 @@
             this.$modal.hide('eventEdit');
             this.$modal.hide('eventCreate');
         },
+        getAppointments: async function() {
+          try {
+              const res = await getAppointments();
+              this.appointments = res;
+            } catch (error) {
+              console.log(error);
+            }
+       },
+       getAppointmentsByDay: async function(dateObj) {
+          try {
+              const res = await getAppointmentsByDay(dateObj);
+              this.appointmentsByDay = res;
+            } catch (error) {
+              console.log(error);
+            }
+       },
         
+    },
+    mounted() {
+     this.getAppointments();
     },
     data: function() {
       return {
           selectedDateObj: null,
           selectedDateFormatted: null,
-          events: events.data(),
+          appointmentsByDay: [],
+          appointments: [],
           config: {
             weekends: true,
             selectable: true,
@@ -262,9 +267,10 @@
             eventClick: function(info) {
               console.log(info)
             }.bind(this),
-            select: function(info) {
-              this.selectedDateObj = info;
-              this.selectedDateFormatted = moment(info).format('ddd MMM DD, YYYY');
+            select: function(date) {
+              this.selectedDateObj = moment(date).toObject();
+              this.selectedDateFormatted = moment(date).format('ddd MMM DD, YYYY');
+              this.getAppointmentsByDay(this.selectedDateObj);
               this.showDisplay();
             }.bind(this),
             businessHours: {
