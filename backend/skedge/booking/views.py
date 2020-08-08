@@ -61,7 +61,7 @@ class Login(ObtainAuthToken):
         user = authenticate(**credentials)
 
         if user is None:
-            raise exceptions.AuthenticationFailed(_('Invalid username/password.'))
+            raise exceptions.AuthenticationFailed('Invalid username/password.')
 
         print(user.pk)
 
@@ -72,7 +72,7 @@ class Login(ObtainAuthToken):
             business = Business.objects.filter(user=user)
             account_type = 'business'
             if business is None:
-                raise exceptions.AuthenticationFailed(_('Somehow this User has no attached Customer or Business account'))
+                raise exceptions.AuthenticationFailed('Somehow this User has no attached Customer or Business account')
             else:
                 business = business[0]
         else:
