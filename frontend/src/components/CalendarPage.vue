@@ -29,101 +29,44 @@
             <b-card-body>
             <h4> Events </h4>
              <b-list-group>
-                <b-list-group-item button class="flex-column align-items-start" v-on:click="showEdit">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">List group item heading</h5>
-                    <small>3 days ago</small>
+
+                <b-list-group-item 
+                 v-for="(item, index) in appointmentsByDay"
+                 :key="index"
+                 >
+                 <b-row>
+                    <b-col>
+                    <h5 >{{item.service.name}}</h5>
+                    </b-col>
+                 
+                      <b-col style="text-align: right">
+                      <b-badge v-if="!item.cancelled && !item.cancelled_by_business && !item.cancelled_by_customer" variant="primary">{{item.service.duration}} mins</b-badge>
+                      <b-badge v-if="item.cancelled || item.cancelled_by_business" variant="warning">Cancelled</b-badge>
+                      <b-badge v-if="item.cancelled_by_customer" variant="danger">Customer cancelled</b-badge>
+                    </b-col>
+                  </b-row>
+                 
+                  <b-row>
+                    <b-col sm> <b>{{item.service.description}}</b></b-col>
+                    <b-col sm>Price: <b>$ {{item.service.price}} </b></b-col>
+                    <b-col sm>Customer: <b>{{item.customer.user.username}}</b></b-col>
+                  </b-row>
+              
+                  <small>{{item.start_time}} - {{item.end_time}}</small>
+                  
+                  <div style="margin-top: 8px;">
+                    <b-button variant="outline-danger"
+                    v-if="!item.cancelled && !item.cancelled_by_business && !item.cancelled_by_customer"
+                    v-on:click="onCancelSelectedAppointment(item)" >
+                    Cancel appointment
+                    </b-button>
                   </div>
 
-                  <p class="mb-1">
-                    Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.
-                  </p>
-
-                  <small>Donec id elit non mi porta.</small>
                 </b-list-group-item>
               </b-list-group>
 
-             
             </b-card-body>
             </b-card>
-    </modal>
-</template>
-
-
-<!-- EDIT MODAL -->
-<template>
-    <modal name="eventEdit"
-          :width="800"
-          :height="800"
-          :adaptive="true" >
-           <b-card no-body style="border: none" :title="selectedDateFormatted">
-            <b-card-header>
-            <b-row>
-                    <b-col >
-                    <h3>Edit Event </h3>
-                    </b-col>
-                 
-                  <b-col style="text-align: right">
-                  <b-button variant="danger" style="margin-right: 80px" v-on:click="hideAll">
-                      Delete
-                  </b-button>
-                  <b-button variant="outline-secondary" v-on:click="hideAll">
-                      Cancel
-                  </b-button>
-                  <b-button variant="success">
-                    Save
-                  </b-button>
-                </b-col>
-              </b-row>
-            </b-card-header>
-            <b-card-body>
-           
-            <b-form>
-              <b-form-group
-                id="input-group-1"
-                label="Title: "
-                label-for="input-1">
-                <b-form-input
-                  id="input-1"
-                  type="email"
-                  required
-                  placeholder="Title"></b-form-input>
-              </b-form-group>
-
-              <b-form-group
-                id="input-group-1"
-                label="Description: "
-                label-for="input-1">
-                <b-form-textarea
-                  id="input-1"
-                  type="email"
-                  required
-                  placeholder="Description of listing"></b-form-textarea>
-              </b-form-group>
-
-              <b-form-group
-                id="input-group-1"
-                label="Services: "
-                label-for="input-1">
-                <b-form-input
-                  id="input-1"
-                  type="email"
-                  required></b-form-input>
-              </b-form-group>
-
-              <b-form-group
-                id="input-group-1"
-                label="Members: "
-                label-for="input-1">
-                <b-form-input
-                  id="input-1"
-                  type="email"
-                  required></b-form-input>
-              </b-form-group>
-
-           </b-form>
-        </b-card-body>
-      </b-card>
     </modal>
 </template>
 
@@ -217,17 +160,12 @@
            this.hideAll();
            return this.$modal.show('eventDisplay');
         },
-        showEdit: function() {
-            this.hideAll();
-            return this.$modal.show('eventEdit');
-        },
         showCreate: function() {
             this.hideAll();
             return this.$modal.show('eventCreate');
         },
         hideAll: function() {
             this.$modal.hide('eventDisplay');
-            this.$modal.hide('eventEdit');
             this.$modal.hide('eventCreate');
         },
         getAppointments: async function() {
@@ -242,10 +180,22 @@
           try {
               const res = await getAppointmentsByDay(dateObj);
               this.appointmentsByDay = res;
+              console.log(this.appointmentsByDay)
+              
             } catch (error) {
               console.log(error);
             }
        },
+       onCancelSelectedAppointment: function(item) {
+         console.log(item)
+         this.selectedAppointment = item;
+         var result = confirm(`Are you sure you want to cancel\nthe ${item.service.name} appointment \nfrom ${item.start_time}-${item.end_time}?`);
+          if (result) {
+              // cancel logic
+              // reload data
+              this.hideAll();
+          }
+       }
         
     },
     mounted() {
@@ -255,6 +205,7 @@
       return {
           selectedDateObj: null,
           selectedDateFormatted: null,
+          selectedAppointment: {},
           appointmentsByDay: [],
           appointments: [],
           config: {
@@ -264,8 +215,12 @@
             eventRender: function(event, element) {
               console.log(event)
             },
-            eventClick: function(info) {
-              console.log(info)
+            eventClick: function(date) {
+              console.log(moment(date.start).toObject())
+              this.selectedDateObj = moment(date.start).toObject();
+              this.selectedDateFormatted = moment(date.start).format('ddd MMM DD, YYYY');
+              this.getAppointmentsByDay(this.selectedDateObj);
+              this.showDisplay();
             }.bind(this),
             select: function(date) {
               this.selectedDateObj = moment(date).toObject();
@@ -274,7 +229,6 @@
               this.showDisplay();
             }.bind(this),
             businessHours: {
-                // days of week. an array of zero-based day of week integers (0=Sunday)
                 daysOfWeek: [ 1, 2, 3, 4, 5 ], // Monday - Thursday
                 startTime: '9:00', // a start time (9am in this example)
                 endTime: '17:00', // an end time (5pm in this example)
