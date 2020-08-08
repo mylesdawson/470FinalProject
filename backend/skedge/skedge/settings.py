@@ -25,7 +25,8 @@ SECRET_KEY = 'r9qa3v8@^$f)&&%o0ee^im4i&7n!my*9l5_#k(q8*i$8at+94q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['app', 'localhost']
+ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['app', 'localhost']
 
 
 # Application definition
@@ -89,7 +90,7 @@ WSGI_APPLICATION = 'skedge.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'project',
         'USER': 'project',
         'PASSWORD': 'secret',
