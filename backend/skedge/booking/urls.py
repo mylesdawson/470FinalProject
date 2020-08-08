@@ -1,9 +1,17 @@
-from django.urls import path
-
+from django.urls import include, path
+from rest_framework import routers
 from . import views
+
+router = routers.DefaultRouter()
+router.register(r'customers', views.CustomerViewSet, 'customers')
+router.register(r'businesses', views.BusinessViewSet, 'businesses')
+router.register(r'services', views.ServiceViewSet, 'services')
+router.register(r'appointments', views.AppointmentViewSet, 'appointments')
 
 # app_name = 'booking'
 urlpatterns = [
+    path('', include(router.urls)),
+
     path('favorites/<int:customer_id>', views.favorite_businesses),
 
     path('customer/<int:customer_id>/appointments/', views.customer_appointments),
