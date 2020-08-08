@@ -38,6 +38,12 @@ async function request(url, body = {}, method = 'GET') {
 
 }
 
+function tokenHeader() {
+  const token = localStorage.getItem("token")
+
+  const header = ['Authorization', `Token ${token}`]
+  return header
+}
 
 /* Requests to API endpoints go here */
 
@@ -50,7 +56,35 @@ export async function login(username = '', password = '') {
   }
 
   const res = await request('/login/', body, 'POST')
+  return res
+}
+
+export async function logout() {
+  const token = tokenHeader()
+  const headers = new Headers()
+  headers.append(token[0], token[1])
+
+  const options = {
+    method: 'POST',
+    headers
+  }
+  console.log('logging out')
+
+  return fetch(`${host}/logout/`, options)
+    .then(resp => {
+      if(resp.status === 200) {
+        localStorage.removeItem("token")
+      }
+      return resp.status
+    })
+    .catch(err => {
+      console.log(err)
+    })
+
+
+  const res = await request('/logout/', {}, 'POST', headers)
   console.log(res)
+  return res
 }
 
 export async function createCustomerAccount(username, password, accountInfo) {
