@@ -301,7 +301,7 @@ def customer_appointments(request, customer_id):
 
 def business_appointments_by_day(request, business_id, year, month, day):
     if request.method == 'GET':
-        appointments = Appointment.objects.select_related('customer').filter(business=business_id, date__year=year, date__month=month, date__day=day)
+        appointments = Appointment.objects.select_related('customer', 'service', 'customer__user').filter(business=business_id, date__year=year, date__month=month, date__day=day)
         serializer = BusinessAppointmentSerializer(appointments, many=True)
         return JsonResponse(serializer.data, safe=False)
 
@@ -309,7 +309,7 @@ def business_appointments_by_day(request, business_id, year, month, day):
 
 def business_appointments_by_week(request, business_id, year, week):
     if request.method == 'GET':
-        appointments = Appointment.objects.select_related('customer').filter(business=business_id, date__year=year, date__week=week)
+        appointments = Appointment.objects.select_related('customer', 'service', 'customer__user').filter(business=business_id, date__year=year, date__week=week)
         serializer = BusinessAppointmentSerializer(appointments, many=True)
         return JsonResponse(serializer.data, safe=False)
 
@@ -340,7 +340,7 @@ def business_appointments_by_month(request, business_id, year, month):
             day_of_week = datetime.datetime(year, month, day).weekday()
 
             if days_open[day_of_week] == True:
-                day_appointments = list(appointments.filter(date__day=day).values('start_time', 'end_time').order_by('start_time'))
+                # day_appointments = list(appointments.filter(date__day=day).values('start_time', 'end_time').order_by('start_time'))
                 day_appointments.insert(0, {'end_time': opening_times[day_of_week]})
                 day_appointments.append({'start_time': closing_times[day_of_week]})
                 print(day_appointments)
@@ -406,7 +406,7 @@ def services_available_times(request, business_id, year, month, day):
             return JsonResponse([], safe=False)
 
         services = Service.objects.filter(business=business_id)
-        appointments = list(Appointment.objects.filter(business=business_id, date__year=year, date__month=month, date__day=day).values('start_time', 'end_time').order_by('start_time'))
+        # appointments = list(Appointment.objects.filter(business=business_id, date__year=year, date__month=month, date__day=day).values('start_time', 'end_time').order_by('start_time'))
         appointments.insert(0, {'end_time': opening_times[day_of_week]})
         appointments.append({'start_time': closing_times[day_of_week]})
 

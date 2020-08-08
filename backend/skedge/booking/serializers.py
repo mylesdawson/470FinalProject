@@ -4,8 +4,9 @@ from rest_framework import serializers
 from .models import *
 
 class UserSerializer(serializers.ModelSerializer):
-    model = User
-    fields = ['username', 'first_name', 'last_name']
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name']
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -111,7 +112,7 @@ class CustomerAppointmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Appointment
-        fields = ['start_time', 'end_time', 'duration', 'cancelled', 'cancelled_by_customer', 'cancelled_by_business', 'business', 'service']
+        fields = ['start_time', 'end_time', 'cancelled', 'cancelled_by_customer', 'cancelled_by_business', 'business', 'service']
 
 class BusinessAppointmentSerializer(serializers.ModelSerializer):
     customer = CustomerBriefSerializer(many=False, read_only=True)
@@ -119,4 +120,4 @@ class BusinessAppointmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Appointment
-        fields = ['start_time', 'end_time', 'duration', 'cancelled', 'cancelled_by_customer', 'cancelled_by_business', 'customer', 'service']
+        fields = ['start_time', 'end_time', 'cancelled', 'cancelled_by_customer', 'cancelled_by_business', 'customer', 'service']
