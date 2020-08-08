@@ -36,7 +36,6 @@ export default {
         const res = await login(this.username, this.password)
         // console.log(res)
         if (res.token) {
-          localStorage.setItem('token', res.token)
           this.$router.push('/home')
           // console.log(res.token)
         }

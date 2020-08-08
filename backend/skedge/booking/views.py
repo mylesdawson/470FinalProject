@@ -1,8 +1,9 @@
 from django.http import HttpResponse, JsonResponse
-from django.contrib.auth import logout, authenticate
+from django.contrib.auth import logout, authenticate, get_user_model
 from django.contrib.auth.models import User
 from django.db.models import Min
-from rest_framework import viewsets, status, generics
+from rest_framework import viewsets, status, generics, exceptions
+from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.parsers import JSONParser
@@ -37,6 +38,54 @@ class Logout(APIView):
             return Response(status=status.HTTP_200_OK)
         except e:
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class Login(ObtainAuthToken):
+    permission_classes = []
+
+    def post(self, request):
+
+        username = request.data.get('username', None)
+        password = request.data.get('password', None)
+        print(username)
+        print(password)
+
+        credentials = {
+            get_user_model().USERNAME_FIELD: username,
+            'password': password
+        }
+
+        user = authenticate(**credentials)
+
+        if user is None:
+            raise exceptions.AuthenticationFailed(_('Invalid username/password.'))
+
+        print(user.pk)
+
+        account_type = 'customer'
+        customer = Customer.objects.filter(user=user)
+        business = None
+        if customer is None:
+            business = Business.objects.filter(user=user)
+            account_type = 'business'
+            if business is None:
+                raise exceptions.AuthenticationFailed(_('Somehow this User has no attached Customer or Business account'))
+            else:
+                business = business[0]
+        else:
+            customer = customer[0]
+
+        print(customer)
+        print(business)
+
+        token, created = Token.objects.get_or_create(user=user)
+        print(token)
+
+        return Response({
+            'token': token.key,
+            'user_id': user.pk,
+            'account_type': account_type,
+            'account_id': customer.pk if customer else business.pk
+        })
 
 
 class CustomerViewSet(viewsets.ModelViewSet):

@@ -48,15 +48,37 @@ function tokenHeader() {
 /* Requests to API endpoints go here */
 
 export async function login(username = '', password = '') {
-  console.log(`username: ${username}, password: ${password}`)
-
   const body = {
     username,
     password
   }
 
-  const res = await request('/login/', body, 'POST')
-  return res
+  const headers = new Headers()
+  headers.append("Content-Type", "application/json")
+
+  const options = {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body)
+  }
+
+  return fetch(`${host}/login/`, options)
+    .then(resp => {
+      // console.log(resp)
+      return resp.json()
+    })
+    .then(res => {
+      console.log(res)
+      localStorage.setItem('token', res.token)
+      localStorage.setItem('account_type', res.account_type)
+      localStorage.setItem('account_id', res.account_id)
+      localStorage.setItem('user_id', res.user_id)
+      return res
+    })
+    .catch(err => {
+      console.log(err)
+    })
+
 }
 
 export async function logout() {
