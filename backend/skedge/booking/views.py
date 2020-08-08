@@ -281,7 +281,7 @@ def business_services(request, business_id):
         serializer = ServiceSerializer(services, many=True)
         return JsonResponse(serializer.data, safe=False)
 
-    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
 # Return all of a customer's favorited businesses
 def favorite_businesses(request, customer_id):
@@ -290,7 +290,7 @@ def favorite_businesses(request, customer_id):
         serializer = FavoriteBusinessSerializer(businesses, many=True)
         return JsonResponse(serializer.data, safe=False)
 
-    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
 def customer_appointments(request, customer_id):
     if request.method == 'GET':
@@ -298,7 +298,7 @@ def customer_appointments(request, customer_id):
         serializer = CustomerAppointmentSerializer(appointments, many=True)
         return JsonResponse(serializer.data, safe=False)
 
-    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
 
 def business_appointments_by_day(request, business_id, year, month, day):
@@ -307,7 +307,7 @@ def business_appointments_by_day(request, business_id, year, month, day):
         serializer = BusinessAppointmentSerializer(appointments, many=True)
         return JsonResponse(serializer.data, safe=False)
 
-    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
 def business_appointments_by_week(request, business_id, year, week):
     if request.method == 'GET':
@@ -315,7 +315,7 @@ def business_appointments_by_week(request, business_id, year, week):
         serializer = BusinessAppointmentSerializer(appointments, many=True)
         return JsonResponse(serializer.data, safe=False)
 
-    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
 
 def business_appointments_by_month(request, business_id, year, month):
@@ -367,7 +367,7 @@ def business_appointments_by_month(request, business_id, year, month):
 
         return JsonResponse(data, safe=False)
 
-    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
 def businesses_by_category(request, category):
     if request.method == 'GET' and category in dict(CATEGORIES):
@@ -379,7 +379,7 @@ def businesses_by_category(request, category):
         serializer = BusinessSerializer(businesses, many=True)
         return JsonResponse(serializer.data, safe=False)
 
-    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
 def businesses_search(request, category, search):
     if request.method == 'GET' and category in dict(CATEGORIES):
@@ -391,7 +391,7 @@ def businesses_search(request, category, search):
         serializer = BusinessSerializer(businesses, many=True)
         return JsonResponse(serializer.data, safe=False)
 
-    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
 
 def services_available_times(request, business_id, year, month, day):
@@ -437,15 +437,18 @@ def services_available_times(request, business_id, year, month, day):
 
 
 
-    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
-@csrf_exempt
+@csrf_exempt # Remove when authentication is working
 def business_cancel_appointment(request, business_id, appointment_id):
     if request.method == 'POST':
         try:
             appointment = Appointment.objects.get(pk=appointment_id, business=business_id)
-        except Business.DoesNotExist:
+        except Appointment.DoesNotExist:
             return JsonResponse({'status': 'details'}, status=status.HTTP_404_NOT_FOUND)
+
+        if appointment.cancelled:
+            return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
         appointment.cancelled = True
         appointment.cancelled_by_business = True
@@ -456,8 +459,26 @@ def business_cancel_appointment(request, business_id, appointment_id):
 
         return JsonResponse(serializer.data, safe=False)
 
-    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
-@csrf_exempt
+@csrf_exempt # Remove when authentication is working
 def customer_cancel_appointment(request, customer_id, appointment_id):
-    return JsonResponse(status=400, data={'status':'false', 'message':'Bad request'})
+    if request.method == 'POST':
+        try:
+            appointment = Appointment.objects.get(pk=appointment_id, customer=customer_id)
+        except Appointment.DoesNotExist:
+            return JsonResponse({'status': 'details'}, status=status.HTTP_404_NOT_FOUND)
+
+        if appointment.cancelled:
+            return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+
+        appointment.cancelled = True
+        appointment.cancelled_by_customer = True
+        appointment.cancelled_by_business = False
+        appointment.save()
+
+        serializer = CustomerAppointmentSerializer(appointment, many=False)
+
+        return JsonResponse(serializer.data, safe=False)
+
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
