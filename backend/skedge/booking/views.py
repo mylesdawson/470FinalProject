@@ -13,9 +13,11 @@ from rest_framework.views import APIView
 from .models import *
 from .serializers import *
 import datetime
+import pytz
 from calendar import monthrange
-
 from django.views.decorators.csrf import csrf_exempt
+
+timezone = pytz.timezone('America/Vancouver')
 
 # Helper function to get open status, opening hour, closing hour
 # each day of the week for a business
@@ -336,10 +338,10 @@ def services_available_days(request, business_id, year, month):
 
         appointments = Appointment.objects.filter(business=business_id, date__year=year, date__month=month, cancelled=False)
         data = {}
-        current_date = datetime.datetime.today()
+        current_date = datetime.datetime.now(tz=timezone).date()
 
         for day in range(1, days_in_month+1):
-            date = datetime.datetime(year, month, day)
+            date = datetime.date(year, month, day)
             day_of_week = date.weekday()
             days_between = (date - current_date).days
 
@@ -351,7 +353,7 @@ def services_available_days(request, business_id, year, month):
                 day_appointments = list(appointments.filter(date__day=day).values('start_time', 'end_time').order_by('start_time'))
                 day_appointments.insert(0, {'end_time': opening_times[day_of_week]})
                 day_appointments.append({'start_time': closing_times[day_of_week]})
-                print(day_appointments)
+
                 fully_booked = True
                 for i in range(1, len(day_appointments)):
                     date = datetime.date(1, 1, 1)
@@ -407,18 +409,32 @@ def services_available_times(request, business_id, year, month, day):
         except Business.DoesNotExist:
             return JsonResponse({'status': 'details'}, status=status.HTTP_404_NOT_FOUND)
 
-        day_of_week = datetime.datetime(year, month, day).weekday()
+        date = datetime.date(year, month, day)
+        day_of_week = date.weekday()
         days_open, opening_times, closing_times = get_business_hours(business)
+        current_date = datetime.datetime.now(tz=timezone).date()
+        days_between = (date - current_date).days
+        earliest_bookable_time = datetime.datetime.combine(datetime.date(1, 1, 1), datetime.datetime.now(tz=timezone).time())
+        earliest_bookable_time += datetime.timedelta(hours=business.hours_notice_in_advance)
 
-        if days_open[day_of_week] == False:
-            return JsonResponse([], safe=False)
+        if days_between < 0:
+            availability = 'past'
+        elif days_between > business.days_bookable_in_advance:
+            availability = 'unavailable'
+        elif days_open[day_of_week] == False:
+            availability = 'closed'
+        else:
+            availability = 'open'
+
+        if availability != 'open':
+            return JsonResponse({'availability': availability, 'services': []}, safe=False)
 
         services = Service.objects.filter(business=business_id)
         appointments = list(Appointment.objects.filter(business=business_id, date__year=year, date__month=month, date__day=day).values('start_time', 'end_time').order_by('start_time'))
         appointments.insert(0, {'end_time': opening_times[day_of_week]})
         appointments.append({'start_time': closing_times[day_of_week]})
 
-        data = []
+        data = {'availability': 'open', 'services': []}
 
         for service in services:
             serializer = ServiceSerializer(service, many=False)
@@ -432,12 +448,13 @@ def services_available_times(request, business_id, year, month, day):
                 interval = second_time - first_time
 
                 while (interval.total_seconds() // 60) >= service.duration:
-                    times.append('{:d}:{:02d}'.format(first_time.hour, first_time.minute))
+                    if days_between > 0 or first_time >= earliest_bookable_time:
+                        times.append('{:d}:{:02d}'.format(first_time.hour, first_time.minute))
                     first_time = first_time + datetime.timedelta(seconds=60*MIN_DURATION)
                     interval = second_time - first_time
 
             service_data['times'] = times
-            data.append(service_data)
+            data['services'].append(service_data)
 
         return JsonResponse(data, safe=False)
 

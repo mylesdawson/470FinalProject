@@ -84,6 +84,7 @@ class Business(models.Model):
     sunday_closing_time = models.TimeField(default='17:00')
 
     days_bookable_in_advance = models.PositiveIntegerField(default=14)
+    hours_notice_in_advance = models.PositiveIntegerField(default=1)
 
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
