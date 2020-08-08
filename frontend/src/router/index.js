@@ -53,6 +53,11 @@ export default new Router({
       alias: '/'
     },
     {
+      path: '/menu',
+      name: 'HomePage',
+      component: HomePage,
+    },
+    {
       path: '/search-listings',
       name: 'SearchListingsPage',
       component: SearchListingsPage,
