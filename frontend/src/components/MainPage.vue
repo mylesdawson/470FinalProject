@@ -26,9 +26,9 @@
     </h2>
     <br>
     <b-row align-h="center">
-      <b-button class="mr-5" size="lg" variant="primary">Fitness</b-button>
-      <b-button class="mr-5" size="lg" variant="success">Wellness</b-button>
-      <b-button class="mr-5" size="lg" variant="warning">Beauty</b-button>
+      <b-button class="mr-5" size="lg" variant="primary" href="/?#/search">Fitness</b-button>
+      <b-button class="mr-5" size="lg" variant="success" href="/?#/search">Wellness</b-button>
+      <b-button class="mr-5" size="lg" variant="warning" href="/?#/search">Beauty</b-button>
     </b-row>
 
   </b-container>
