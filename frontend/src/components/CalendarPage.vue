@@ -72,7 +72,7 @@
 </template>
 
 <script>
-  import {getAppointments, getAppointmentsByDay} from '../api/events.js'
+  import {getAppointments, getAppointmentsByDay, onCancelAppointment} from '../api/events.js'
   import moment from 'moment'
  
   export default {
@@ -103,16 +103,23 @@
                 console.log(error);
               }
         },
+        onCancelAppointment: async function(app_id) {
+            try {
+                const res = await onCancelAppointment(app_id);
+                this.getAppointmentsByDay(this.selectedDateObj);
+              } catch (error) {
+                console.log(error);
+              }
+        },
         onCancelSelectedAppointment: function(item) {
-          console.log(item)
+          console.log("item", item)
           this.selectedAppointment = item;
           var result = confirm(`Are you sure you want to cancel\nthe ${item.service.name} appointment \nfrom ${item.start_time}-${item.end_time}?`);
             if (result) {
-                // cancel logic
-                // reload data
-                this.hideAll();
+                this.onCancelAppointment(item.id); 
             }
-        }
+        },
+        
           
     },
     mounted() {

@@ -13,7 +13,7 @@
       </div>
     </b-card-text>
     <template v-slot:footer>
-      <small class="text-muted">Business type might go here</small>
+      <small class="text-muted">{{ business.address }}, {{ business.city }}, {{ business.province }}</small><br>
     </template>
   </b-card>
 </template>
