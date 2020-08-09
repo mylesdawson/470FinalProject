@@ -351,6 +351,71 @@ def edit_main_business_info(request, business_id):
 
     return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
+def edit_location_business_info(request, business_id):
+    if request.method == 'POST':
+        try:
+            business = Business.objects.get(pk=business_id)
+        except Business.DoesNotException:
+            return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+
+        try:
+            business.address = request.POST['address']
+            business.city = request.POST['city']
+            business.province = request.POST['province']
+            business.postal_code = request.POST['postal_code']
+
+            business.full_clean()
+            business.save()
+
+            serializer = BusinessSerializer(business, many=False)
+            return JsonResponse(serializer.data, safe=False)
+        except Exception:
+            return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+
+def edit_hours_business_info(request, business_id):
+    if request.method == 'POST':
+        try:
+            business = Business.objects.get(pk=business_id)
+        except Business.DoesNotException:
+            return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+
+        try:
+            business.monday_open = request.POST['monday_open']
+            business.tuesday_open = request.POST['tuesday_open']
+            business.wednesday_open = request.POST['wednesday_open']
+            business.thursday_open = request.POST['thursday_open']
+            business.friday_open = request.POST['friday_open']
+            business.saturday_open = request.POST['saturday_open']
+            business.sunday_open = request.POST['sunday_open']
+
+            business.monday_opening_time = request.POST['monday_opening_time']
+            business.tuesday_opening_time = request.POST['tuesday_opening_time']
+            business.wednesday_opening_time = request.POST['wednesday_opening_time']
+            business.thursday_opening_time = request.POST['thursday_opening_time']
+            business.friday_opening_time = request.POST['friday_opening_time']
+            business.saturday_opening_time = request.POST['saturday_opening_time']
+            business.sunday_opening_time = request.POST['sunday_opening_time']
+
+            business.monday_closing_time = request.POST['monday_closing_time']
+            business.tuesday_closing_time = request.POST['tuesday_closing_time']
+            business.wednesday_closing_time = request.POST['wednesday_closing_time']
+            business.thursday_closing_time = request.POST['thursday_closing_time']
+            business.friday_closing_time = request.POST['friday_closing_time']
+            business.saturday_closing_time = request.POST['saturday_closing_time']
+            business.sunday_closing_time = request.POST['sunday_closing_time']
+
+            business.full_clean()
+            business.save()
+
+            serializer = BusinessSerializer(business, many=False)
+            return JsonResponse(serializer.data, safe=False)
+        except Exception:
+            return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+
 # Return all services of a specific business
 def business_services(request, business_id):
     print(request.user)
