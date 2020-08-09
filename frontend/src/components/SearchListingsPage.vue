@@ -35,17 +35,9 @@
     <hr class="my-3">
 
     <b-row>
-      <b-col cols="4" style="text-align: left">
-        <h1>Listings</h1>
-          <b-button-group vertical size="lg">
-            <b-button>Listing 1</b-button>
-            <b-button>Listing 2</b-button>
-            <b-button>Listing 3</b-button>
-            <b-button>Listing 4</b-button>
-          </b-button-group>
-        </b-col>
-      <b-col col style="text-align: left">
-        <h1><strong>Listing 1</strong>: Services</h1>
+      <b-col cols="10" style="text-align: left; ">
+        <h1 style="margin-left: 20px;"><strong>Services:</strong></h1>
+
         <b-list-group>
           <b-list-group-item>
             <b-row align-v="center">
