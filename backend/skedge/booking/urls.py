@@ -13,7 +13,11 @@ urlpatterns = [
     path('', include(router.urls)),
 
     # Requires customer authentication
-    path('favorites/<int:customer_id>', views.favorite_businesses),
+    path('favorites/<int:customer_id>/', views.favorite_businesses),
+    # Requires customer authentication
+    path('favorites/<int:customer_id>/add/<int:business_id>/', views.add_favorite_business),
+    # Requires customer authentication
+    path('favorites/<int:customer_id>/remove/<int:business_id>/', views.remove_favorite_business),
 
     # Requires customer authentication
     path('customer/<int:customer_id>/appointments/', views.customer_appointments),
@@ -28,23 +32,10 @@ urlpatterns = [
     path('business/<int:business_id>/appointments/day/<int:year>/<int:month>/<int:day>/', views.business_appointments_by_day),
     path('business/<int:business_id>/appointments/week/<int:year>/<int:week>/', views.business_appointments_by_week),
 
-
     # Requires business authentication
     path('business/<int:business_id>/appointments/<int:appointment_id>/cancel/', views.business_cancel_appointment),
 
     path('business/search/<str:category>/', views.businesses_by_category),
     path('business/search/<str:category>/<str:search>/', views.businesses_search),
-
-
-
-    # path('', views.index, name='index'),
-    # path('login/', views.login_user, name='login'),
-    # path('logout/', views.logout_user, name='login'),
-    # path('customer/new', views.new_customer, name='new'),
-    # path('business/new', views.new_business, name='new'),
-    # path('customer/edit', views.edit_customer, name='new'),
-    # path('business/edit', views.edit_business, name='new'),
-    # path('appointment/new', views.new_appointment)
-    # path('appointment/edit', views.edit_appointment)
 
 ]

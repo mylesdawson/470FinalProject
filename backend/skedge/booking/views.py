@@ -19,6 +19,10 @@ from django.views.decorators.csrf import csrf_exempt
 
 timezone = pytz.timezone('America/Vancouver')
 
+###############################################################
+# Helper functions
+###############################################################
+
 # Helper function to get open status, opening hour, closing hour
 # each day of the week for a business
 def get_business_hours(business):
@@ -29,6 +33,17 @@ def get_business_hours(business):
     closing_times = [business.monday_closing_time, business.tuesday_closing_time, business.wednesday_closing_time, business.thursday_closing_time, business.friday_closing_time, business.saturday_closing_time, business.sunday_closing_time]
 
     return days_open, opening_times, closing_times
+
+# Parse phone number into standard format
+def parse_phone_number(phone_number):
+    if phone_number != '':
+        phone_number = phone_number.replace('-', '').replace('(', '').replace(')', '')
+        phone_number = '{}-{}-{}'.format(phone_number[0:3], phone_number[3:6], phone_number[6:10])
+    return phone_number
+
+###############################################################
+# Authentication
+###############################################################
 
 class Logout(APIView):
     permission_classes = [IsAuthenticated]
@@ -108,12 +123,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
 
-# Parse phone number into standard format
-def parse_phone_number(phone_number):
-    if phone_number != '':
-        phone_number = phone_number.replace('-', '').replace('(', '').replace(')', '')
-        phone_number = '{}-{}-{}'.format(phone_number[0:3], phone_number[3:6], phone_number[6:10])
-    return phone_number
+
 
 def new_customer(request):
     username = request.POST['username']
@@ -285,6 +295,10 @@ def business_services(request, business_id):
 
     return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
+###############################################################
+# Favorites
+###############################################################
+
 # Return all of a customer's favorited businesses
 def favorite_businesses(request, customer_id):
     if request.method == 'GET':
@@ -294,6 +308,21 @@ def favorite_businesses(request, customer_id):
 
     return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
+# Add a business to a customer's favorited businesses
+def add_favorite_business(request, customer_id, business_id):
+
+    return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+
+# Remove a business from a customer's favorited businesses
+def remove_favorite_business(request, customer_id, business_id):
+
+    return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+
+###############################################################
+# Favorites
+###############################################################
+
+# Returns all of a customer's appointments
 def customer_appointments(request, customer_id):
     if request.method == 'GET':
         appointments = Appointment.objects.select_related('business', 'service').filter(customer=customer_id)
@@ -302,7 +331,7 @@ def customer_appointments(request, customer_id):
 
     return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
-
+# Returns all of a business's appointments for a specific day
 def business_appointments_by_day(request, business_id, year, month, day):
     if request.method == 'GET':
         appointments = Appointment.objects.select_related('customer', 'service', 'customer__user').filter(business=business_id, date__year=year, date__month=month, date__day=day)
@@ -311,6 +340,7 @@ def business_appointments_by_day(request, business_id, year, month, day):
 
     return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
+# Returns all of a business's appointments for a specific month
 def business_appointments_by_week(request, business_id, year, week):
     if request.method == 'GET':
         appointments = Appointment.objects.select_related('customer', 'service', 'customer__user').filter(business=business_id, date__year=year, date__week=week)
@@ -319,95 +349,17 @@ def business_appointments_by_week(request, business_id, year, week):
 
     return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
+###############################################################
+# Services
+###############################################################
 
-def services_available_days(request, business_id, year, month):
-    if request.method == 'GET':
-        try:
-            business = Business.objects.get(pk=business_id)
-        except Business.DoesNotExist:
-            return JsonResponse({'status': 'details'}, status=status.HTTP_404_NOT_FOUND)
-
-        days_open, opening_times, closing_times = get_business_hours(business)
-
-        try:
-            min_duration = Service.objects.filter(business=business_id).aggregate(Min('duration'))['duration__min']
-        except AttributeError:
-            return JsonResponse({'status': 'details'}, status=status.HTTP_404_NOT_FOUND)
-
-        _, days_in_month = monthrange(year, month)
-
-        appointments = Appointment.objects.filter(business=business_id, date__year=year, date__month=month, cancelled=False)
-        data = {}
-        current_date = datetime.datetime.now(tz=timezone).date()
-
-        for day in range(1, days_in_month+1):
-            date = datetime.date(year, month, day)
-            day_of_week = date.weekday()
-            days_between = (date - current_date).days
-
-            if days_between < 0:
-                availability = 'past'
-            elif days_between > business.days_bookable_in_advance:
-                availability = 'unavailable'
-            elif days_open[day_of_week] == True:
-                day_appointments = list(appointments.filter(date__day=day).values('start_time', 'end_time').order_by('start_time'))
-                day_appointments.insert(0, {'end_time': opening_times[day_of_week]})
-                day_appointments.append({'start_time': closing_times[day_of_week]})
-
-                fully_booked = True
-                for i in range(1, len(day_appointments)):
-                    date = datetime.date(1, 1, 1)
-                    first_time = datetime.datetime.combine(date, day_appointments[i-1]['end_time'])
-                    second_time = datetime.datetime.combine(date, day_appointments[i]['start_time'])
-                    interval = second_time - first_time
-
-                    if (interval.total_seconds() // 60) >= min_duration:
-                        fully_booked = False
-                        break
-
-                if fully_booked == True:
-                    availability = 'booked'
-                else:
-                    availability = 'open'
-            else:
-                availability = 'closed'
-            data[day] = availability
-
-        return JsonResponse(data, safe=False)
-
-    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
-
-def businesses_by_category(request, category):
-    if request.method == 'GET' and category in dict(CATEGORIES):
-        if category == ALL:
-            businesses = Business.objects.all()
-        else:
-            businesses = Business.objects.filter(category=category)
-
-        serializer = BusinessSerializer(businesses, many=True)
-        return JsonResponse(serializer.data, safe=False)
-
-    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
-
-def businesses_search(request, category, search):
-    if request.method == 'GET' and category in dict(CATEGORIES):
-        if category == ALL:
-            businesses = Business.objects.filter(business_name__startswith=search)
-        else:
-            businesses = Business.objects.filter(category=category, business_name__startswith=search)
-
-        serializer = BusinessSerializer(businesses, many=True)
-        return JsonResponse(serializer.data, safe=False)
-
-    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
-
-
+# Returns the available appointment time slots for each service of a business for a specific day
 def services_available_times(request, business_id, year, month, day):
     if request.method == 'GET':
         try:
             business = Business.objects.get(pk=business_id)
         except Business.DoesNotExist:
-            return JsonResponse({'status': 'details'}, status=status.HTTP_404_NOT_FOUND)
+            return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
 
         date = datetime.date(year, month, day)
         day_of_week = date.weekday()
@@ -462,13 +414,102 @@ def services_available_times(request, business_id, year, month, day):
 
     return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
+def services_available_days(request, business_id, year, month):
+    if request.method == 'GET':
+        try:
+            business = Business.objects.get(pk=business_id)
+        except Business.DoesNotExist:
+            return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+
+        days_open, opening_times, closing_times = get_business_hours(business)
+
+        try:
+            min_duration = Service.objects.filter(business=business_id).aggregate(Min('duration'))['duration__min']
+        except AttributeError:
+            return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+
+        _, days_in_month = monthrange(year, month)
+
+        appointments = Appointment.objects.filter(business=business_id, date__year=year, date__month=month, cancelled=False)
+        data = {}
+        current_date = datetime.datetime.now(tz=timezone).date()
+
+        for day in range(1, days_in_month+1):
+            date = datetime.date(year, month, day)
+            day_of_week = date.weekday()
+            days_between = (date - current_date).days
+
+            if days_between < 0:
+                availability = 'past'
+            elif days_between > business.days_bookable_in_advance:
+                availability = 'unavailable'
+            elif days_open[day_of_week] == True:
+                day_appointments = list(appointments.filter(date__day=day).values('start_time', 'end_time').order_by('start_time'))
+                day_appointments.insert(0, {'end_time': opening_times[day_of_week]})
+                day_appointments.append({'start_time': closing_times[day_of_week]})
+
+                fully_booked = True
+                for i in range(1, len(day_appointments)):
+                    date = datetime.date(1, 1, 1)
+                    first_time = datetime.datetime.combine(date, day_appointments[i-1]['end_time'])
+                    second_time = datetime.datetime.combine(date, day_appointments[i]['start_time'])
+                    interval = second_time - first_time
+
+                    if (interval.total_seconds() // 60) >= min_duration:
+                        fully_booked = False
+                        break
+
+                if fully_booked == True:
+                    availability = 'booked'
+                else:
+                    availability = 'open'
+            else:
+                availability = 'closed'
+            data[day] = availability
+
+        return JsonResponse(data, safe=False)
+
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+
+###############################################################
+# Search
+###############################################################
+
+def businesses_by_category(request, category):
+    if request.method == 'GET' and category in dict(CATEGORIES):
+        if category == ALL:
+            businesses = Business.objects.all()
+        else:
+            businesses = Business.objects.filter(category=category)
+
+        serializer = BusinessSerializer(businesses, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+
+def businesses_search(request, category, search):
+    if request.method == 'GET' and category in dict(CATEGORIES):
+        if category == ALL:
+            businesses = Business.objects.filter(business_name__startswith=search)
+        else:
+            businesses = Business.objects.filter(category=category, business_name__startswith=search)
+
+        serializer = BusinessSerializer(businesses, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+
+###############################################################
+# Appointments
+###############################################################
+
 @csrf_exempt # Remove when authentication is working
 def business_cancel_appointment(request, business_id, appointment_id):
     if request.method == 'POST':
         try:
             appointment = Appointment.objects.get(pk=appointment_id, business=business_id)
         except Appointment.DoesNotExist:
-            return JsonResponse({'status': 'details'}, status=status.HTTP_404_NOT_FOUND)
+            return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
 
         if appointment.cancelled:
             return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
@@ -490,7 +531,7 @@ def customer_cancel_appointment(request, customer_id, appointment_id):
         try:
             appointment = Appointment.objects.get(pk=appointment_id, customer=customer_id)
         except Appointment.DoesNotExist:
-            return JsonResponse({'status': 'details'}, status=status.HTTP_404_NOT_FOUND)
+            return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
 
         if appointment.cancelled:
             return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
