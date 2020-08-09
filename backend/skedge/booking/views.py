@@ -102,21 +102,6 @@ class Login(ObtainAuthToken):
         if user is None:
             raise exceptions.AuthenticationFailed('Invalid username/password.')
 
-        print(user.pk)
-
-        # account_type = 'customer'
-        # customer = Customer.objects.filter(user=user)
-        # business = None
-        # if not customer.exists():
-        #     business = Business.objects.filter(user=user)
-        #     account_type = 'business'
-        #     if not business.exists():
-        #         raise exceptions.AuthenticationFailed('Somehow this User has no attached Customer or Business account')
-        #     else:
-        #         business = business[0]
-        # else:
-        #     customer = customer[0]
-
         try:
             customer = Customer.objects.get(user=user)
             account_type = 'customer'
@@ -292,60 +277,6 @@ def new_business(request, user_id):
     # Render home page
     return
 
-def edit_business(request):
-    user = User.objects.get(pk=user_id)
-    business = user.business
-
-    username = method.POST['username']
-    password = method.POST['password']
-    email = method.POST['email']
-    first_name = method.POST['first_name']
-    last_name = method.POST['last_name']
-
-    business_name = method.POST['name']
-    short_description = method.POST['short_description']
-    long_description = method.POST['long_description']
-    address = method.POST['address']
-    city = method.POST['city']
-    state = method.POST['state']
-    postal_code = method.POST['postal_code']
-    country = method.POST['country']
-    contact_email = method.POST['contact_email']
-    phone_number = method.POST['phone_number']
-    category = method.POST['category']
-    multiple_employees = method.POST['multiple_employees']
-    exclusive_customers = method.POST['exclusive_customers']
-
-    user = User.objects.create_user(
-        username=username,
-        password=password,
-        first_name=first_name,
-        last_name=last_name,
-        email=email
-    )
-    user.save()
-    business = Business(
-        business_name=business_name,
-        short_description=short_description,
-        long_description=long_description,
-        address=address,
-        city=city,
-        state=state,
-        postal_code=postal_code,
-        country=country,
-        contact_email=contact_email,
-        phone_number=phone_number,
-        category=category,
-        multiple_employees=multiple_employees,
-        exclusive_customers=exclusive_customers,
-    )
-
-    user.save()
-    business.save()
-
-    # Render home page
-    return
-
 # Returns the information about a business
 def business_info(request, business_id):
     if request.method == 'GET':
@@ -361,132 +292,85 @@ def business_info(request, business_id):
 
 # Edits the main information of a business
 @api_view(['POST'])
-@csrf_exempt
-def edit_main_business_info(request, business_id):
-    if request.method == 'POST':
-        try:
-            business = Business.objects.get(pk=business_id)
-        except Business.DoesNotException:
-            return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
-
-        try:
-            business.business_name = request.POST['business_name']
-            business.short_description = request.POST['short_description']
-            business.long_description = request.POST['long_description']
-            business.contact_email = request.POST['contact_email']
-            business.phone_number = parse_phone_number(request.POST['phone_number'])
-            business.category = request.POST['category']
-
-            business.full_clean()
-            business.save()
-
-            serializer = BusinessSerializer(business, many=False)
-            return JsonResponse(serializer.data, safe=False)
-        except Exception:
-            return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
-
-    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
-
-def edit_location_business_info(request, business_id):
-    if request.method == 'POST':
-        try:
-            business = Business.objects.get(pk=business_id)
-        except Business.DoesNotException:
-            return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
-
-        try:
-            business.address = request.POST['address']
-            business.city = request.POST['city']
-            business.province = request.POST['province']
-            business.postal_code = request.POST['postal_code']
-
-            business.full_clean()
-            business.save()
-
-            serializer = BusinessSerializer(business, many=False)
-            return JsonResponse(serializer.data, safe=False)
-        except Exception:
-            return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
-
-    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
-
-def edit_hours_business_info(request, business_id):
-    if request.method == 'POST':
-        try:
-            business = Business.objects.get(pk=business_id)
-        except Business.DoesNotException:
-            return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
-
-        try:
-            business.monday_open = request.POST['monday_open']
-            business.tuesday_open = request.POST['tuesday_open']
-            business.wednesday_open = request.POST['wednesday_open']
-            business.thursday_open = request.POST['thursday_open']
-            business.friday_open = request.POST['friday_open']
-            business.saturday_open = request.POST['saturday_open']
-            business.sunday_open = request.POST['sunday_open']
-
-            business.monday_opening_time = request.POST['monday_opening_time']
-            business.tuesday_opening_time = request.POST['tuesday_opening_time']
-            business.wednesday_opening_time = request.POST['wednesday_opening_time']
-            business.thursday_opening_time = request.POST['thursday_opening_time']
-            business.friday_opening_time = request.POST['friday_opening_time']
-            business.saturday_opening_time = request.POST['saturday_opening_time']
-            business.sunday_opening_time = request.POST['sunday_opening_time']
-
-            business.monday_closing_time = request.POST['monday_closing_time']
-            business.tuesday_closing_time = request.POST['tuesday_closing_time']
-            business.wednesday_closing_time = request.POST['wednesday_closing_time']
-            business.thursday_closing_time = request.POST['thursday_closing_time']
-            business.friday_closing_time = request.POST['friday_closing_time']
-            business.saturday_closing_time = request.POST['saturday_closing_time']
-            business.sunday_closing_time = request.POST['sunday_closing_time']
-
-            business.full_clean()
-            business.save()
-
-            serializer = BusinessSerializer(business, many=False)
-            return JsonResponse(serializer.data, safe=False)
-        except Exception:
-            return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
-
-    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
-
-# Return all services of a specific business
-def business_services(request, business_id):
-    print(request.user)
-    if request.method == 'GET':
-        services = Service.objects.filter(business=business_id)
-        serializer = ServiceSerializer(services, many=True)
-        return JsonResponse(serializer.data, safe=False)
-
-    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
-
-@api_view(['POST'])
 @permission_classes((IsAuthenticated,))
-def new_business_service(request, business_id):
-    business = authenticate_business(request, business_id)
+def edit_main_business_info(request, business_id):
+    business = authenticate_business(business_id)
 
     try:
-        service = Service(
-            name=request.POST['name'],
-            description=request.POST['description'],
-            price=request.POST['price'],
-            duration=request.POST['duration'],
-            business=business
-        )
-        service.full_clean()
-        service.save()
+        business.business_name = request.POST['business_name']
+        business.short_description = request.POST['short_description']
+        business.long_description = request.POST['long_description']
+        business.contact_email = request.POST['contact_email']
+        business.phone_number = parse_phone_number(request.POST['phone_number'])
+        business.category = request.POST['category']
 
-        serializer = ServiceSerializer(service, many=False)
+        business.full_clean()
+        business.save()
+
+        serializer = BusinessSerializer(business, many=False)
         return JsonResponse(serializer.data, safe=False)
+    except Exception:
+        return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
 
-    except Exception as e:
-        print(e)
-        return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+# Edits the location information of a business
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def edit_location_business_info(request, business_id):
+    business = authenticate_business(business_id)
 
-def delete_business_service(request, business_id, service_id):
-    return
+    try:
+        business.address = request.POST['address']
+        business.city = request.POST['city']
+        business.province = request.POST['province']
+        business.postal_code = request.POST['postal_code']
+
+        business.full_clean()
+        business.save()
+
+        serializer = BusinessSerializer(business, many=False)
+        return JsonResponse(serializer.data, safe=False)
+    except Exception:
+        return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+
+# Edits the hours information of a business
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def edit_hours_business_info(request, business_id):
+    business = authenticate_business(business_id)
+
+    try:
+        business.monday_open = request.POST['monday_open']
+        business.tuesday_open = request.POST['tuesday_open']
+        business.wednesday_open = request.POST['wednesday_open']
+        business.thursday_open = request.POST['thursday_open']
+        business.friday_open = request.POST['friday_open']
+        business.saturday_open = request.POST['saturday_open']
+        business.sunday_open = request.POST['sunday_open']
+
+        business.monday_opening_time = request.POST['monday_opening_time']
+        business.tuesday_opening_time = request.POST['tuesday_opening_time']
+        business.wednesday_opening_time = request.POST['wednesday_opening_time']
+        business.thursday_opening_time = request.POST['thursday_opening_time']
+        business.friday_opening_time = request.POST['friday_opening_time']
+        business.saturday_opening_time = request.POST['saturday_opening_time']
+        business.sunday_opening_time = request.POST['sunday_opening_time']
+
+        business.monday_closing_time = request.POST['monday_closing_time']
+        business.tuesday_closing_time = request.POST['tuesday_closing_time']
+        business.wednesday_closing_time = request.POST['wednesday_closing_time']
+        business.thursday_closing_time = request.POST['thursday_closing_time']
+        business.friday_closing_time = request.POST['friday_closing_time']
+        business.saturday_closing_time = request.POST['saturday_closing_time']
+        business.sunday_closing_time = request.POST['sunday_closing_time']
+
+        business.full_clean()
+        business.save()
+
+        serializer = BusinessSerializer(business, many=False)
+        return JsonResponse(serializer.data, safe=False)
+    except Exception:
+        return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+
 
 ###############################################################
 # Favorites
@@ -549,6 +433,59 @@ def business_appointments_by_week(request, business_id, year, week):
 ###############################################################
 # Services
 ###############################################################
+
+# Return all services of a specific business
+@api_view(['GET'])
+def business_services(request, business_id):
+    services = Service.objects.filter(business=business_id)
+    serializer = ServiceSerializer(services, many=True)
+    return JsonResponse(serializer.data, safe=False)
+
+# Creates a new service for a business
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def new_business_service(request, business_id):
+    business = authenticate_business(request, business_id)
+
+    try:
+        service = Service(
+            name=request.POST['name'],
+            description=request.POST['description'],
+            price=request.POST['price'],
+            duration=request.POST['duration'],
+            business=business
+        )
+        service.full_clean()
+        service.save()
+
+        serializer = ServiceSerializer(service, many=False)
+        return JsonResponse(serializer.data, safe=False)
+
+    except Exception as e:
+        print(e)
+        return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+
+# Deletes a service for a business
+@api_view(['DELETE'])
+@permission_classes((IsAuthenticated,))
+def delete_business_service(request, business_id, service_id):
+    authenticate_business(request, business_id)
+
+    try:
+        service = Service.objects.get(pk=service_id)
+        service.deleted = True
+        service.save()
+
+        appointments = Appointment.objects.filter(service_id=service_id)
+        appointments.updated(cancelled=True, cancelled_by_business=True)
+        for appointment in appointments:
+            appointment.save()
+
+        serializer = ServiceSerializer(service, many=False)
+        return JsonResponse(serializer.data, safe=False)
+        
+    except Service.DoesNotExist:
+        return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
 
 # Returns the available appointment time slots for each service of a business for a specific day
 def services_available_times(request, business_id, year, month, day):
