@@ -11,7 +11,7 @@ from rest_framework.decorators import api_view
 from rest_framework.decorators import permission_classes
 from rest_framework.parsers import JSONParser
 from rest_framework.authtoken.models import Token
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.views import APIView
 from rest_framework.exceptions import AuthenticationFailed
 from .models import *
@@ -135,17 +135,45 @@ class CustomerViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = CustomerUserSerializer
 
+    def get_permissions(self):
+        if self.action == 'create':
+            permission_classes = []
+        else:
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]
+
 class BusinessViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = BusinessUserSerializer
+
+    def get_permissions(self):
+        if self.action == 'create':
+            permission_classes = []
+        else:
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]
 
 class ServiceViewSet(viewsets.ModelViewSet):
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
 
+    def get_permissions(self):
+        if self.action == 'create':
+            permission_classes = []
+        else:
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]
+
 class AppointmentViewSet(viewsets.ModelViewSet):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
+
+    def get_permissions(self):
+        if self.action == 'create':
+            permission_classes = []
+        else:
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]
 
 
 
