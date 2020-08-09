@@ -104,30 +104,38 @@ class Login(ObtainAuthToken):
 
         print(user.pk)
 
-        account_type = 'customer'
-        customer = Customer.objects.filter(user=user)
-        business = None
-        if customer is None:
-            business = Business.objects.filter(user=user)
-            account_type = 'business'
-            if business is None:
-                raise exceptions.AuthenticationFailed('Somehow this User has no attached Customer or Business account')
-            else:
-                business = business[0]
-        else:
-            customer = customer[0]
+        # account_type = 'customer'
+        # customer = Customer.objects.filter(user=user)
+        # business = None
+        # if not customer.exists():
+        #     business = Business.objects.filter(user=user)
+        #     account_type = 'business'
+        #     if not business.exists():
+        #         raise exceptions.AuthenticationFailed('Somehow this User has no attached Customer or Business account')
+        #     else:
+        #         business = business[0]
+        # else:
+        #     customer = customer[0]
 
-        print(customer)
-        print(business)
+        try:
+            customer = Customer.objects.get(user=user)
+            account_type = 'customer'
+            account_id = customer.pk
+        except Customer.DoesNotExist:
+            try:
+                business = Business.objects.get(user=user)
+                account_type = 'business'
+                account_id = business.pk
+            except Business.DoesNotExist:
+                raise AuthenticationFailed('User has no attached Customer or Business account')
 
         token, created = Token.objects.get_or_create(user=user)
-        print(token)
 
         return Response({
             'token': token.key,
             'user_id': user.pk,
             'account_type': account_type,
-            'account_id': customer.pk if customer else business.pk
+            'account_id': account_id
         })
 
 
@@ -453,6 +461,32 @@ def business_services(request, business_id):
         return JsonResponse(serializer.data, safe=False)
 
     return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def new_business_service(request, business_id):
+    business = authenticate_business(request, business_id)
+
+    try:
+        service = Service(
+            name=request.POST['name'],
+            description=request.POST['description'],
+            price=request.POST['price'],
+            duration=request.POST['duration'],
+            business=business
+        )
+        service.full_clean()
+        service.save()
+
+        serializer = ServiceSerializer(service, many=False)
+        return JsonResponse(serializer.data, safe=False)
+
+    except Exception as e:
+        print(e)
+        return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+
+def delete_business_service(request, business_id, service_id):
+    return
 
 ###############################################################
 # Favorites

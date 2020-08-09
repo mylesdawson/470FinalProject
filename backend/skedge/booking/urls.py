@@ -63,6 +63,13 @@ urlpatterns = [
     # Get the services offered by a business
     path('business/<int:business_id>/services/', views.business_services),
 
+    # Delete a service
+    # Requires business authentication
+    path('service/<int:service_id>/', views.delete_business_service),
+
+    # Create a service
+    path('business/<int:business_id>/services/new', views.new_business_service),
+
     # Get the available appointment time slots for each service for a business for a specific day
     path('business/<int:business_id>/services/available/<int:year>/<int:month>/<int:day>/', views.services_available_times),
 
