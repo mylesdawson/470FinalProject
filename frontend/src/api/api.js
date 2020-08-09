@@ -102,11 +102,6 @@ export async function logout() {
     .catch(err => {
       console.log(err)
     })
-
-
-  const res = await request('/logout/', {}, 'POST', headers)
-  console.log(res)
-  return res
 }
 
 export async function createCustomerAccount(username, password, accountInfo) {
@@ -162,7 +157,22 @@ export async function getBusinessesByCategory(category = 'all') {
     .catch(e => {
       console.log(e)
     })
+}
 
+export async function getServicesByBusiness(business_id) {
+  const headers = new Headers()
+  headers.append("Content-Type", "application.json")
+
+  const options = {
+    headers,
+  }
+
+  return fetch(`${host}/business/${business_id}/services/`, options)
+    .then(res => res.json())
+    .then(res => res)
+    .catch(e => {
+      console.log(e)
+    })
 }
 
 // export async function search(searchString) {
