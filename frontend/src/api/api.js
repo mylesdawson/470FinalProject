@@ -141,3 +141,40 @@ export async function users() {
   const res = await request('/users/')
   console.log(res)
 }
+
+const categories = {
+  fitness: 'fitness',
+  wellness: 'wellness',
+  beauty: 'beauty',
+  all: 'all'
+}
+export async function getBusinessesByCategory(category = 'all') {
+  const headers = new Headers()
+  headers.append("Content-Type", "application.json")
+
+  const options = {
+    headers,
+  }
+
+  return fetch(`${host}/business/search/${category}/`, options)
+    .then(res => res.json())
+    .then(res => res)
+    .catch(e => {
+      console.log(e)
+    })
+
+}
+
+// export async function search(searchString) {
+//   const headers = new Headers()
+//   headers.append("Content-Type", "application/json")
+
+//   const options = {
+//     method: 'GET'
+//     headers,
+//     body: JSON.stringify(searchString)
+//   }
+
+//   fetch(`${host}/`)
+
+// }

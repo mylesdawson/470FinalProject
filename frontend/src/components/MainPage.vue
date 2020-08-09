@@ -1,9 +1,8 @@
 <template>
   <b-container fluid>
     <h1 class="text-center"><strong>Explore</strong> and <strong>book</strong> anything <strong>fitness</strong>, <strong>wellness</strong>, <strong>beauty</strong></h1>
-    <br>
 
-    <search-component></search-component>
+    <!-- <search-component></search-component> -->
 
     <h2 class="text-center">
       <br><strong>Explore</strong> Skedge
