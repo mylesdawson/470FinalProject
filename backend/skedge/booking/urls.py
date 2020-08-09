@@ -64,7 +64,7 @@ urlpatterns = [
     path('business/<int:business_id>/services/', views.business_services),
 
     # Create a service
-    path('business/<int:business_id>/services/new', views.new_business_service),
+    path('business/<int:business_id>/services/new/', views.new_business_service),
 
     # Delete a service
     # Requires business authentication
@@ -84,6 +84,9 @@ urlpatterns = [
     # Get the appointments booked for a week for a business
     # Requires business authentication
     path('business/<int:business_id>/appointments/week/<int:year>/<int:week>/', views.business_appointments_by_week),
+
+    # Get info about the appointments booked for each day of the month for a business
+    path('business/<int:business_id>/appointments/month/<int:year>/<int:month>/', views.business_appointments_by_month),
 
     # Cancel an appointment by a business
     # Requires business authentication

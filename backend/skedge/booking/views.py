@@ -446,13 +446,13 @@ def delete_business_service(request, business_id, service_id):
         service.save()
 
         appointments = Appointment.objects.filter(service_id=service_id)
-        appointments.updated(cancelled=True, cancelled_by_business=True)
+        appointments.update(cancelled=True, cancelled_by_business=True)
         for appointment in appointments:
             appointment.save()
 
         serializer = ServiceSerializer(service, many=False)
         return JsonResponse(serializer.data, safe=False)
-        
+
     except Service.DoesNotExist:
         return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
 
@@ -534,7 +534,7 @@ def services_available_days(request, business_id, year, month):
         _, days_in_month = monthrange(year, month)
 
         appointments = Appointment.objects.filter(business=business_id, date__year=year, date__month=month, cancelled=False)
-        data = {}
+        data = []
         current_date = datetime.datetime.now(tz=timezone).date()
 
         for day in range(1, days_in_month+1):
@@ -568,7 +568,7 @@ def services_available_days(request, business_id, year, month):
                     availability = 'open'
             else:
                 availability = 'closed'
-            data[day] = availability
+            data.append({'date': day, 'status': availability})
 
         return JsonResponse(data, safe=False)
 
@@ -632,6 +632,64 @@ def business_appointments_by_week(request, business_id, year, week):
         return JsonResponse(serializer.data, safe=False)
 
     return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+
+# Returns all of a business's appointments for a specific month
+@api_view(['GET'])
+@permission_classes((IsAuthenticated,))
+def business_appointments_by_month(request, business_id, year, month):
+    business = authenticate_business(request, business_id)
+
+    days_open, opening_times, closing_times = get_business_hours(business)
+
+    try:
+        min_duration = Service.objects.filter(business=business_id).aggregate(Min('duration'))['duration__min']
+    except AttributeError:
+        return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+
+    _, days_in_month = monthrange(year, month)
+
+    appointments = Appointment.objects.filter(business=business_id, date__year=year, date__month=month, cancelled=False)
+    data = []
+    current_date = datetime.datetime.now(tz=timezone).date()
+
+    for day in range(1, days_in_month+1):
+        date = datetime.date(year, month, day)
+        day_of_week = date.weekday()
+        days_between = (date - current_date).days
+
+        day_appointments = list(appointments.filter(date__day=day).values('start_time', 'end_time').order_by('start_time'))
+        num_appointments = len(day_appointments)
+
+        if days_between < 0:
+            availability = 'past'
+        elif days_between > business.days_bookable_in_advance:
+            availability = 'unavailable'
+        elif days_open[day_of_week] == True:
+
+            day_appointments.insert(0, {'end_time': opening_times[day_of_week]})
+            day_appointments.append({'start_time': closing_times[day_of_week]})
+
+            fully_booked = True
+            for i in range(1, len(day_appointments)):
+                date = datetime.date(1, 1, 1)
+                first_time = datetime.datetime.combine(date, day_appointments[i-1]['end_time'])
+                second_time = datetime.datetime.combine(date, day_appointments[i]['start_time'])
+                interval = second_time - first_time
+
+                if (interval.total_seconds() // 60) >= min_duration:
+                    fully_booked = False
+                    break
+
+            if fully_booked == True:
+                availability = 'booked'
+            else:
+                availability = 'open'
+        else:
+            availability = 'closed'
+        data.append({'date': day, 'status': availability, 'appointments': num_appointments})
+
+    return JsonResponse(data, safe=False)
+
 
 @csrf_exempt # Remove when authentication is working
 def business_cancel_appointment(request, business_id, appointment_id):
