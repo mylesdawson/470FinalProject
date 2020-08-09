@@ -400,37 +400,6 @@ def remove_favorite_business(request, customer_id, business_id):
     return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
 
 ###############################################################
-# Favorites
-###############################################################
-
-# Returns all of a customer's appointments
-def customer_appointments(request, customer_id):
-    if request.method == 'GET':
-        appointments = Appointment.objects.select_related('business', 'service').filter(customer=customer_id)
-        serializer = CustomerAppointmentSerializer(appointments, many=True)
-        return JsonResponse(serializer.data, safe=False)
-
-    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
-
-# Returns all of a business's appointments for a specific day
-def business_appointments_by_day(request, business_id, year, month, day):
-    if request.method == 'GET':
-        appointments = Appointment.objects.select_related('customer', 'service', 'customer__user').filter(business=business_id, date__year=year, date__month=month, date__day=day)
-        serializer = BusinessAppointmentSerializer(appointments, many=True)
-        return JsonResponse(serializer.data, safe=False)
-
-    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
-
-# Returns all of a business's appointments for a specific month
-def business_appointments_by_week(request, business_id, year, week):
-    if request.method == 'GET':
-        appointments = Appointment.objects.select_related('customer', 'service', 'customer__user').filter(business=business_id, date__year=year, date__week=week)
-        serializer = BusinessAppointmentSerializer(appointments, many=True)
-        return JsonResponse(serializer.data, safe=False)
-
-    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
-
-###############################################################
 # Services
 ###############################################################
 
@@ -636,6 +605,33 @@ def businesses_search(request, category, search):
 ###############################################################
 # Appointments
 ###############################################################
+
+# Returns all of a customer's appointments
+def customer_appointments(request, customer_id):
+    if request.method == 'GET':
+        appointments = Appointment.objects.select_related('business', 'service').filter(customer=customer_id)
+        serializer = CustomerAppointmentSerializer(appointments, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+
+# Returns all of a business's appointments for a specific day
+def business_appointments_by_day(request, business_id, year, month, day):
+    if request.method == 'GET':
+        appointments = Appointment.objects.select_related('customer', 'service', 'customer__user').filter(business=business_id, date__year=year, date__month=month, date__day=day)
+        serializer = BusinessAppointmentSerializer(appointments, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+
+# Returns all of a business's appointments for a specific month
+def business_appointments_by_week(request, business_id, year, week):
+    if request.method == 'GET':
+        appointments = Appointment.objects.select_related('customer', 'service', 'customer__user').filter(business=business_id, date__year=year, date__week=week)
+        serializer = BusinessAppointmentSerializer(appointments, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
 @csrf_exempt # Remove when authentication is working
 def business_cancel_appointment(request, business_id, appointment_id):
