@@ -1,6 +1,8 @@
+from django.conf.urls import url
 from django.urls import include, path
 from rest_framework import routers
 from . import views
+from rest_framework.authtoken.views import obtain_auth_token
 
 router = routers.DefaultRouter()
 router.register(r'customers', views.CustomerViewSet, 'customers')
@@ -11,6 +13,12 @@ router.register(r'appointments', views.AppointmentViewSet, 'appointments')
 # app_name = 'booking'
 urlpatterns = [
     path('', include(router.urls)),
+
+    # This is essentially our login. It will return a token if login was successful
+    path('login/', views.Login.as_view(), name='api_token_auth'),
+    path('logout/', views.Logout.as_view()),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^get-token/$', views.get_csrf_token),
 
     path('business/<int:business_id>/', views.business_info),
 

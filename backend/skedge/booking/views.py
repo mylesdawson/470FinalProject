@@ -1,5 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import logout, authenticate, get_user_model
+from django.middleware.csrf import get_token
 from django.contrib.auth.models import User
 from django.db.models import Min
 from rest_framework import viewsets, status, generics, exceptions
@@ -47,6 +48,10 @@ def parse_phone_number(phone_number):
 ###############################################################
 # Authentication
 ###############################################################
+
+def get_csrf_token(request):
+    token = get_token(request)
+    return JsonResponse({'token': token})
 
 def authenticate_customer(request, customer_id):
     try:
@@ -319,11 +324,16 @@ def business_info(request, business_id):
     return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
 # Edits the main information of a business
+@api_view(['POST'])
 @csrf_exempt
 def edit_main_business_info(request, business_id):
     if request.method == 'POST':
         try:
             business = Business.objects.get(pk=business_id)
+        except Business.DoesNotException:
+            return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+
+        try:
             business.business_name = request.POST['business_name']
             business.short_description = request.POST['short_description']
             business.long_description = request.POST['long_description']
@@ -331,6 +341,7 @@ def edit_main_business_info(request, business_id):
             business.phone_number = parse_phone_number(request.POST['phone_number'])
             business.category = request.POST['category']
 
+            business.full_clean()
             business.save()
 
             serializer = BusinessSerializer(business, many=False)
@@ -584,7 +595,8 @@ def business_cancel_appointment(request, business_id, appointment_id):
 
     return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
-@csrf_exempt # Remove when authentication is working
+# @csrf_exempt # Remove when authentication is working
+@api_view(['POST'])
 def customer_cancel_appointment(request, customer_id, appointment_id):
     if request.method == 'POST':
         try:
