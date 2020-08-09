@@ -47,17 +47,16 @@ class Business(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
 
     business_name = models.CharField(max_length=50)
-    short_description = models.CharField(max_length=200, null=True) # A short description shown in search results
-    long_description = models.CharField(max_length=3000, null=True) # A longer description shown on the business page, supports markdown
-    contact_email = models.CharField(max_length=50, null=True) # Email for customers to contact, can be different from the email used to login
-    phone_number = models.CharField(max_length=14, null=True) # Phone number for customers to call
-    category = models.CharField(max_length=50, choices=CATEGORIES, default=MISCELLANEOUS) # Business type
+    short_description = models.CharField(max_length=200, blank=True) # A short description shown in search results
+    long_description = models.CharField(max_length=3000, blank=True) # A longer description shown on the business page, supports markdown
+    contact_email = models.CharField(max_length=50, blank=True) # Email for customers to contact, can be different from the email used to login
+    phone_number = models.CharField(max_length=14, blank=True) # Phone number for customers to call
+    category = models.CharField(max_length=50, choices=CATEGORIES, default=WELLNESS) # Business type
 
-    address = models.CharField(max_length=200, null=True) # The business address, excluding city, state, and country
-    city = models.CharField(max_length=100, null=True)
-    state = models.CharField(max_length=100, null=True) # State or province
-    postal_code = models.CharField(max_length=6, null=True)
-    country = models.CharField(max_length=100, null=True)
+    address = models.CharField(max_length=200, blank=True) # The business address, excluding city, state, and country
+    city = models.CharField(max_length=100, blank=True)
+    province = models.CharField(max_length=100, blank=True) # State or province
+    postal_code = models.CharField(max_length=6, blank=True)
 
     monday_open = models.BooleanField(default=True)
     tuesday_open = models.BooleanField(default=True)
