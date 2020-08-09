@@ -37,7 +37,7 @@ class CustomerUserSerializer(serializers.HyperlinkedModelSerializer):
 class BusinessSerializer(serializers.ModelSerializer):
     class Meta:
         model = Business
-        fields = ['business_name', 'short_description']
+        fields = ['id', 'business_name', 'short_description', 'long_description', 'contact_email', 'phone_number', 'category', 'address', 'city', 'state', 'postal_code', 'country', 'monday_open', 'tuesday_open', 'wednesday_open', 'thursday_open', 'friday_open', 'saturday_open', 'sunday_open', 'monday_opening_time', 'tuesday_opening_time', 'wednesday_opening_time', 'thursday_opening_time', 'friday_opening_time', 'saturday_opening_time', 'sunday_opening_time', 'monday_closing_time', 'tuesday_closing_time', 'wednesday_closing_time', 'thursday_closing_time', 'friday_closing_time', 'saturday_closing_time', 'sunday_closing_time', 'days_bookable_in_advance', 'hours_notice_in_advance']
 
 
 class BusinessUserSerializer(serializers.HyperlinkedModelSerializer):
@@ -81,12 +81,6 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
         appointment = Appointment.objects.create(customer=customer, service=service, business=business, **validated_data)
         return appointment
-
-
-class FavoriteBusinessSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Business
-        fields = ['id', 'business_name', 'short_description']
 
 
 class CustomerBriefSerializer(serializers.ModelSerializer):

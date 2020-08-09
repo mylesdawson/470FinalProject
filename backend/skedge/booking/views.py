@@ -286,6 +286,19 @@ def edit_business(request):
     # Render home page
     return
 
+# Returns the information about a business
+def business_info(request, business_id):
+    if request.method == 'GET':
+        try:
+            business = Business.objects.get(pk=business_id)
+        except Business.DoesNotExist:
+            return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+
+        serializer = BusinessSerializer(business, many=False)
+        return JsonResponse(serializer.data, safe=False)
+
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+
 # Return all services of a specific business
 def business_services(request, business_id):
     if request.method == 'GET':
@@ -303,7 +316,7 @@ def business_services(request, business_id):
 def favorite_businesses(request, customer_id):
     if request.method == 'GET':
         businesses = Business.objects.filter(favorite__customer=customer_id)
-        serializer = FavoriteBusinessSerializer(businesses, many=True)
+        serializer = BusinessSerializer(businesses, many=True)
         return JsonResponse(serializer.data, safe=False)
 
     return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
