@@ -1,33 +1,18 @@
 <template>
   <b-container fluid>
 
-    <b-row>
-      <b-col cols="6" ml="1" style="text-align: left">
-      <b-input-group>
-        <b-input-group-prepend is-text>
-        <b-icon icon="search"></b-icon>
-        </b-input-group-prepend>
-        <b-form-input aria-label="First name" placeholder="Search for anything"></b-form-input>
-        <b-form-input aria-label="Last name" placeholder="Location"></b-form-input>
-      </b-input-group>
-      </b-col>
-      <b-col col md="3" style="text-align: left">
-      <b-btn class="ma-2" variant="warning">
-          <b-icon icon="search"></b-icon>
-      </b-btn>
-      </b-col>
-    </b-row>
+    <search-component></search-component>
 
     <hr class="my-3">
 
-    <b-row align-h="left">
-      <b-button class="ml-3" size="sm" variant="primary">Fitness</b-button>
-      <b-button class="ml-3" size="sm" variant="success">Wellness</b-button>
-      <b-button class="ml-3" size="sm" variant="warning">Beauty</b-button>
+    <b-row>
+      <b-button class="ml-3" size="sm" variant="primary" name="fitness" @click="setFilter">Fitness</b-button>
+      <b-button class="ml-3" size="sm" variant="success" name="wellness" @click="setFilter">Wellness</b-button>
+      <b-button class="ml-3" size="sm" variant="warning" name="beauty" @click="setFilter">Beauty</b-button>
     </b-row>
     <br>
 
-    <h1 class="text-left"><strong>Beauty</strong> Business in Location, <strong>BC</strong></h1>
+    <h1 class="text-left"><strong>{{title}}</strong> Businesses</h1>
 
     <br>
 
@@ -123,8 +108,44 @@
 </template>
 
 <script>
+import SearchComponent from './SearchComponent'
+
+
 export default {
-  name: 'SearchPage'
+  name: 'SearchPage',
+  components: {
+    SearchComponent,
+  },
+  data: function() {
+    return {
+      filterBy: '',
+      title: ''
+    }
+  },
+  methods: {
+    upper: function() {
+      if(this.filterBy.length > 0) {
+        const [head, ...rest] = this.filterBy.split("")
+        // console.log(head)
+        // console.log(rest)
+        return head.toUpperCase() + rest.join("")
+      }
+      return ''
+    },
+    setFilter: function(e) {
+      const type = e.target.name
+      this.filterBy = type
+      this.title = this.upper()
+    }
+  },
+  mounted: function() {
+    const filter = this.$route.params.filterBy
+    console.log(filter)
+    if(filter) {
+      this.filterBy = filter
+      this.title = this.upper()
+    }
+  }
 }
 </script>
 
