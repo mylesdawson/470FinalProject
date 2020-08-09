@@ -62,7 +62,7 @@ export default {
       this.getBusinesses()
     },
     getBusinesses: async function() {
-      const category = this.filter ? this.filter : 'all'
+      const category = this.filterBy ? this.filterBy : 'all'
       const res = await getBusinessesByCategory(category)
       console.log(res)
       this.businesses = res
