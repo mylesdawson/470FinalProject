@@ -4,7 +4,7 @@
         <b-form>
           <b-form-group class="account-type">
               <b-form-radio v-model="form.selected" value="customer">
-                User Account
+                Customer Account
               </b-form-radio>
               <b-form-radio v-model="form.selected" value="business">
                 Business Account
