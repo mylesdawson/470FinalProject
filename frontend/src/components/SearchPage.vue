@@ -6,6 +6,7 @@
     <hr class="my-3">
 
     <b-row>
+      <b-button class="ml-3" size="sm" variant="light" name="all" @click="setFilter">All</b-button>
       <b-button class="ml-3" size="sm" variant="primary" name="fitness" @click="setFilter">Fitness</b-button>
       <b-button class="ml-3" size="sm" variant="success" name="wellness" @click="setFilter">Wellness</b-button>
       <b-button class="ml-3" size="sm" variant="warning" name="beauty" @click="setFilter">Beauty</b-button>
