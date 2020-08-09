@@ -1,7 +1,7 @@
 <template>
   <b-container fluid>
 
-    <search-component></search-component>
+    <!-- <search-component></search-component> -->
 
     <hr class="my-3">
 
@@ -16,92 +16,12 @@
 
     <br>
 
-    <b-card-group>
-
-      <b-card title="Hair Salon" img-src="https://picsum.photos/600/300/?image=25" style="min-width: 18rem;">
-        <b-card-text>
-          Beautiful hair with beautiful care
-        </b-card-text>
-        <b-button size="sm" variant="primary" href="/?#/search-listings">View</b-button>
-      </b-card>
-
-      <b-card title="Barber" img-src="https://picsum.photos/600/300/?image=25" style="min-width: 18rem;">
-        <b-card-text>
-          A quality hair cut at a fair price.
-        </b-card-text>
-        <b-button size="sm" variant="primary" href="/?#/search-listings">View</b-button>
-      </b-card>
-
-      <b-card title="Fitness Gym Big Muscles" img-src="https://picsum.photos/600/300/?image=25" style="min-width: 18rem;">
-        <b-card-text>
-          Sponsored by Gym Shark.
-        </b-card-text>
-        <b-button size="sm" variant="primary" href="/?#/search-listings">View</b-button>
-      </b-card>
-
-      <b-card title="Other" img-src="https://picsum.photos/600/300/?image=25" style="min-width: 18rem;">
-        <b-card-text>
-          Other
-        </b-card-text>
-        <b-button size="sm" variant="primary" href="/?#/search-listings">View</b-button>
-      </b-card>
-
-      <b-card title="Other" img-src="https://picsum.photos/600/300/?image=25" style="min-width: 18rem;">
-        <b-card-text>
-          Other
-        </b-card-text>
-        <b-button size="sm" variant="primary" href="/?#/search-listings">View</b-button>
-      </b-card>
-
-      <b-card title="Other" img-src="https://picsum.photos/600/300/?image=25" style="min-width: 18rem;">
-        <b-card-text>
-          Other
-        </b-card-text>
-        <b-button size="sm" variant="primary" href="/?#/search-listings">View</b-button>
-      </b-card>
-
-      <b-card title="Other" img-src="https://picsum.photos/600/300/?image=25" style="min-width: 18rem;">
-        <b-card-text>
-          Other
-        </b-card-text>
-        <b-button size="sm" variant="primary" href="/?#/search-listings">View</b-button>
-      </b-card>
-
-      <b-card title="Other" img-src="https://picsum.photos/600/300/?image=25" style="min-width: 18rem;">
-        <b-card-text>
-          Other
-        </b-card-text>
-        <b-button size="sm" variant="primary" href="/?#/search-listings">View</b-button>
-      </b-card>
-
-      <b-card title="Other" img-src="https://picsum.photos/600/300/?image=25" style="min-width: 18rem;">
-        <b-card-text>
-          Other
-        </b-card-text>
-        <b-button size="sm" variant="primary" href="/?#/search-listings">View</b-button>
-      </b-card>
-
-      <b-card title="Other" img-src="https://picsum.photos/600/300/?image=25" style="min-width: 18rem;">
-        <b-card-text>
-          Other
-        </b-card-text>
-        <b-button size="sm" variant="primary" href="/?#/search-listings">View</b-button>
-      </b-card>
-
-      <b-card title="Other" img-src="https://picsum.photos/600/300/?image=25" style="min-width: 18rem;">
-        <b-card-text>
-          Other
-        </b-card-text>
-        <b-button size="sm" variant="primary" href="/?#/search-listings">View</b-button>
-      </b-card>
-
-      <b-card title="Other" img-src="https://picsum.photos/600/300/?image=25" style="min-width: 18rem;">
-        <b-card-text>
-          Other
-        </b-card-text>
-        <b-button size="sm" variant="primary" href="/?#/search-listings">View</b-button>
-      </b-card>
-
+    <b-card-group deck>
+      <business-component
+        v-for="business in businesses"
+        v-bind:business="business"
+        v-bind:key="business.name"
+      ></business-component>
     </b-card-group>
 
   </b-container>
@@ -109,42 +29,55 @@
 
 <script>
 import SearchComponent from './SearchComponent'
-
+import BusinessComponent from './BusinessComponent'
+import { getBusinessesByCategory } from '../api/api'
 
 export default {
   name: 'SearchPage',
   components: {
     SearchComponent,
+    BusinessComponent
   },
   data: function() {
     return {
       filterBy: '',
-      title: ''
+      title: '',
+      search: '',
+      businesses: [],
     }
   },
   methods: {
     upper: function() {
       if(this.filterBy.length > 0) {
         const [head, ...rest] = this.filterBy.split("")
-        // console.log(head)
-        // console.log(rest)
         return head.toUpperCase() + rest.join("")
       }
       return ''
     },
     setFilter: function(e) {
       const type = e.target.name
+      this.businesses = []
       this.filterBy = type
       this.title = this.upper()
+      this.getBusinesses()
+    },
+    getBusinesses: async function() {
+      const category = this.filter ? this.filter : 'all'
+      const res = await getBusinessesByCategory(category)
+      console.log(res)
+      this.businesses = res
     }
   },
-  mounted: function() {
-    const filter = this.$route.params.filterBy
+  mounted: async function() {
+    const params = this.$route.params
+    const filter = params.filterBy
     console.log(filter)
     if(filter) {
       this.filterBy = filter
       this.title = this.upper()
     }
+
+    this.getBusinesses()
   }
 }
 </script>
