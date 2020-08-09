@@ -99,6 +99,8 @@ class Service(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2) # Cost to customer
     duration = models.IntegerField(choices=DURATIONS) # Duration in minutes
 
+    deleted = models.BooleanField(default=False)
+
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
