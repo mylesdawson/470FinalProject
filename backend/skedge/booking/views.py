@@ -6,10 +6,13 @@ from rest_framework import viewsets, status, generics, exceptions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.decorators import api_view
+from rest_framework.decorators import permission_classes
 from rest_framework.parsers import JSONParser
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
+from rest_framework.exceptions import AuthenticationFailed
 from .models import *
 from .serializers import *
 import datetime
@@ -44,6 +47,22 @@ def parse_phone_number(phone_number):
 ###############################################################
 # Authentication
 ###############################################################
+
+def authenticate_customer(request, customer_id):
+    try:
+        customer = Customer.objects.get(id=customer_id, user=request.user.id)
+    except Customer.DoesNotExist:
+        raise AuthenticationFailed
+
+    return customer
+
+def authenticate_business(request, business_id):
+    try:
+        business = Business.objects.get(id=business_id, user=request.user.id)
+    except Business.DoesNotExist:
+        raise AuthenticationFailed
+
+    return business
 
 class Logout(APIView):
     permission_classes = [IsAuthenticated]
@@ -299,8 +318,31 @@ def business_info(request, business_id):
 
     return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
+# Edits the main information of a business
+@csrf_exempt
+def edit_main_business_info(request, business_id):
+    if request.method == 'POST':
+        try:
+            business = Business.objects.get(pk=business_id)
+            business.business_name = request.POST['business_name']
+            business.short_description = request.POST['short_description']
+            business.long_description = request.POST['long_description']
+            business.contact_email = request.POST['contact_email']
+            business.phone_number = parse_phone_number(request.POST['phone_number'])
+            business.category = request.POST['category']
+
+            business.save()
+
+            serializer = BusinessSerializer(business, many=False)
+            return JsonResponse(serializer.data, safe=False)
+        except Exception:
+            return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+
+    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+
 # Return all services of a specific business
 def business_services(request, business_id):
+    print(request.user)
     if request.method == 'GET':
         services = Service.objects.filter(business=business_id)
         serializer = ServiceSerializer(services, many=True)
@@ -313,7 +355,11 @@ def business_services(request, business_id):
 ###############################################################
 
 # Return all of a customer's favorited businesses
+@api_view(['GET'])
+@permission_classes((IsAuthenticated,))
 def favorite_businesses(request, customer_id):
+    authenticate_customer(request, customer_id)
+
     if request.method == 'GET':
         businesses = Business.objects.filter(favorite__customer=customer_id)
         serializer = BusinessSerializer(businesses, many=True)

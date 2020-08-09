@@ -26,9 +26,9 @@ urlpatterns = [
     # Requires customer authentication
     path('customer/<int:customer_id>/appointments/<int:appointment_id>/cancel/', views.customer_cancel_appointment),
 
-    # path('business/<int:business_id>/edit/main', views.edit_main_business_info),
-    # path('business/<int:business_id>/edit/location', views.edit_main_business_info),
-    # path('business/<int:business_id>/edit/hours', views.edit_main_business_info),
+    path('business/<int:business_id>/edit/main/', views.edit_main_business_info),
+    # path('business/<int:business_id>/edit/location', views.edit_location_business_info),
+    # path('business/<int:business_id>/edit/hours', views.edit_hours_business_info),
 
     path('business/<int:business_id>/services/', views.business_services),
 
