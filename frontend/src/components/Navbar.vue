@@ -7,7 +7,7 @@
         </b-nav-item>
       </b-navbar-brand>
 
-      <template v-if="token">
+      <template v-if="account_type === 'business'">
         <b-navbar-nav>
           <b-nav-item :active='$route.name =="HomePage"' to="/home">Home</b-nav-item>
           <b-nav-item :active='$route.name =="CalendarPage"' to="/calendar">Calendar</b-nav-item>
@@ -26,7 +26,21 @@
               class="profile-dropdown"
               right
               text="Your Account">
-              <b-dropdown-item>Settings</b-dropdown-item>
+              <!-- <b-dropdown-item>Settings</b-dropdown-item> -->
+              <b-dropdown-item v-on:click="logout">Logout</b-dropdown-item>
+            </b-nav-item-dropdown>
+          </b-nav-item>
+        </b-navbar-nav>
+      </template>
+
+      <template v-if="account_type === 'customer'">
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item>
+            <b-nav-item-dropdown
+              class="profile-dropdown"
+              right
+              text="Your Account">
+              <!-- <b-dropdown-item>Settings</b-dropdown-item> -->
               <b-dropdown-item v-on:click="logout">Logout</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-nav-item>
@@ -63,17 +77,26 @@ export default {
     if (localStorage.token) {
       this.token = localStorage.token
     }
+    if (localStorage.account_type) {
+      this.account_type = localStorage.account_type
+    }
     this.timer = window.setInterval(() => {
       if(localStorage.token) {
         this.token = localStorage.token
       } else {
         this.token = ''
       }
+      if(localStorage.account_type) {
+        this.account_type = localStorage.account_type
+      } else {
+        this.account_type = ''
+      }
     }, 1000)
   },
   data() {
     return {
       token: '',
+      account_type: '',
       timer: null
     }
   },

@@ -96,6 +96,9 @@ export async function logout() {
     .then(resp => {
       if(resp.status === 200) {
         localStorage.removeItem("token")
+        localStorage.removeItem("account_id")
+        localStorage.removeItem("account_type")
+        localStorage.removeItem("user_id")
       }
       return resp.status
     })
