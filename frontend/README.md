@@ -18,6 +18,13 @@ npm run build
 npm run build --report
 ```
 
+## Production Setup
+
+``` bash
+sudo docker build -t frontend .
+sudo docker run -it -p 80:80 --rm --name dockerize-vuejs-app-1 frontend
+```
+
 ## Dev-Help
 
 #### Pages
