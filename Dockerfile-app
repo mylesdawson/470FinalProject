@@ -1,0 +1,16 @@
+FROM python:3.7
+WORKDIR /code
+ENV PYTHONUNBUFFERED=1
+COPY wait.sh /wait.sh
+RUN chmod +x /wait.sh
+COPY requirements.txt /tmp/
+RUN pip install -r /tmp/requirements.txt
+ADD ./ /code
+CMD /wait.sh db 5432 \
+  && python backend/skedge/manage.py collectstatic --noinput \
+  && python backend/skedge/manage.py makemigrations booking \
+  && python backend/skedge/manage.py migrate booking \
+  && python backend/skedge/manage.py migrate authtoken \
+  && python backend/skedge/manage.py showmigrations booking \
+#  && python backend/skedge/manage.py loaddata data.json \
+  && /usr/local/bin/uwsgi --ini /code/backend/skedge/skedge/uwsgi.ini
