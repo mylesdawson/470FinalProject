@@ -12,5 +12,9 @@ CMD /wait.sh db 5432 \
   && python skedge/manage.py migrate booking \
   && python skedge/manage.py migrate authtoken \
   && python skedge/manage.py showmigrations booking \
+  && echo "from django.contrib.auth.models import User; user = User.objects.create_user('customer1', password='secret', last_login='2020-08-09'); user.save()" | python skedge/manage.py shell \
+  && echo "from django.contrib.auth.models import User; user = User.objects.create_user('business1', password='secret', last_login='2020-08-09'); user.save()" | python skedge/manage.py shell \
+  && echo "from django.contrib.auth.models import User; user = User.objects.create_user('business2', password='secret', last_login='2020-08-09'); user.save()" | python skedge/manage.py shell \
+  && echo "from django.contrib.auth.models import User; user = User.objects.create_user('business3', password='secret', last_login='2020-08-09'); user.save()" | python skedge/manage.py shell \
   && python skedge/manage.py loaddata data.json \
   && /usr/local/bin/uwsgi --ini /code/skedge/skedge/uwsgi.ini
