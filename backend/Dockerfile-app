@@ -12,5 +12,5 @@ CMD /wait.sh db 5432 \
   && python skedge/manage.py migrate booking \
   && python skedge/manage.py migrate authtoken \
   && python skedge/manage.py showmigrations booking \
-#  && python skedge/manage.py loaddata data.json \
+  && python skedge/manage.py loaddata data.json \
   && /usr/local/bin/uwsgi --ini /code/skedge/skedge/uwsgi.ini
