@@ -58,7 +58,7 @@ export default new Router({
       component: HomePage,
     },
     {
-      path: '/search-listings',
+      path: '/search-listing/:id',
       name: 'SearchListingsPage',
       component: SearchListingsPage,
     },

@@ -9,7 +9,7 @@
         {{ business.short_description }}
       </div>
       <div>
-        <b-button size="sm" variant="primary" href="/?#/search-listings">View</b-button>
+        <b-button size="sm" variant="primary" @click="toBusinessPage">View</b-button>
       </div>
     </b-card-text>
     <template v-slot:footer>
@@ -22,7 +22,13 @@
 export default {
   name: 'BusinessComponent',
   props: ['business'],
-
+  methods: {
+    toBusinessPage: function(e) {
+      this.$router.push({
+        path: `/search-listing/${this.business.id}`
+      })
+    },
+  }
 }
 </script>
 

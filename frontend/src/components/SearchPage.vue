@@ -69,7 +69,7 @@ export default {
       this.businesses = res
     }
   },
-  mounted: async function() {
+  mounted: function() {
     const params = this.$route.params
     const filter = params.filterBy
     console.log(filter)
