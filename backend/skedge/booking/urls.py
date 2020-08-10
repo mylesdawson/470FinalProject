@@ -51,7 +51,7 @@ urlpatterns = [
     path('customer/<int:customer_id>/appointments/<int:appointment_id>/cancel/', views.customer_cancel_appointment),
 
     # Edit customer account information
-    path('customer/<int:customer_id>/edit/', views.new_customer_appointment),
+    path('customer/<int:customer_id>/edit/', views.edit_customer_account),
 
     # Edit business account information
     path('business/<int:business_id>/edit/', views.edit_business_account),

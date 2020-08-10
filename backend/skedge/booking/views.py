@@ -279,6 +279,35 @@ def new_business(request, user_id):
     return
 
 ###############################################################
+# Customers
+###############################################################
+
+# Edits the account information of a customer
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def edit_customer_account(request, customer_id):
+    customer = authenticate_customer(request, customer_id)
+
+    try:
+        user = customer.user
+        user.username = request.data['username']
+        user.first_name = request.data['first_name']
+        user.last_name = request.data['last_name']
+        if request.data['password'] != '':
+            user.set_password(request.data['password'])
+        customer.phone_number = parse_phone_number(request.data['phone_number'])
+        try:
+            user.save()
+        except Exception:
+            return JsonResponse(status=status.HTTP_409_CONFLICT, data={'status':'false', 'message':'Username already in use'})
+        customer.save()
+
+        serializer = CustomerBriefSerializer(customer, many=False)
+        return JsonResponse(serializer.data, safe=False)
+    except Exception:
+        return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+
+###############################################################
 # Businesses
 ###############################################################
 
@@ -302,10 +331,18 @@ def edit_business_account(request, business_id):
     try:
         user = business.user
         user.username = request.data['username']
-        user.set_password(request.data['password'])
-        user.save()
+        if request.data['password'] != '':
+            user.set_password(request.data['password'])
+
+        try:
+            user.save()
+        except Exception:
+            return JsonResponse(status=status.HTTP_409_CONFLICT, data={'status':'false', 'message':'Username already in use'})
+
+        serializer = UserSerializer(user, many=False)
+        return JsonResponse(serializer.data, safe=False)
     except Exception:
-        return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+        return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Username already in use'})
 
 # Edits the main information of a business
 @api_view(['POST'])
