@@ -10,7 +10,7 @@
         <strong>$ {{ service.price }}</strong>
       </b-col>
       <b-col cols="2">
-        <b-button>Book</b-button>
+        <b-button @click="toBookAppointment">Book</b-button>
       </b-col>
     </b-row>
   </b-list-group-item>
@@ -19,9 +19,17 @@
 <script>
 export default {
   props: [
-    "service"
+    "service",
+    "businessId"
   ],
-  name: 'ServiceComponent'
+  name: 'ServiceComponent',
+  methods: {
+    toBookAppointment: function() {
+      this.$router.push({
+        path: `/search-listing/${this.businessId}/book/${this.service.id}`
+      })
+    }
+  }
 }
 </script>
 

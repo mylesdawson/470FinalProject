@@ -32,6 +32,7 @@
             v-for="business_service in business_services"
             v-bind:key="business_service.id"
             v-bind:service="business_service"
+            v-bind:businessId="business_info.id"
           ></service-component>
         </b-list-group>
       </b-col>
@@ -73,5 +74,7 @@ export default {
 </script>
 
 <style scoped>
-
+  p {
+    margin-bottom: 0;
+  }
 </style>

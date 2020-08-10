@@ -12,6 +12,7 @@ import MainPage from '@/components/MainPage'
 import CreateAccountPage from '@/components/CreateAccountPage'
 import SearchListingsPage from '@/components/SearchListingsPage'
 import SearchPage from '@/components/SearchPage'
+import BookAppointmentPage from '@/components/BookAppointmentPage'
 
 import {
           BootstrapVue,
@@ -61,6 +62,11 @@ export default new Router({
       path: '/search-listing/:id',
       name: 'SearchListingsPage',
       component: SearchListingsPage,
+    },
+    {
+      path: '/search-listing/:business_id/book/:service_id',
+      name: 'BookAppointmentPage',
+      component: BookAppointmentPage
     },
     {
       path: '/search',
