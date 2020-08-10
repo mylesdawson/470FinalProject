@@ -3,6 +3,7 @@
     v-bind:title="business.business_name"
     img-src="https://picsum.photos/600/300/?image=25"
     class="card"
+    style="max-width: 20rem;"
   >
     <b-card-text>
       <div>
