@@ -85,9 +85,9 @@
         hideAll: function() {
             this.$modal.hide('eventDisplay');
         },
-        getAppointments: async function() {
+        getAppointments: async function(year, month) {
           try {
-              const res = await getAppointments();
+              const res = await getAppointments(year, month);
               this.appointments = res;
             } catch (error) {
               console.log(error);
@@ -118,12 +118,10 @@
             if (result) {
                 this.onCancelAppointment(item.id); 
             }
-        },
-        
-          
+        }, 
     },
     mounted() {
-     this.getAppointments();
+     
     },
     data: function() {
       return {
@@ -135,9 +133,10 @@
             weekends: true,
             selectable: true,
             defaultView: 'month',
-            eventRender: function(event, element) {
-              console.log(event)
-            },
+            viewRender: function(view){
+              const dateObj = moment(view.calendar.getDate()).toObject()
+              this.getAppointments(dateObj.years, dateObj.months)
+            }.bind(this),
             eventClick: function(date) {
               console.log(moment(date.start).toObject())
               this.selectedDateObj = moment(date.start).toObject();
