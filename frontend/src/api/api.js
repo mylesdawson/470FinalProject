@@ -1,10 +1,4 @@
-
-// URL may remain the same even in production. we may not need this code
 let host = "http://localhost:8080"
-if(process.env.NODE_ENV === "production") {
-  host = "TODO....."
-}
-
 
 /*
   Sexy generic request function from:

@@ -3,7 +3,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile-app
+      dockerfile: app.Dockerfile
     volumes:
       - static:/static:rw
     environment:
@@ -15,19 +15,18 @@ services:
     environment:
       POSTGRES_USER: project
       POSTGRES_PASSWORD: secret
-  # web:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile-web
-  #   ports:
-  #     - "8080:80"
-  #   volumes:
-  #     - static:/static:ro
-
+  web:
+    build:
+      context: .
+      dockerfile: web.Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - static:/static:ro
   vue:
     build:
       context: .
-      dockerfile: Dockerfile-vue
+      dockerfile: vue.Dockerfile
     ports:
       - "8000:80"
     volumes:
