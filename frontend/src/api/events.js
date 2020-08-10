@@ -10,7 +10,8 @@ function tokenHeader() {
   return header
 }
 
-export async function getAppointments() {
+export async function getAppointments(year, month) {
+  console.log(year, month)
   const token = tokenHeader()
   const business_id = localStorage.getItem("account_id")
   const headers = new Headers()
@@ -20,12 +21,12 @@ export async function getAppointments() {
     method: 'GET',
     headers
   }
- 
-  return fetch(host+`/business/${business_id}/services/available/2020/8`, options)
+  return fetch(host+`/business/${business_id}/appointments/month/${year}/${month+1}`, options)
     .then(response => response.json())
     .then(data => {
       console.log('Success:', data);
-      return data;
+
+      return sanitizeAppointments(data);
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -48,6 +49,7 @@ export async function getAppointmentsByDay(dateObj) {
     .then(response => response.json())
     .then(data => {
       console.log('Success:', data);
+      
       return data;
     })
     .catch((error) => {
@@ -77,4 +79,42 @@ export async function onCancelAppointment(app_id) {
     });
 }
 
+// format appointments for the vue-full calendar
+function sanitizeAppointments(appointmentsArray) {
+  
+  const newArray = appointmentsArray.filter(function (obj) {
+       
+    
+    obj.allDay = true;
 
+    if(obj.status == "past"){
+      obj.title = `Past: ${obj.appointments} appointments`;
+      obj.backgroundColor = "#6c757d";
+      obj.borderColor = "#495057";
+      obj.textColor = "#fff";
+    }
+    if(obj.status == "open"){
+      obj.title = `Open: ${obj.appointments} appointments`;
+      obj.backgroundColor = " #28a745";
+      obj.borderColor = " #28a745";
+      obj.textColor = "#fff";
+    }
+    if(obj.status == "unavailable"){
+      obj.title = `Unavailable for booking`;
+      obj.backgroundColor = "#17a2b8";
+      obj.borderColor = "#17a2b8";
+      obj.textColor = "#fff";
+    }
+    if(obj.status == "closed"){
+      obj.title = `Closed`;
+      obj.backgroundColor = "#dc3545";
+      obj.borderColor = "#dc3545";
+      obj.textColor = "#fff";
+    }
+
+    return obj;
+  });
+
+  return newArray;
+
+}
