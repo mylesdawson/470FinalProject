@@ -5,18 +5,19 @@
 
     <b-row>
       <b-col col style="text-align: left">
-        <h1><strong>{{ business_info.business_name }}</strong></h1>
         <div>
-          <span>{{ business_info.city }} </span>
-          <span>{{ business_info.province }} </span>
-          <span>{{ business_info.address }} </span>
-          <span>{{ business_info.postal_code }} </span>
-          <span></span>
+          <h1 style="margin-bottom: 0"><strong>{{ business_info.business_name }}</strong></h1>
+          <p style="margin-bottom: 0.5rem;">{{ business_info.address }}, {{ business_info.city }}, {{ business_info.province }}, {{ business_info.postal_code }}</p>
+          <p>{{ business_info.long_description }}</p>
         </div>
 
-        <h4>Contact information</h4>
-        <p>{{ business_info.contact_email }}</p>
-        <p>{{ business_info.phone_number }}</p>
+        <div style="margin-top: 1rem;">
+          <h4>Contact</h4>
+          <p>
+            Email: {{ business_info.contact_email }}<br>
+            Phone: {{ business_info.phone_number }}
+          </p>
+        </div>
       </b-col>
     </b-row>
 
