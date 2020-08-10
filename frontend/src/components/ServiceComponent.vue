@@ -29,7 +29,11 @@ export default {
   methods: {
     toBookAppointment: function() {
       this.$router.push({
-        path: `/search-listing/${this.businessId}/book/${this.service.id}`
+        path: `/search-listing/${this.businessId}/book/${this.service.id}`,
+        params: {
+          service: this.service,
+          business: this.business
+        },
       })
     }
   }

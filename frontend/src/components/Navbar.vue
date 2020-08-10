@@ -12,15 +12,11 @@
           <b-nav-item :active='$route.name =="HomePage"' to="/home">Home</b-nav-item>
           <b-nav-item :active='$route.name =="CalendarPage"' to="/calendar">Calendar</b-nav-item>
           <b-nav-item :active='$route.name =="ServicesPage"' to="/services">Services</b-nav-item>
-          <b-nav-item :active='$route.name =="TeamPage"' to="/team">Team</b-nav-item>
-          <b-nav-item :active='$route.name =="ListingsPage"' to="/listings">Listings</b-nav-item>
           <b-nav-item :active='$route.name =="BusinessPage"' to="/business">Business</b-nav-item>
         </b-navbar-nav>
 
         <b-navbar-nav class="ml-auto">
-          <b-nav-item>
-            <b-button variant="outline-primary" type="submit" to="/new-listing">Create New Listing</b-button>
-          </b-nav-item>
+         
           <b-nav-item>
             <b-nav-item-dropdown
               class="profile-dropdown"
