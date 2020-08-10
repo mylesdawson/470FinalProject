@@ -36,7 +36,7 @@ export default {
         const res = await login(this.username, this.password)
         // console.log(res)
         if (res.token) {
-          this.$router.push('/home')
+          this.$router.push('/calendar')
           // console.log(res.token)
         }
         this.show = false
