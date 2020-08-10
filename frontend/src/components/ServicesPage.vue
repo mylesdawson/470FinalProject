@@ -88,13 +88,8 @@
 
         <b-form-group
           label="Duration (minutes)">
-             <b-form-spinbutton
-              wrap
-              min="15"
-              max="180"
-              step="15"
-              v-model="newService.duration">
-            </b-form-spinbutton>
+          
+            <b-form-select v-model="newService.duration" :options="timeOptions"></b-form-select>
         </b-form-group>
 
         <b-button type="submit" variant="primary" v-on:click="createService">Save</b-button>
@@ -202,7 +197,17 @@
            price: 0,
            duration: 0,
          },
-         services: []
+         services: [],
+         timeOptions: [
+          { value: 15, text: '15 mins' },
+          { value: 30, text: '30 mins' },
+          { value: 45, text: '45 mins' },
+          { value: 60, text: '1:00 hour' },
+          { value: 90, text: '1:30 hours' },
+          { value: 120, text: '2:00 hours' },
+          { value: 150, text: '2:30 hours' },
+          { value: 180, text: '3:00 hours' }
+        ]
       } 
     },
     mounted() {
@@ -211,7 +216,7 @@
     methods: {
       showEdit: function(item, index) {
         console.log(item)
-          const body = {business: item.business,name: item.name, description: item.description, price: Number(item.price), duration: item.duration};
+          const body = {id: item.id ,business: item.business,name: item.name, description: item.description, price: Number(item.price), duration: item.duration};
           this.selectedItem = body;
           this.$modal.show('serviceEdit');
       },
@@ -235,6 +240,7 @@
           // this.newService.price = String(this.newService.price);
           try {
             const res = await createService(this.newService);
+            this.newService = {name: '', description: '', price: 0, duration: 0 };
             this.getServices();
             this.hideAll();
           } catch (error) {
@@ -248,22 +254,12 @@
               this.hideAll();
           }
       },
-      saveEditedService: async function() {
-        console.log(this.selectedItem);
-        // try {
-        //   const res = await editService(this.selectedItem);
-        //   //reload data
-        //   this.hideAll();
-        // } catch (error) {
-        //   console.log(error);
-        // }
-      },
       deleteService: async function() {
           console.log(this.selectedItem)
           var result = confirm("Are you sure you want to delete this service?");
           if (result) {
               try {
-                const res = await deleteService(this.selectedItem.business);
+                const res = await deleteService(this.selectedItem.id);
                 //reload data
                 this.hideAll();
               } catch (error) {
