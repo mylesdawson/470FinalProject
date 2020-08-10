@@ -130,6 +130,7 @@
           appointmentsByDay: [],
           appointments: [],
           config: {
+            navLinks: false,
             weekends: true,
             selectable: true,
             defaultView: 'month',
@@ -154,6 +155,11 @@
                 daysOfWeek: [ 1, 2, 3, 4, 5 ], // Monday - Thursday
                 startTime: '9:00', // a start time (9am in this example)
                 endTime: '17:00', // an end time (5pm in this example)
+            },
+            header: {
+              left: 'prev,next today',
+              center: 'title',
+              right: false,
             }
           },
         }
