@@ -182,10 +182,6 @@ export async function getBusinessInfo(business_id) {
   const headers = new Headers()
   headers.append("Content-Type", "application.json")
 
-  const token = tokenHeader()
-
-  headers.append(token[0], token[1])
-
   const options = {
     headers,
   }
