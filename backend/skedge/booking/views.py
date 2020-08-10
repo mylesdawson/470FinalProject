@@ -410,7 +410,7 @@ def remove_favorite_business(request, customer_id, business_id):
 # Return all services of a specific business
 @api_view(['GET'])
 def business_services(request, business_id):
-    services = Service.objects.filter(business=business_id)
+    services = Service.objects.filter(business=business_id, deleted=False)
     serializer = ServiceSerializer(services, many=True)
     return JsonResponse(serializer.data, safe=False)
 
@@ -446,7 +446,7 @@ def delete_business_service(request, business_id, service_id):
     authenticate_business(request, business_id)
 
     try:
-        service = Service.objects.get(pk=service_id)
+        service = Service.objects.get(pk=service_id, deleted=False)
         service.deleted = True
         service.save()
 
@@ -489,7 +489,7 @@ def services_available_times(request, business_id, year, month, day):
     if availability != 'open':
         return JsonResponse({'availability': availability, 'services': []}, safe=False)
 
-    services = Service.objects.filter(business=business_id)
+    services = Service.objects.filter(business=business_id, deleted=False)
     appointments = list(Appointment.objects.filter(business=business_id, date__year=year, date__month=month, date__day=day).values('start_time', 'end_time').order_by('start_time'))
     appointments.insert(0, {'end_time': opening_times[day_of_week]})
     appointments.append({'start_time': closing_times[day_of_week]})
@@ -528,7 +528,7 @@ def services_available_days(request, business_id, year, month):
     days_open, opening_times, closing_times = get_business_hours(business)
 
     try:
-        min_duration = Service.objects.filter(business=business_id).aggregate(Min('duration'))['duration__min']
+        min_duration = Service.objects.filter(business=business_id, deleted=False).aggregate(Min('duration'))['duration__min']
     except AttributeError:
         return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
 
@@ -651,7 +651,7 @@ def business_appointments_by_month(request, business_id, year, month):
     days_open, opening_times, closing_times = get_business_hours(business)
 
     try:
-        min_duration = Service.objects.filter(business=business_id).aggregate(Min('duration'))['duration__min']
+        min_duration = Service.objects.filter(business=business_id, deleted=False).aggregate(Min('duration'))['duration__min']
     except AttributeError:
         return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
 
@@ -707,7 +707,7 @@ def new_customer_appointment(request, customer_id):
 
     try:
         business = Business.objects.get(pk=request.data['business_id'])
-        service = Service.objects.get(pk=request.data['service_id'])
+        service = Service.objects.get(pk=request.data['service_id'], deleted=False)
     except (Business.DoesNotExist, Service.DoesNotExist):
         return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
 

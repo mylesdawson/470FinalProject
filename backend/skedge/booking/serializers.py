@@ -62,7 +62,7 @@ class BusinessUserSerializer(serializers.HyperlinkedModelSerializer):
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
-        fields = ['id', 'name', 'description', 'price', 'duration', 'business']
+        fields = ['id', 'name', 'description', 'price', 'duration', 'deleted', 'business']
 
     def create(self, validated_data):
         business = validated_data.pop('business')
@@ -98,7 +98,7 @@ class BusinessBriefSerializer(serializers.ModelSerializer):
 class ServiceBriefSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
-        fields = ['id', 'name', 'description', 'price', 'duration']
+        fields = ['id', 'name', 'description', 'price', 'deleted', 'duration']
 
 class CustomerAppointmentSerializer(serializers.ModelSerializer):
     business = BusinessBriefSerializer(many=False, read_only=True)
