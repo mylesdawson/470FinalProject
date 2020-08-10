@@ -44,6 +44,11 @@ urlpatterns = [
     # Requires customer authentication
     path('customer/<int:customer_id>/appointments/', views.customer_appointments),
 
+
+    # Create an appointment for a customer
+    # Requires customer authentication
+    path('customer/<int:customer_id>/appointments/new/', views.new_customer_appointment),
+
     # Cancel an appointment by a customer
     # Requires customer authentication
     path('customer/<int:customer_id>/appointments/<int:appointment_id>/cancel/', views.customer_cancel_appointment),

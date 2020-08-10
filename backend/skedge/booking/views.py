@@ -3,6 +3,7 @@ from django.contrib.auth import logout, authenticate, get_user_model
 from django.middleware.csrf import get_token
 from django.contrib.auth.models import User
 from django.db.models import Min
+from django.utils import dateparse
 from rest_framework import viewsets, status, generics, exceptions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
@@ -697,6 +698,95 @@ def business_appointments_by_month(request, business_id, year, month):
         data.append({'date': day, 'status': availability, 'appointments': num_appointments})
 
     return JsonResponse(data, safe=False)
+
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def new_customer_appointment(request, customer_id):
+    customer = authenticate_customer(request, customer_id)
+
+    try:
+        business = Business.objects.get(pk=request.data['business_id'])
+        service = Service.objects.get(pk=request.data['service_id'])
+    except (Business.DoesNotExist, Service.DoesNotExist):
+        return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+
+    try:
+        appointment = Appointment(
+            date=request.data['date'],
+            start_time=request.data['start_time'],
+            end_time=request.data['end_time'],
+            cancelled=False,
+            cancelled_by_customer=False,
+            cancelled_by_business=False,
+            customer=customer,
+            service=service,
+            business=business
+        )
+        appointment.full_clean()
+        print('HELLO')
+        print(type(appointment.date))
+        print(type(appointment.start_time))
+        print(type(appointment.end_time))
+
+        days_open, opening_times, closing_times = get_business_hours(business)
+
+        date = appointment.date
+        start_time = appointment.start_time
+        end_time = appointment.end_time
+
+        new_start_date = datetime.datetime.combine(date, start_time)
+        new_end_date = datetime.datetime.combine(date, end_time)
+        day_of_week = date.weekday()
+        opening_time = opening_times[day_of_week]
+        closing_time = closing_times[day_of_week]
+        print(new_start_date)
+        print(new_end_date)
+        print(opening_time)
+        print(closing_time)
+        print(days_open[day_of_week] == False)
+        print(start_time < opening_time)
+        print(end_time > closing_time)
+
+        if days_open[day_of_week] == False or start_time < opening_time or end_time > closing_time:
+            return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+
+        day_appointments = list(Appointment.objects.filter(business_id=request.data['business_id'], date=date).values('start_time', 'end_time').order_by('start_time'))
+        print(day_appointments)
+        # Make sure it does not conflict with existing appointments
+        for existing_appointment in day_appointments:
+            existing_start_date = datetime.datetime.combine(date, existing_appointment['start_time'])
+            existing_end_date = datetime.datetime.combine(date, existing_appointment['end_time'])
+
+            if new_start_date < existing_end_date and new_end_date > existing_start_date:
+                return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+
+        appointment.save()
+
+        serializer = ServiceSerializer(service, many=False)
+        return JsonResponse(serializer.data, safe=False)
+
+    except Exception as e:
+        print(e)
+        return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+
+    try:
+        appointment = Appointment.objects.get(pk=appointment_id, business=business_id)
+    except Appointment.DoesNotExist:
+        return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+
+    if appointment.cancelled:
+        return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+
+    appointment.cancelled = True
+    appointment.cancelled_by_business = True
+    appointment.cancelled_by_customer = False
+    appointment.save()
+
+    serializer = BusinessAppointmentSerializer(appointment, many=False)
+
+    return JsonResponse(serializer.data, safe=False)
+
 
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
