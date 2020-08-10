@@ -297,14 +297,15 @@ def business_info(request, business_id):
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def edit_business_account(request, business_id):
-    business = authenticate(request, business_id)
-    print(business.user_id)
-    print(business.user)
+    business = authenticate_business(request, business_id)
+
     try:
-        user = User.objects.get(pk=business.user_id)
-        return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
-    except User.DoesNotExist:
-        return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+        user = business.user
+        user.username = request.data['username']
+        user.set_password(request.data['password'])
+        user.save()
+    except Exception:
+        return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
 # Edits the main information of a business
 @api_view(['POST'])
@@ -325,8 +326,9 @@ def edit_main_business_info(request, business_id):
 
         serializer = BusinessSerializer(business, many=False)
         return JsonResponse(serializer.data, safe=False)
-    except Exception:
-        return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+    except Exception as e:
+        print(e)
+        return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
 # Edits the location information of a business
 @api_view(['POST'])
@@ -346,7 +348,7 @@ def edit_location_business_info(request, business_id):
         serializer = BusinessSerializer(business, many=False)
         return JsonResponse(serializer.data, safe=False)
     except Exception:
-        return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+        return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
 # Edits the hours information of a business
 @api_view(['POST'])
@@ -388,7 +390,7 @@ def edit_hours_business_info(request, business_id):
         serializer = BusinessSerializer(business, many=False)
         return JsonResponse(serializer.data, safe=False)
     except Exception:
-        return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+        return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
 ###############################################################
 # Favorites
@@ -733,7 +735,7 @@ def business_appointments_by_month(request, business_id, year, month):
                 availability = 'open'
         else:
             availability = 'closed'
-        data.append({'date': day, 'status': availability, 'appointments': num_appointments})
+        data.append({'date': date, 'status': availability, 'appointments': num_appointments})
 
     return JsonResponse(data, safe=False)
 
