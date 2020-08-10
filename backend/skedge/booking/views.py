@@ -720,9 +720,9 @@ def business_appointments_by_month(request, business_id, year, month):
 
             fully_booked = True
             for i in range(1, len(day_appointments)):
-                date = datetime.date(1, 1, 1)
-                first_time = datetime.datetime.combine(date, day_appointments[i-1]['end_time'])
-                second_time = datetime.datetime.combine(date, day_appointments[i]['start_time'])
+                temp_date = datetime.date(1, 1, 1)
+                first_time = datetime.datetime.combine(temp_date, day_appointments[i-1]['end_time'])
+                second_time = datetime.datetime.combine(temp_date, day_appointments[i]['start_time'])
                 interval = second_time - first_time
 
                 if (interval.total_seconds() // 60) >= min_duration:
