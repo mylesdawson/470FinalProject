@@ -3,7 +3,7 @@
 
 <!-- FIRST COLUMN (SERVICES TABLE) -->
         
-            <b-card>
+            <b-card bg-variant="light">
               <b-row>
                     <b-col cols="12" md="3">
                     <h3>Services</h3>
@@ -88,7 +88,6 @@
 
         <b-form-group
           label="Duration (minutes)">
-          
             <b-form-select v-model="newService.duration" :options="timeOptions"></b-form-select>
         </b-form-group>
 

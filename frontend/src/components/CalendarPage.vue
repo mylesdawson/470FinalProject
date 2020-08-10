@@ -1,6 +1,6 @@
 <template>
 <div>
-    <b-card no-body>
+    <b-card no-body bg-variant="light">
       <b-card-body>
         <full-calendar :config="config" :events="appointments"/>
       </b-card-body>

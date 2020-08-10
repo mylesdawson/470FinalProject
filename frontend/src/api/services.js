@@ -11,6 +11,28 @@ function tokenHeader() {
   return header
 }
 
+export async function getBusiness() {
+  const token = tokenHeader()
+  const headers = new Headers()
+  const business_id = localStorage.getItem("account_id")
+  headers.append(token[0], token[1])
+
+  const options = {
+    method: 'GET',
+    headers
+  }
+
+  return fetch(host+`/business/${business_id}/`, options)
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+      return data;
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+}
+
 export async function getServices() {
   const token = tokenHeader()
   const headers = new Headers()
