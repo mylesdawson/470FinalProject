@@ -65,11 +65,11 @@ urlpatterns = [
 
     # Edit the location information of a business
     # Requires business authentication
-    path('business/<int:business_id>/edit/location', views.edit_location_business_info),
+    path('business/<int:business_id>/edit/location/', views.edit_location_business_info),
 
     # Edit the hours information of a business
     # Requires business authentication
-    path('business/<int:business_id>/edit/hours', views.edit_hours_business_info),
+    path('business/<int:business_id>/edit/hours/', views.edit_hours_business_info),
 
     # Get the services offered by a business
     path('business/<int:business_id>/services/', views.business_services),
@@ -79,7 +79,7 @@ urlpatterns = [
 
     # Delete a service
     # Requires business authentication
-    path('business/<int:business_id>/services/<int:service_id>/delete', views.delete_business_service),
+    path('business/<int:business_id>/services/<int:service_id>/delete/', views.delete_business_service),
 
 
     # Get the available appointment time slots for each service for a business for a specific day
