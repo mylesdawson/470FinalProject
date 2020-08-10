@@ -384,12 +384,9 @@ def edit_hours_business_info(request, business_id):
 def favorite_businesses(request, customer_id):
     authenticate_customer(request, customer_id)
 
-    if request.method == 'GET':
-        businesses = Business.objects.filter(favorite__customer=customer_id)
-        serializer = BusinessSerializer(businesses, many=True)
-        return JsonResponse(serializer.data, safe=False)
-
-    return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+    businesses = Business.objects.filter(favorite__customer=customer_id)
+    serializer = BusinessSerializer(businesses, many=True)
+    return JsonResponse(serializer.data, safe=False)
 
 # Add a business to a customer's favorited businesses
 @api_view(['POST'])
@@ -445,7 +442,6 @@ def business_services(request, business_id):
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def new_business_service(request, business_id):
-    # print(request.data)
     business = authenticate_business(request, business_id)
 
     try:
@@ -462,8 +458,7 @@ def new_business_service(request, business_id):
         serializer = ServiceSerializer(service, many=False)
         return JsonResponse(serializer.data, safe=False)
 
-    except Exception as e:
-        print(e)
+    except Exception:
         return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
 
 # Deletes a service for a business
@@ -636,9 +631,9 @@ def businesses_search(request, category, search):
 # Appointments
 ###############################################################
 
+# Returns all of a customer's appointments
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
-# Returns all of a customer's appointments
 def customer_appointments(request, customer_id):
     authenticate_customer(request, customer_id)
 
@@ -738,6 +733,9 @@ def new_customer_appointment(request, customer_id):
     except (Business.DoesNotExist, Service.DoesNotExist):
         return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
 
+    if service.business_id != int(request.data['business_id']):
+        return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Invalid service for business'})
+
     try:
         appointment = Appointment(
             date=request.data['date'],
@@ -751,10 +749,6 @@ def new_customer_appointment(request, customer_id):
             business=business
         )
         appointment.full_clean()
-        print('HELLO')
-        print(type(appointment.date))
-        print(type(appointment.start_time))
-        print(type(appointment.end_time))
 
         days_open, opening_times, closing_times = get_business_hours(business)
 
@@ -767,26 +761,42 @@ def new_customer_appointment(request, customer_id):
         day_of_week = date.weekday()
         opening_time = opening_times[day_of_week]
         closing_time = closing_times[day_of_week]
-        print(new_start_date)
-        print(new_end_date)
-        print(opening_time)
-        print(closing_time)
-        print(days_open[day_of_week] == False)
-        print(start_time < opening_time)
-        print(end_time > closing_time)
+        duration = (new_end_date - new_start_date).seconds // 60
+        days_between = (new_start_date - datetime.datetime.now()).days
 
-        if days_open[day_of_week] == False or start_time < opening_time or end_time > closing_time:
-            return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+        acceptable_minutes = []
+        i = 0
+        while (i*MIN_DURATION < 60):
+            acceptable_minutes.append(i*MIN_DURATION)
+            i += 1
+
+        # Check that appointment date and time is valid
+        if days_open[day_of_week] == False:
+            return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Invalid: business is closed on that date'})
+        if days_between < 0:
+            return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Invalid: date has past'})
+        if days_between > business.days_bookable_in_advance:
+            return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Invalid: date is too far in the future'})
+        if start_time < opening_time:
+            return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Invalid: starting time is before opening time'})
+        if end_time > closing_time:
+            return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Invalid: ending time is after closing time'})
+        if start_time.minute not in acceptable_minutes or start_time.second != 0:
+            return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Invalid: start time is not at a valid miute'})
+        if end_time.minute not in acceptable_minutes or end_time.second != 0:
+            return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Invalid: end time is not at a valid minute'})
+        if duration != service.duration:
+            return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Invalid: appointment duration does not match service duration'})
 
         day_appointments = list(Appointment.objects.filter(business_id=request.data['business_id'], date=date).values('start_time', 'end_time').order_by('start_time'))
-        print(day_appointments)
-        # Make sure it does not conflict with existing appointments
+
+        # Make sure appointment does not conflict with existing appointments
         for existing_appointment in day_appointments:
             existing_start_date = datetime.datetime.combine(date, existing_appointment['start_time'])
             existing_end_date = datetime.datetime.combine(date, existing_appointment['end_time'])
 
             if new_start_date < existing_end_date and new_end_date > existing_start_date:
-                return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+                return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Invalid: conflicts with existing appoitments'})
 
         appointment.save()
 
