@@ -395,13 +395,40 @@ def favorite_businesses(request, customer_id):
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def add_favorite_business(request, customer_id, business_id):
-    return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+    customer = authenticate_customer(request, customer_id)
+
+    try:
+        business = Business.objects.get(pk=business_id)
+    except Business.DoesNotExist:
+        return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+
+    try:
+        existing_favorite = Favorite.objects.get(customer=customer, business=business)
+        return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
+    except Favorite.DoesNotExist:
+        favorite = Favorite(
+            customer=customer,
+            business=business
+        )
+        favorite.save()
+
+        serializer = FavoriteSerializer(favorite, many=False)
+        return JsonResponse(serializer.data, safe=False)
+
 
 # Remove a business from a customer's favorited businesses
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def remove_favorite_business(request, customer_id, business_id):
-    return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+    customer = authenticate_customer(request, customer_id)
+
+    try:
+        favorite = Favorite.objects.get(customer=customer, business_id=business_id)
+        favorite.delete()
+        serializer = FavoriteSerializer(favorite, many=False)
+        return JsonResponse(serializer.data, safe=False)
+    except Favorite.DoesNotExist:
+        return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
 
 ###############################################################
 # Services

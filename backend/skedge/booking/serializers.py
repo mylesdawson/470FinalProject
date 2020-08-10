@@ -115,3 +115,8 @@ class BusinessAppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = ['id', 'start_time', 'end_time', 'cancelled', 'cancelled_by_customer', 'cancelled_by_business', 'customer', 'service']
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorite
+        fields = ['customer', 'business']
