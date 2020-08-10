@@ -178,16 +178,22 @@ export async function getServicesByBusiness(business_id) {
     })
 }
 
-// export async function search(searchString) {
-//   const headers = new Headers()
-//   headers.append("Content-Type", "application/json")
+export async function getBusinessInfo(business_id) {
+  const headers = new Headers()
+  headers.append("Content-Type", "application.json")
 
-//   const options = {
-//     method: 'GET'
-//     headers,
-//     body: JSON.stringify(searchString)
-//   }
+  const token = tokenHeader()
 
-//   fetch(`${host}/`)
+  headers.append(token[0], token[1])
 
-// }
+  const options = {
+    headers,
+  }
+
+  return fetch(`${host}/business/${business_id}/`, options)
+  .then(res => res.json())
+  .then(res => res)
+  .catch(e => {
+    console.log(e)
+  })
+}

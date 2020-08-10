@@ -414,14 +414,15 @@ def business_services(request, business_id):
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def new_business_service(request, business_id):
+    # print(request.data)
     business = authenticate_business(request, business_id)
 
     try:
         service = Service(
-            name=request.POST['name'],
-            description=request.POST['description'],
-            price=request.POST['price'],
-            duration=request.POST['duration'],
+            name=request.data['name'],
+            description=request.data['description'],
+            price=request.data['price'],
+            duration=request.data['duration'],
             business=business
         )
         service.full_clean()
