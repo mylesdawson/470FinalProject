@@ -38,12 +38,9 @@ urlpatterns = [
     # Requires customer authentication
     path('favorites/<int:customer_id>/remove/<int:business_id>/', views.remove_favorite_business),
 
-
-
     # Get the appointments for a customer
     # Requires customer authentication
     path('customer/<int:customer_id>/appointments/', views.customer_appointments),
-
 
     # Create an appointment for a customer
     # Requires customer authentication
@@ -52,6 +49,15 @@ urlpatterns = [
     # Cancel an appointment by a customer
     # Requires customer authentication
     path('customer/<int:customer_id>/appointments/<int:appointment_id>/cancel/', views.customer_cancel_appointment),
+
+    # Edit customer account information
+    path('customer/<int:customer_id>/edit/', views.new_customer_appointment),
+
+    # Edit business account information
+    path('business/<int:business_id>/edit/', views.edit_business_account),
+
+
+    # Edit business account information
 
     # Edit the main information of a business
     # Requires business authentication

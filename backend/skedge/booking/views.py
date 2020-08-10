@@ -172,12 +172,12 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 
 
 def new_customer(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    first_name = request.POST['first_name']
-    last_name = request.POST['last_name']
-    email = request.POST['email']
-    phone_number = parse_phone_number(request.POST['phone_number'])
+    username = request.data['username']
+    password = request.data['password']
+    first_name = request.data['first_name']
+    last_name = request.data['last_name']
+    email = request.data['email']
+    phone_number = parse_phone_number(request.data['phone_number'])
 
     user = User.objects.create_user(
         username=username,
@@ -200,12 +200,12 @@ def edit_customer(request, user_id):
     customer = user.customer
 
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        email = request.POST['email']
-        phone_number = parse_phone_number(request.POST['phone_number'])
+        username = request.data['username']
+        password = request.data['password']
+        first_name = request.data['first_name']
+        last_name = request.data['last_name']
+        email = request.data['email']
+        phone_number = parse_phone_number(request.data['phone_number'])
 
         user.username = username
         user.set_password(password)
@@ -293,19 +293,32 @@ def business_info(request, business_id):
     serializer = BusinessSerializer(business, many=False)
     return JsonResponse(serializer.data, safe=False)
 
+# Edits the account information of a business
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def edit_business_account(request, business_id):
+    business = authenticate(request, business_id)
+    print(business.user_id)
+    print(business.user)
+    try:
+        user = User.objects.get(pk=business.user_id)
+        return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+    except User.DoesNotExist:
+        return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
+
 # Edits the main information of a business
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def edit_main_business_info(request, business_id):
-    business = authenticate_business(business_id)
+    business = authenticate_business(request, business_id)
 
     try:
-        business.business_name = request.POST['business_name']
-        business.short_description = request.POST['short_description']
-        business.long_description = request.POST['long_description']
-        business.contact_email = request.POST['contact_email']
-        business.phone_number = parse_phone_number(request.POST['phone_number'])
-        business.category = request.POST['category']
+        business.business_name = request.data['business_name']
+        business.short_description = request.data['short_description']
+        business.long_description = request.data['long_description']
+        business.contact_email = request.data['contact_email']
+        business.phone_number = parse_phone_number(request.data['phone_number'])
+        business.category = request.data['category']
 
         business.full_clean()
         business.save()
@@ -319,13 +332,13 @@ def edit_main_business_info(request, business_id):
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def edit_location_business_info(request, business_id):
-    business = authenticate_business(business_id)
+    business = authenticate_business(request, business_id)
 
     try:
-        business.address = request.POST['address']
-        business.city = request.POST['city']
-        business.province = request.POST['province']
-        business.postal_code = request.POST['postal_code']
+        business.address = request.data['address']
+        business.city = request.data['city']
+        business.province = request.data['province']
+        business.postal_code = request.data['postal_code']
 
         business.full_clean()
         business.save()
@@ -339,32 +352,35 @@ def edit_location_business_info(request, business_id):
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def edit_hours_business_info(request, business_id):
-    business = authenticate_business(business_id)
+    business = authenticate_business(request, business_id)
 
     try:
-        business.monday_open = request.POST['monday_open']
-        business.tuesday_open = request.POST['tuesday_open']
-        business.wednesday_open = request.POST['wednesday_open']
-        business.thursday_open = request.POST['thursday_open']
-        business.friday_open = request.POST['friday_open']
-        business.saturday_open = request.POST['saturday_open']
-        business.sunday_open = request.POST['sunday_open']
+        business.monday_open = request.data['monday_open']
+        business.tuesday_open = request.data['tuesday_open']
+        business.wednesday_open = request.data['wednesday_open']
+        business.thursday_open = request.data['thursday_open']
+        business.friday_open = request.data['friday_open']
+        business.saturday_open = request.data['saturday_open']
+        business.sunday_open = request.data['sunday_open']
 
-        business.monday_opening_time = request.POST['monday_opening_time']
-        business.tuesday_opening_time = request.POST['tuesday_opening_time']
-        business.wednesday_opening_time = request.POST['wednesday_opening_time']
-        business.thursday_opening_time = request.POST['thursday_opening_time']
-        business.friday_opening_time = request.POST['friday_opening_time']
-        business.saturday_opening_time = request.POST['saturday_opening_time']
-        business.sunday_opening_time = request.POST['sunday_opening_time']
+        business.monday_opening_time = request.data['monday_opening_time']
+        business.tuesday_opening_time = request.data['tuesday_opening_time']
+        business.wednesday_opening_time = request.data['wednesday_opening_time']
+        business.thursday_opening_time = request.data['thursday_opening_time']
+        business.friday_opening_time = request.data['friday_opening_time']
+        business.saturday_opening_time = request.data['saturday_opening_time']
+        business.sunday_opening_time = request.data['sunday_opening_time']
 
-        business.monday_closing_time = request.POST['monday_closing_time']
-        business.tuesday_closing_time = request.POST['tuesday_closing_time']
-        business.wednesday_closing_time = request.POST['wednesday_closing_time']
-        business.thursday_closing_time = request.POST['thursday_closing_time']
-        business.friday_closing_time = request.POST['friday_closing_time']
-        business.saturday_closing_time = request.POST['saturday_closing_time']
-        business.sunday_closing_time = request.POST['sunday_closing_time']
+        business.monday_closing_time = request.data['monday_closing_time']
+        business.tuesday_closing_time = request.data['tuesday_closing_time']
+        business.wednesday_closing_time = request.data['wednesday_closing_time']
+        business.thursday_closing_time = request.data['thursday_closing_time']
+        business.friday_closing_time = request.data['friday_closing_time']
+        business.saturday_closing_time = request.data['saturday_closing_time']
+        business.sunday_closing_time = request.data['sunday_closing_time']
+
+        business.days_bookable_in_advance = request.data['days_bookable_in_advance']
+        business.hours_notice_in_advance = request.data['hours_notice_in_advance']
 
         business.full_clean()
         business.save()
@@ -803,27 +819,8 @@ def new_customer_appointment(request, customer_id):
         serializer = ServiceSerializer(service, many=False)
         return JsonResponse(serializer.data, safe=False)
 
-    except Exception as e:
-        print(e)
+    except Exception:
         return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
-
-    try:
-        appointment = Appointment.objects.get(pk=appointment_id, business=business_id)
-    except Appointment.DoesNotExist:
-        return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
-
-    if appointment.cancelled:
-        return JsonResponse(status=status.HTTP_400_BAD_REQUEST, data={'status':'false', 'message':'Bad request'})
-
-    appointment.cancelled = True
-    appointment.cancelled_by_business = True
-    appointment.cancelled_by_customer = False
-    appointment.save()
-
-    serializer = BusinessAppointmentSerializer(appointment, many=False)
-
-    return JsonResponse(serializer.data, safe=False)
-
 
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
