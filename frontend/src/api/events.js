@@ -1,7 +1,4 @@
 let host = "http://localhost:8080"
-if(process.env.NODE_ENV === "production") {
-  host = "TODO....."
-}
 
 function tokenHeader() {
   const token = localStorage.getItem("token")

@@ -1,5 +1,4 @@
 FROM node:lts-alpine as build-stage
-COPY ./new.conf /etc/nginx/conf.d/default.conf
 WORKDIR /app
 COPY frontend/package*.json ./
 RUN npm install
