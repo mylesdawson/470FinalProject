@@ -21,7 +21,7 @@
             <b-nav-item-dropdown
               class="profile-dropdown"
               right
-              text="Your Account">
+              :text="'Your '+ account_type+ ' account'">
               <!-- <b-dropdown-item>Settings</b-dropdown-item> -->
               <b-dropdown-item v-on:click="logout">Logout</b-dropdown-item>
             </b-nav-item-dropdown>
@@ -35,7 +35,7 @@
             <b-nav-item-dropdown
               class="profile-dropdown"
               right
-              text="Your Account">
+              :text="'Your '+ account_type+ ' account'">
               <!-- <b-dropdown-item>Settings</b-dropdown-item> -->
               <b-dropdown-item v-on:click="logout">Logout</b-dropdown-item>
             </b-nav-item-dropdown>

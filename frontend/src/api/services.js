@@ -33,6 +33,33 @@ export async function getBusiness() {
     });
 }
 
+export async function editBusiness(obj, type) {
+  const token = tokenHeader()
+  const headers = new Headers({
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+
+  })
+  const business_id = localStorage.getItem("account_id")
+  headers.append(token[0], token[1])
+
+  const options = {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(obj)
+  }
+
+  return fetch(host+`/business/${business_id}/edit/${type}/`, options)
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+      return data;
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+}
+
 export async function getServices() {
   const token = tokenHeader()
   const headers = new Headers()
@@ -93,7 +120,7 @@ export async function deleteService(service_id) {
     headers
   }
 
-  return fetch(host+`/business/${business_id}/services/${service_id}/delete`, options)
+  return fetch(host+`/business/${business_id}/services/${service_id}/delete/`, options)
     .then(response => response.json())
     .then(data => {
       console.log('Success:', data);

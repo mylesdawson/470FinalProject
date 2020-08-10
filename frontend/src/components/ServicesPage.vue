@@ -259,6 +259,7 @@
           if (result) {
               try {
                 const res = await deleteService(this.selectedItem.id);
+                this.getServices();
                 //reload data
                 this.hideAll();
               } catch (error) {
