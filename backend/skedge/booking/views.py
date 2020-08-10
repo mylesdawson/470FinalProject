@@ -695,6 +695,9 @@ def business_appointments_by_month(request, business_id, year, month):
     except AttributeError:
         return JsonResponse(status=status.HTTP_404_NOT_FOUND, data={'status': 'details'})
 
+    if min_duration is None:
+        return JsonResponse([], safe=False)
+
     _, days_in_month = monthrange(year, month)
 
     appointments = Appointment.objects.filter(business=business_id, date__year=year, date__month=month, cancelled=False)
