@@ -36,8 +36,12 @@ export async function getServices() {
 export async function createService(service) {
   const token = tokenHeader()
   const headers = new Headers()
+  headers.append("Content-Type", "application/json")
   const business_id = localStorage.getItem("account_id")
   headers.append(token[0], token[1])
+
+  // console.log(service)
+  // console.log(JSON.stringify(service))
 
   const options = {
     method: 'POST',
@@ -45,7 +49,7 @@ export async function createService(service) {
     body: JSON.stringify(service)
   }
 
-  return fetch(host+`/business/${business_id}/services/new`, options)
+  return fetch(host+`/business/${business_id}/services/new/`, options)
     .then(response => response.json())
     .then(data => {
       console.log('Success:', data);
@@ -89,4 +93,3 @@ export async function editService(service) {
 }
 
 
-  

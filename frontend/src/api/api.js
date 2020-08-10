@@ -96,17 +96,15 @@ export async function logout() {
     .then(resp => {
       if(resp.status === 200) {
         localStorage.removeItem("token")
+        localStorage.removeItem("account_id")
+        localStorage.removeItem("account_type")
+        localStorage.removeItem("user_id")
       }
       return resp.status
     })
     .catch(err => {
       console.log(err)
     })
-
-
-  const res = await request('/logout/', {}, 'POST', headers)
-  console.log(res)
-  return res
 }
 
 export async function createCustomerAccount(username, password, accountInfo) {
@@ -162,19 +160,40 @@ export async function getBusinessesByCategory(category = 'all') {
     .catch(e => {
       console.log(e)
     })
-
 }
 
-// export async function search(searchString) {
-//   const headers = new Headers()
-//   headers.append("Content-Type", "application/json")
+export async function getServicesByBusiness(business_id) {
+  const headers = new Headers()
+  headers.append("Content-Type", "application.json")
 
-//   const options = {
-//     method: 'GET'
-//     headers,
-//     body: JSON.stringify(searchString)
-//   }
+  const options = {
+    headers,
+  }
 
-//   fetch(`${host}/`)
+  return fetch(`${host}/business/${business_id}/services/`, options)
+    .then(res => res.json())
+    .then(res => res)
+    .catch(e => {
+      console.log(e)
+    })
+}
 
-// }
+export async function getBusinessInfo(business_id) {
+  const headers = new Headers()
+  headers.append("Content-Type", "application.json")
+
+  const token = tokenHeader()
+
+  headers.append(token[0], token[1])
+
+  const options = {
+    headers,
+  }
+
+  return fetch(`${host}/business/${business_id}/`, options)
+  .then(res => res.json())
+  .then(res => res)
+  .catch(e => {
+    console.log(e)
+  })
+}

@@ -1,28 +1,9 @@
 <template>
   <b-container fluid>
 
-    <b-row>
-      <b-col cols="6" ml="1" style="text-align: left">
-        <b-input-group>
-          <b-input-group-prepend is-text>
-          <b-icon icon="search"></b-icon>
-          </b-input-group-prepend>
-          <b-form-input aria-label="Search" placeholder="Search for anything"></b-form-input>
-          <b-form-input aria-label="Location" placeholder="Location"></b-form-input>
-        </b-input-group>
-      </b-col>
-      <b-col col md="3" style="text-align: left">
-        <b-btn class="ma-2" variant="warning">
-          <b-icon icon="search"></b-icon>
-        </b-btn>
-      </b-col>
-    </b-row>
-
     <hr class="my-3">
 
     <b-row>
-      <b-col cols="4" style="text-align: left">
-      </b-col>
       <b-col col style="text-align: left">
         <h1><strong>Business Name</strong></h1>
         <p>Address, number, city, province, ZIP<br>
@@ -36,7 +17,7 @@
 
     <b-row>
       <b-col cols="10" style="text-align: left; ">
-        <h1 style="margin-left: 20px;"><strong>Services:</strong></h1>
+        <h1><strong>Services</strong></h1>
 
         <b-list-group>
           <b-list-group-item>
