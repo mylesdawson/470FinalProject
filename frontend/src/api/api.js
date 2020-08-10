@@ -196,7 +196,7 @@ export async function getBusinessInfo(business_id) {
 
 export async function getAvailableTimeSlots(business_id, year, month, day) {
 
-  return fetch(`${host}/business/${business_id}/services/available/${year}/${month}/${day}`)
+  return fetch(`${host}/business/${business_id}/services/available/${year}/${month}/${day}/`)
   .then(res => res.json())
   .then(res => res)
   .catch(e => {
