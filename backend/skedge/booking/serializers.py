@@ -6,7 +6,7 @@ from .models import *
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name']
+        fields = ['username']
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -88,7 +88,7 @@ class CustomerBriefSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Customer
-        fields = ['phone_number', 'user']
+        fields = ['phone_number', 'first_name', 'last_name', 'user']
 
 class BusinessBriefSerializer(serializers.ModelSerializer):
     class Meta:
@@ -106,7 +106,7 @@ class CustomerAppointmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Appointment
-        fields = ['id', 'start_time', 'end_time', 'cancelled', 'cancelled_by_customer', 'cancelled_by_business', 'business', 'service']
+        fields = ['id', 'date', 'start_time', 'end_time', 'cancelled', 'cancelled_by_customer', 'cancelled_by_business', 'business', 'service']
 
 class BusinessAppointmentSerializer(serializers.ModelSerializer):
     customer = CustomerBriefSerializer(many=False, read_only=True)
