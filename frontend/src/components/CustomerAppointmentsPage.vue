@@ -1,41 +1,88 @@
 <template>
-  <b-container fluid>
+<div>
     <b-row>
       <h1 class="title">Your Booked Appointments</h1>
-    </b-row>
-      <b-card-group deck>
-        <b-card
-          v-for="appointment in appointments"
-          v-bind:key="appointment.id"
-        >
-          <b-card-title>
-            {{ appointment.service.name }}
-          </b-card-title>
-          <hr>
-          <b-card-text>
-            <p>
-              {{ appointment.service.description }}
-            </p>
-            <br>
-            <p>
-              Date: {{ appointment.date }}
-            </p>
-            <p>
-              Start time: {{ appointment.start_time}}
-            </p>
-            <p>
-              Duration: {{ appointment.service.duration }} minutes
-            </p>
+      </b-row>
+      <hr>
+          <b-row style="margin-bottom: 16px;" v-for="appointment in appointments" v-bind:key="appointment.id">
+          <b-col style="max-width: 500px; margin: 0px auto;">
+          <b-card 
+              bg-variant="light"
+              :header="appointment.date"
+            >
 
-            <hr>
-            <b-button @click="cancelAppointment(appointment.id)">Cancel Appointment</b-button>
-          </b-card-text>
-        </b-card>
-      </b-card-group>
-    <b-row>
-
-    </b-row>
-  </b-container>
+                  <b-row>
+                      <b-col>
+                       <b-card-title>{{appointment.service.name}}</b-card-title>
+                       <b-card-sub-title class="mb-2">{{appointment.service.description}}</b-card-sub-title>
+                      </b-col>
+                  
+                      <b-col style="text-align: right">
+                      <b-badge v-if="!appointment.cancelled && !appointment.cancelled_by_business && !appointment.cancelled_by_customer" variant="primary">{{appointment.service.duration}} mins</b-badge>
+                      <b-badge v-if="appointment.cancelled_by_business" variant="danger">Business cancellation</b-badge>
+                      <b-badge v-if="appointment.cancelled_by_customer" variant="warning">Customer cancellation</b-badge>
+                    </b-col>
+                  </b-row>
+              <br>
+              <p>
+                Date: <b>{{ appointment.date }}</b>
+              </p>
+              <p>
+                Time: <b> {{ appointment.start_time}} - {{ appointment.end_time}}</b>
+              </p>
+              <p>
+                Price: <b> ${{ appointment.service.price }} </b>
+              </p>
+              
+              <span  v-if="!appointment.cancelled">
+              <hr>
+              <b-button variant="warning" @click="cancelAppointment(appointment.id)">Cancel Appointment</b-button>
+              </span>
+          </b-card>
+        </b-col>
+      </b-row>
+    
+      <b-row>
+      <h3 style="margin: 36px auto">Your Cancelled Appointments</h3>
+      </b-row>
+      <hr>
+          <b-row style="margin-bottom: 16px;" v-for="appointment in cancellations" v-bind:key="appointment.id">
+          <b-col style="max-width: 500px; margin: 0px auto;">
+          <b-card 
+              bg-variant="secondary" text-variant="white" 
+              :header="appointment.date"
+            >
+                  <b-row>
+                      <b-col>
+                       <b-card-title>{{appointment.service.name}}</b-card-title>
+                       <p style="color:#fff" >{{appointment.service.description}}</p>
+                      </b-col>
+                  
+                      <b-col style="text-align: right">
+                      <b-badge v-if="!appointment.cancelled && !appointment.cancelled_by_business && !appointment.cancelled_by_customer" variant="primary">{{appointment.service.duration}} mins</b-badge>
+                      <b-badge v-if="appointment.cancelled_by_business" variant="danger">Business cancellation</b-badge>
+                      <b-badge v-if="appointment.cancelled_by_customer" variant="warning">Customer cancellation</b-badge>
+                    </b-col>
+                  </b-row>
+              <br>
+              <p>
+                Date: <b>{{ appointment.date }}</b>
+              </p>
+              <p>
+                Time: <b> {{ appointment.start_time}} - {{ appointment.end_time}}</b>
+              </p>
+              <p>
+                Price: <b> ${{ appointment.service.price }} </b>
+              </p>
+              
+              <span  v-if="!appointment.cancelled">
+              <hr>
+              <b-button variant="warning" @click="cancelAppointment(appointment.id)">Cancel Appointment</b-button>
+              </span>
+          </b-card>
+        </b-col>
+      </b-row>
+</div>
 </template>
 
 <script>
@@ -45,31 +92,37 @@ export default {
   name: 'CustomerAppointmentsPage',
   data: function() {
     return {
-      appointments: null
+      appointments: [],
+      cancellations: []
     }
   },
   mounted: async function() {
-    const accountId = localStorage.getItem("account_id")
-
-    try {
-      let res = await getCustomerAppointments(accountId)
-      res = res.filter(appt => !appt.cancelled)
-      console.log(res)
-      this.appointments = res
-    } catch(e) {
-      console.log(e)
-    }
+  this.getAppointments();
   },
+  
   methods: {
+    getAppointments: async function() {
+        try {
+          let res = await getCustomerAppointments()
+          console.log(res)
+          this.appointments = res.filter(appt => !appt.cancelled);
+          this.cancellations = res.filter(appt => appt.cancelled);
+        } catch(e) {
+          console.log(e)
+        }
+      },
     async cancelAppointment(appointmentId) {
-      const custId = localStorage.getItem("account_id")
-      try {
-        const res = await cancelCustomerAppointment(custId, appointmentId)
-        console.log(res)
-        this.appointments = this.appointments.filter(appt => appt.id !== res.id)
-      } catch (error) {
-        console.log(error)
-      }
+      var result = confirm("Are you sure you want to cancel this appointment?");
+        if (result) {
+          try {
+            const res = await cancelCustomerAppointment(appointmentId)
+            console.log(res)
+            this.getAppointments();
+          } catch (error) {
+            alert(error)
+            console.log(error)
+          }
+        }
     }
   }
 }

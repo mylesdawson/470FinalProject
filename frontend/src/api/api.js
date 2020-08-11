@@ -232,10 +232,10 @@ export async function createCustomerAppointment(date, startTime, endTime, custom
   })
 }
 
-export async function getCustomerAppointments(customerId) {
+export async function getCustomerAppointments() {
   const headers = new Headers()
   const token = tokenHeader()
-
+  const custId = localStorage.getItem("account_id")
   headers.append(token[0], token[1])
 
   const options = {
@@ -243,9 +243,11 @@ export async function getCustomerAppointments(customerId) {
     method: 'GET'
   }
 
-  return fetch(`${host}/customer/${customerId}/appointments/`, options)
+  return fetch(`${host}/customer/${custId}/appointments/`, options)
   .then(res => res.json())
-  .then(res => res)
+  .then(res => {
+    return res;
+  })
   .catch(e => {
     console.log(e)
   })
@@ -254,7 +256,7 @@ export async function getCustomerAppointments(customerId) {
 export async function cancelCustomerAppointment(customerId, appointmentId) {
   const headers = new Headers()
   const token = tokenHeader()
-
+  const custId = localStorage.getItem("account_id")
   headers.append(token[0], token[1])
 
   const options = {
@@ -262,7 +264,7 @@ export async function cancelCustomerAppointment(customerId, appointmentId) {
     method: 'POST'
   }
 
-  return fetch(`${host}/customer/${customerId}/appointments/${appointmentId}/cancel/`, options)
+  return fetch(`${host}/customer/${custId}/appointments/${appointmentId}/cancel/`, options)
   .then(res => res.json())
   .then(res => res)
   .catch(e => {
