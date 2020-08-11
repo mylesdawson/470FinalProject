@@ -47,5 +47,7 @@ export default {
 </script>
 
 <style scoped>
-
+  .jumbotron {
+    padding: 0;
+  }
 </style>
