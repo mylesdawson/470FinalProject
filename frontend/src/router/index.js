@@ -56,7 +56,11 @@ export default new Router({
       beforeEnter(to, from, next) {
         if (localStorage.getItem("account_type") == "customer") {
           next()
-        } else {
+        } 
+        if (localStorage.getItem("account_type") == "business") {
+          next({name: 'CalendarPage'})
+        }
+        else {
           next(false);
         }
       }
@@ -101,6 +105,13 @@ export default new Router({
       path: '/login',
       name: 'LoginPage',
       component: LoginPage,
+      beforeEnter(to, from, next) {
+        if (localStorage.getItem("account_type") == "customer" || localStorage.getItem("account_type") == "business") {
+          next(false);
+        } else {
+          next();
+        }
+      }
     },
     {
       path: '/services',
@@ -129,7 +140,14 @@ export default new Router({
     {
       path: '/new-account',
       name: 'CreateAccountPage',
-      component: CreateAccountPage
+      component: CreateAccountPage,
+      beforeEnter(to, from, next) {
+        if (localStorage.getItem("account_type") == "customer" || localStorage.getItem("account_type") == "business") {
+          next(false);
+        } else {
+          next();
+        }
+      }
     },
     {
       path: '/business',

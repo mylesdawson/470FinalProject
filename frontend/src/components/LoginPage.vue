@@ -34,10 +34,8 @@ export default {
       try {
         this.show = true;
         const res = await login(this.username, this.password)
-        // console.log(res)
         if (res.token) {
-          this.$router.push('/calendar')
-          // console.log(res.token)
+          this.$router.push('/')
         }
         this.show = false
       } catch(e) {
