@@ -104,7 +104,7 @@ export default {
       try {
         const res = await logout()
         console.log(res)
-        if (res === 200) {
+        if (res === 200 || res === 401) {
           console.log("going back to homepage")
           this.$router.push('/home')
         }
