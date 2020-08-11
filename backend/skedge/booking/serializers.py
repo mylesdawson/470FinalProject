@@ -88,7 +88,7 @@ class CustomerBriefSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Customer
-        fields = ['phone_number', 'first_name', 'last_name', 'user']
+        fields = ['phone_number', 'user']
 
 class BusinessBriefSerializer(serializers.ModelSerializer):
     class Meta:
