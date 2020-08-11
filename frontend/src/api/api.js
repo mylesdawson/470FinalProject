@@ -87,7 +87,7 @@ export async function logout() {
 
   return fetch(`${host}/logout/`, options)
     .then(resp => {
-      if(resp.status === 200) {
+      if(resp.status === 200 || resp.status === 401) {
         localStorage.removeItem("token")
         localStorage.removeItem("account_id")
         localStorage.removeItem("account_type")
