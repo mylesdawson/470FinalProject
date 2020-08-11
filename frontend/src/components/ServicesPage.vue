@@ -9,12 +9,7 @@
                     <h3>Services</h3>
                     </b-col>
                   <b-col cols="9" md="6">
-                    <b-input-group>
-                        <b-input-group-prepend is-text>
-                        <b-icon icon="search"></b-icon>
-                        </b-input-group-prepend>
-                        <b-form-input placeholder="Search services"></b-form-input>
-                    </b-input-group>
+                   
                   </b-col>
                   <b-col cols="3" md="3" style="text-align: right">
                   <b-button variant="primary" v-on:click="showCreate">
