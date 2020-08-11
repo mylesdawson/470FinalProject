@@ -57,14 +57,10 @@ export async function login(username = '', password = '') {
   }
 
   return fetch(`${host}/login/`, options)
-    .then(resp => {
-      // console.log(resp)
-      return resp.json()
-    })
+    .then(resp => resp.json())
     .then(res => {
-      console.log(res)
       if(res.detail) {
-        throw new Error(res.details)
+        throw new Error(res)
       }
       localStorage.setItem('token', res.token)
       localStorage.setItem('account_type', res.account_type)
@@ -73,7 +69,7 @@ export async function login(username = '', password = '') {
       return res
     })
     .catch(err => {
-      console.log(err)
+      throw new Error(err)
     })
 
 }
