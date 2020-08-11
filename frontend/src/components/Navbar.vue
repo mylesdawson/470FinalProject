@@ -100,7 +100,7 @@ export default {
       try {
         const res = await logout()
         if (res === 200) {
-          this.$router.push('/home')
+          this.$router.push('/login')
         }
       } catch(err) {
         console.log(err)
