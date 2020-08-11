@@ -105,26 +105,26 @@ export default {
     margin: 0 auto;
   }
   .fitness {
-    color: #0091EA;
+    color: #3471eb;
   }
   .wellness {
-    color: #00E676;
+    color: #169e1f;
   }
   .beauty {
-    color: #FF9E80;
+    color: #e8ba00;
   }
 
   h1.fitness {
     color: white;
-    background-color: #0091EA;
+    background-color: #3471eb;
   }
   h1.wellness {
     color: white;
 
-    background-color: #00E676;
+    background-color: #169e1f;
   }
   h1.beauty {
     color: black;
-    background-color: #FF9E80;
+    background-color: #e8ba00;
   }
 </style>
