@@ -250,3 +250,22 @@ export async function getCustomerAppointments(customerId) {
     console.log(e)
   })
 }
+
+export async function cancelCustomerAppointment(customerId, appointmentId) {
+  const headers = new Headers()
+  const token = tokenHeader()
+
+  headers.append(token[0], token[1])
+
+  const options = {
+    headers,
+    method: 'POST'
+  }
+
+  return fetch(`${host}/customer/${customerId}/appointments/${appointmentId}/cancel/`, options)
+  .then(res => res.json())
+  .then(res => res)
+  .catch(e => {
+    console.log(e)
+  })
+}

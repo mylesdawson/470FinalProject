@@ -18,11 +18,17 @@
             </p>
             <br>
             <p>
+              Date: {{ appointment.date }}
+            </p>
+            <p>
               Start time: {{ appointment.start_time}}
             </p>
             <p>
               Duration: {{ appointment.service.duration }} minutes
             </p>
+
+            <hr>
+            <b-button @click="cancelAppointment(appointment.id)">Cancel Appointment</b-button>
           </b-card-text>
         </b-card>
       </b-card-group>
@@ -33,7 +39,7 @@
 </template>
 
 <script>
-import { getCustomerAppointments } from '../api/api'
+import { getCustomerAppointments, cancelCustomerAppointment } from '../api/api'
 
 export default {
   name: 'CustomerAppointmentsPage',
@@ -46,14 +52,25 @@ export default {
     const accountId = localStorage.getItem("account_id")
 
     try {
-      const res = await getCustomerAppointments(accountId)
+      let res = await getCustomerAppointments(accountId)
+      res = res.filter(appt => !appt.cancelled)
       console.log(res)
       this.appointments = res
     } catch(e) {
       console.log(e)
     }
-
-
+  },
+  methods: {
+    async cancelAppointment(appointmentId) {
+      const custId = localStorage.getItem("account_id")
+      try {
+        const res = await cancelCustomerAppointment(custId, appointmentId)
+        console.log(res)
+        this.appointments = this.appointments.filter(appt => appt.id !== res.id)
+      } catch (error) {
+        console.log(error)
+      }
+    }
   }
 }
 </script>
@@ -65,5 +82,8 @@ export default {
   }
   p {
     margin-bottom: 0;
+  }
+  h1 {
+    margin-bottom: 2rem;
   }
 </style>
