@@ -56,12 +56,12 @@ export default new Router({
       beforeEnter(to, from, next) {
         if (localStorage.getItem("account_type") == "customer") {
           next()
-        } 
+        }
         if (localStorage.getItem("account_type") == "business") {
           next({name: 'CalendarPage'})
         }
         else {
-          next(false);
+          next();
         }
       }
     },

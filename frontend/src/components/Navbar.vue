@@ -3,7 +3,7 @@
     <b-navbar >
       <b-navbar-brand>
         <b-nav-item to="/home">
-          <img  src="../assets/logo.png" id="skedge-logo" alt="Skedge">
+          <img  src="../assets/logo.png" id="skedge-logo" alt="Skedge" to="/home">
         </b-nav-item>
       </b-navbar-brand>
 
@@ -103,8 +103,10 @@ export default {
     logout: async function() {
       try {
         const res = await logout()
+        console.log(res)
         if (res === 200) {
-          this.$router.push('/login')
+          console.log("going back to homepage")
+          this.$router.push('/home')
         }
       } catch(err) {
         console.log(err)
