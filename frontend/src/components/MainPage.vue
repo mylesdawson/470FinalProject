@@ -1,4 +1,6 @@
 <template>
+<div>
+<b-jumbotron>
   <b-container fluid>
 
     <p style="font-size: 60px; text-align: center;"><strong>Skedge</strong></p>
@@ -13,16 +15,14 @@
 
     <!-- <search-component></search-component> -->
 
-    <br>
-    <br>
-
-    <b-row align-h="center" class="mb-5">
-      <b-button class="mr-5" size="lg" name="fitness" style="background-color: #0091EA; color: black; width: 16rem; height: 140px; border-radius: 30px; font-size: 40px; font-weight:bold; border: none; margin-bottom: 20px;" @click="searchWithProps">Fitness</b-button>
-      <b-button class="mr-5" size="lg" name="wellness" style="background-color: #00E676; color: black; width: 16rem; height: 140px; border-radius: 30px; font-size: 40px; font-weight:bold; border: none; margin-bottom: 20px" @click="searchWithProps">Wellness</b-button>
-      <b-button class="mr-5" size="lg" name="beauty" style="background-color: #FF9E80; color: black; width: 16rem; height: 140px; border-radius: 30px; font-size: 40px; font-weight:bold; border: none" @click="searchWithProps">Beauty</b-button>
-    </b-row>
-
   </b-container>
+  </b-jumbotron>
+  <b-row align-h="center" class="mb-5">
+      <b-button variant="primary" class="mr-5" size="lg" name="fitness" style=" width: 16rem; height: 140px; border-radius: 30px; font-size: 40px; font-weight:bold; border: none; margin-bottom: 20px;" @click="searchWithProps">Fitness</b-button>
+      <b-button variant="success" class="mr-5" size="lg" name="wellness" style="  width: 16rem; height: 140px; border-radius: 30px; font-size: 40px; font-weight:bold; border: none; margin-bottom: 20px" @click="searchWithProps">Wellness</b-button>
+      <b-button variant="warning" class="mr-5" size="lg" name="beauty" style=" width: 16rem; height: 140px; border-radius: 30px; font-size: 40px; font-weight:bold; border: none" @click="searchWithProps">Beauty</b-button>
+    </b-row>
+    </div>
 </template>
 
 <script>
