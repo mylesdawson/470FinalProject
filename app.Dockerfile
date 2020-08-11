@@ -16,5 +16,8 @@ CMD /wait.sh db 5432 \
   && echo "from django.contrib.auth.models import User; user = User.objects.create_user('business1', password='secret', last_login='2020-08-09'); user.save()" | python backend/skedge/manage.py shell \
   && echo "from django.contrib.auth.models import User; user = User.objects.create_user('business2', password='secret', last_login='2020-08-09'); user.save()" | python backend/skedge/manage.py shell \
   && echo "from django.contrib.auth.models import User; user = User.objects.create_user('business3', password='secret', last_login='2020-08-09'); user.save()" | python backend/skedge/manage.py shell \
+  && echo "from django.contrib.auth.models import User; user = User.objects.create_user('business4', password='secret', last_login='2020-08-09'); user.save()" | python backend/skedge/manage.py shell \
+  && echo "from django.contrib.auth.models import User; user = User.objects.create_user('business5', password='secret', last_login='2020-08-09'); user.save()" | python backend/skedge/manage.py shell \
+  && echo "from django.contrib.auth.models import User; user = User.objects.create_user('business6', password='secret', last_login='2020-08-09'); user.save()" | python backend/skedge/manage.py shell \
   && python backend/skedge/manage.py loaddata backend/data.json \
   && /usr/local/bin/uwsgi --ini /code/backend/skedge/skedge/uwsgi.ini
