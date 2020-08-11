@@ -1,42 +1,35 @@
 <template>
-  <b-container fluid class="book-appointment-container">
-    <b-row v-if="service">
-      <b-col>
-        <h1>{{ service.name }}</h1>
+  <b-container fluid style="max-width:1500px;margin-top: 0px autopx">
+    
+    <b-card style="border:none">
+      <b-card-title v-if="service">{{ service.name }}</b-card-title>
+      <hr>
+    <b-row>
+      <b-col style="min-width:320px;margin-top: 24px" cols="12" md="3">
+          <b-calendar v-model="value" @context="onContext" locale="en-US" width="320px"></b-calendar>
       </b-col>
-    </b-row>
-
-    <b-row class="appointment-row">
-      <b-col md="auto">
-        <b-calendar v-model="value" @context="onContext" locale="en-US"></b-calendar>
-      </b-col>
-    </b-row>
-
-    <b-row v-if="service_availability">
-      <b-col>
-        <h3>Availability: {{ service_availability }}</h3>
-      </b-col>
-    </b-row>
-
-    <b-row v-if="service_details">
-      <b-col>
-        <h3>Timeslots </h3>
-      </b-col>
-    </b-row>
-
-    <b-row v-if="service_details" class="appointment-row">
-      <b-col>
-        <b-form-select v-model="selectedTime" :options="service_details.times">
+    
+     <b-col cols="12" md="9" style="margin-top: 24px;">
+     <b-card v-if="service_availability" bg-variant="light">
+     <b-card-title>Availability: <b>{{ service_availability }}</b> </b-card-title>
+       
+       
+     
+     <b-form-group
+      v-if="service_details"
+          label="Timeslots:">
+          <b-form-select  v-if="service_details" v-model="selectedTime" :options="service_details.times">
         </b-form-select>
-      </b-col>
-    </b-row>
+        </b-form-group>
+ 
 
-    <b-row v-if="selectedTime" class="appointment-row">
-      <b-col>
-        <b-button variant="outline-primary" @click="bookAppointment">Book an Appointment</b-button>
+        <b-button v-if="selectedTime" variant="outline-primary" @click="bookAppointment">Book an Appointment</b-button>
+         </b-card>
       </b-col>
-    </b-row>
+      </b-row>
+    </b-card>
 
+   
   </b-container>
 </template>
 
