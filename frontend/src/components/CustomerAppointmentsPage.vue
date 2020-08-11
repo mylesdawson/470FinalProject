@@ -15,7 +15,7 @@
                       <b-col>
                        <b-card-title>{{appointment.service.name}}</b-card-title>
                        <b-card-sub-title class="mb-2">{{appointment.service.description}}</b-card-sub-title>
-                       <p style="font-size: 1.25em;">{{appointment.business.business_name}} <b-button size="sm" style="width: 3rem; height: 2em; font-size: 0.6em; font-weight:bold; margin-left: 0.5em;" @click="toBusinessPage">View</b-button></p>
+                       <p style="font-size: 1.25em;">{{appointment.business.business_name}} <b-button size="sm" style="width: 3rem; height: 2em; font-size: 0.6em; font-weight:bold; margin-left: 0.5em;" @click="toBusinessPage(appointment.business.id)">View</b-button></p>
                       </b-col>
                   
                       <b-col style="text-align: right">
@@ -124,7 +124,12 @@ export default {
             console.log(error)
           }
         }
-    }
+    },
+    toBusinessPage: function(business_id) {
+      this.$router.push({
+        path: `/search-listing/${business_id}`
+      })
+    },
   }
 }
 </script>
