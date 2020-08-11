@@ -231,3 +231,22 @@ export async function createCustomerAppointment(date, startTime, endTime, custom
     console.log(e)
   })
 }
+
+export async function getCustomerAppointments(customerId) {
+  const headers = new Headers()
+  const token = tokenHeader()
+
+  headers.append(token[0], token[1])
+
+  const options = {
+    headers,
+    method: 'GET'
+  }
+
+  return fetch(`${host}/customer/${customerId}/appointments/`, options)
+  .then(res => res.json())
+  .then(res => res)
+  .catch(e => {
+    console.log(e)
+  })
+}

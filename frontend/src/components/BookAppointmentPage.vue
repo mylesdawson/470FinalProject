@@ -97,7 +97,8 @@ export default {
         hours = Math.floor(total / 60)
         minutes = Math.floor(total % 60)
       } else {
-        minutes = duration
+        hours = Math.floor(duration / 60)
+        minutes = Math.floor(duration % 60)
       }
 
       const endHours = parseInt(startHour) + hours
@@ -107,6 +108,9 @@ export default {
       try {
         const res = await createCustomerAppointment(ymd, startTime, endTime, accountId, this.business_id, this.service_id)
         console.log(res)
+        if(res.id) {
+          this.$router.push("/appointments")
+        }
       } catch(e) {
         console.log(e)
       }

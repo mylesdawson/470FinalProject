@@ -13,6 +13,7 @@ import CreateAccountPage from '@/components/CreateAccountPage'
 import SearchListingsPage from '@/components/SearchListingsPage'
 import SearchPage from '@/components/SearchPage'
 import BookAppointmentPage from '@/components/BookAppointmentPage'
+import CustomerAppointmentsPage from '@/components/CustomerAppointmentsPage'
 
 import {
           BootstrapVue,
@@ -136,6 +137,18 @@ export default new Router({
       component: BusinessPage,
       beforeEnter(to, from, next) {
         if (localStorage.getItem("account_type") == "business") {
+          next()
+        } else {
+          next(false);
+        }
+      }
+    },
+    {
+      path: '/appointments',
+      name: 'CustomerAppointmentsPage',
+      component: CustomerAppointmentsPage,
+      beforeEnter(to, from, next) {
+        if (localStorage.getItem("account_type") == "customer") {
           next()
         } else {
           next(false);
