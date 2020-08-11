@@ -1,73 +1,74 @@
 <template>
   <b-container fluid class="no-top-margin">
-
-    <b-row>
-      <b-col col style="text-align: left">
         <div>
-          <h1 v-bind:class="business_info.category"><strong>{{ business_info.business_name }}</strong></h1>
+          <h1 style="border-radius: 20px; padding: 16px 0px;" v-bind:class="business_info.category"><strong>{{ business_info.business_name }}</strong></h1>
         </div>
-
-        <div class="info-div">
-          <h5>
-            <b-icon-clock v-bind:class="business_info.category">
-            </b-icon-clock>
-            Hours of Operation
-          </h5>
-          <p>Closed: {{ closed_days }}</p>
-          <p>
-            Open: {{ open_hours }}
-          </p>
-        </div>
-
-        <div class="info-div">
-          <h5>
-            <b-icon-map v-bind:class="business_info.category">
-            </b-icon-map>
-            Location
-          </h5>
-          <p>
-            {{ business_info.address }}, {{ business_info.city }}, {{ business_info.province }}, {{ business_info.postal_code }}
-          </p>
-        </div>
-
-        <div class="info-div">
-          <h5>
-            <b-icon-info-circle v-bind:class="business_info.category">
-            </b-icon-info-circle>
-            About
-          </h5>
-          <p>{{ business_info.long_description }}</p>
-        </div>
-
-        <div class="info-div">
-          <h5>
-            <b-icon-telephone v-bind:class="business_info.category">
-            </b-icon-telephone>
-            Contact
-          </h5>
-          <p>
-            Email: {{ business_info.contact_email }}<br>
-            Phone: {{ business_info.phone_number }}
-          </p>
-        </div>
-      </b-col>
-    </b-row>
-
     <b-row>
-      <b-col cols="10" style="text-align: left; " class="services-section">
-        <h1><strong>Services</strong></h1>
+      <b-col>
+        <b-card title="Information">
+        <hr>
+          <div class="info-div">
+            <h5>
+              <b-icon-clock v-bind:class="business_info.category">
+              </b-icon-clock>
+              Hours of Operation
+            </h5>
+            <p>Closed: {{ closed_days }}</p>
+            <p>
+              Open: {{ open_hours }}
+            </p>
+          </div>
 
-        <b-list-group>
-          <service-component
-            v-for="business_service in business_services"
-            v-bind:key="business_service.id"
-            v-bind:service="business_service"
-            v-bind:businessId="business_info.id"
-          ></service-component>
-        </b-list-group>
+          <div class="info-div">
+            <h5>
+              <b-icon-map v-bind:class="business_info.category">
+              </b-icon-map>
+              Location
+            </h5>
+            <p>
+              {{ business_info.address }}, {{ business_info.city }}, {{ business_info.province }}, {{ business_info.postal_code }}
+            </p>
+          </div>
+
+          <div class="info-div">
+            <h5>
+              <b-icon-info-circle v-bind:class="business_info.category">
+              </b-icon-info-circle>
+              About
+            </h5>
+            <p>{{ business_info.long_description }}</p>
+          </div>
+
+          <div class="info-div">
+            <h5>
+              <b-icon-telephone v-bind:class="business_info.category">
+              </b-icon-telephone>
+              Contact
+            </h5>
+            <p>
+              Email: {{ business_info.contact_email }}<br>
+              Phone: {{ business_info.phone_number }}
+            </p>
+          </div>
+        </b-card>
       </b-col>
-    </b-row>
+      
+          <b-col style="text-align: left; " class="services-section">
+          <b-card title="Services">
+            <hr>
+                   
 
+                    <b-list-group>
+                      <service-component
+                        v-for="business_service in business_services"
+                        v-bind:key="business_service.id"
+                        v-bind:service="business_service"
+                        v-bind:businessId="business_info.id"
+                      ></service-component>
+                    </b-list-group>
+                    </b-card>
+          </b-col>
+    </b-row>
 
   </b-container>
 </template>
