@@ -5,7 +5,7 @@
       </b-row>
       <hr>
           <b-row style="margin-bottom: 16px;" v-for="appointment in appointments" v-bind:key="appointment.id">
-          <b-col style="max-width: 500px; margin: 0px auto;">
+          <b-col style="max-width: 700px; margin: 0px auto;">
           <b-card 
               bg-variant="light"
               :header="appointment.date"
@@ -47,7 +47,7 @@
       </b-row>
       <hr>
           <b-row style="margin-bottom: 16px;" v-for="appointment in cancellations" v-bind:key="appointment.id">
-          <b-col style="max-width: 500px; margin: 0px auto;">
+          <b-col style="max-width: 700px; margin: 0px auto;">
           <b-card 
               bg-variant="secondary" text-variant="white" 
               :header="appointment.date"
