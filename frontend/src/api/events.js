@@ -108,6 +108,12 @@ function sanitizeAppointments(appointmentsArray) {
       obj.borderColor = "#dc3545";
       obj.textColor = "#fff";
     }
+    if(obj.status == "closed"){
+      obj.title = `Full: ${obj.appointments} appointments`;
+      obj.backgroundColor = "#007bff";
+      obj.borderColor = "#007bff";
+      obj.textColor = "#fff";
+    }
 
     return obj;
   });
