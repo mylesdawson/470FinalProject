@@ -2,8 +2,8 @@
   <b-card
     v-bind:title="business.business_name"
     img-src="https://picsum.photos/600/300/?image=25"
-    class="card"
-    style="max-width: 20rem;"
+    class="w-25 mb-4"
+    style="min-width: 21rem; max-width: 15%"
   >
     <b-card-text>
       <div>
