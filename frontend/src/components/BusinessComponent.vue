@@ -1,18 +1,21 @@
 <template>
   <b-card
     v-bind:title="business.business_name"
-    img-src="https://picsum.photos/600/300/?image=25"
     class="w-25 mb-4"
     style="min-width: 21rem; max-width: 15%"
   >
+
     <b-card-text>
       <div>
         {{ business.short_description }}
       </div>
-      <div>
-        <b-button size="sm" variant="primary" @click="toBusinessPage">View</b-button>
+      <div class="mt-2">
+        <b-button size="sm" style="background-color: #ebebeb; color: black; border: none; width: 4rem; height: 30px; font-size: 16px; font-weight:bold;" @click="toBusinessPage">View</b-button>
       </div>
     </b-card-text>
+    <template>
+      <b-icon icon="geo-alt"></b-icon>
+    </template>
     <template v-slot:footer>
       <small class="text-muted">{{ business.address }}, {{ business.city }}, {{ business.province }}</small><br>
     </template>

@@ -13,7 +13,7 @@
         <strong>$ {{ service.price }}</strong>
       </b-col>
       <b-col cols="2">
-        <b-button @click="toBookAppointment">Book</b-button>
+        <b-button style="background-color: #ebebeb; color: black; border: none; width: 6rem; height: 40px; font-size: 16px; font-weight:bold;" name="all" @click="toBookAppointment">Book</b-button>
       </b-col>
     </b-row>
   </b-list-group-item>

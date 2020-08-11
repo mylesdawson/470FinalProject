@@ -6,10 +6,10 @@
     <hr class="my-3">
 
     <b-row>
-      <b-button class="ml-3" size="sm" variant="light" name="all" @click="setFilter">All</b-button>
-      <b-button class="ml-3" size="sm" variant="primary" name="fitness" @click="setFilter">Fitness</b-button>
-      <b-button class="ml-3" size="sm" variant="success" name="wellness" @click="setFilter">Wellness</b-button>
-      <b-button class="ml-3" size="sm" variant="warning" name="beauty" @click="setFilter">Beauty</b-button>
+      <b-button class="ml-3" style="background-color: #ebebeb; color: black; border: none; width: 6rem; height: 40px; font-size: 16px; font-weight:bold;" name="all" @click="setFilter">All</b-button>
+      <b-button class="ml-3" style="background-color: #0091EA; color: black; border: none; width: 6rem; height: 40px; font-size: 16px; font-weight:bold;" name="fitness" @click="setFilter">Fitness</b-button>
+      <b-button class="ml-3" style="background-color: #00E676; color: black; border: none; width: 6rem; height: 40px; font-size: 16px; font-weight:bold;" name="wellness" @click="setFilter">Wellness</b-button>
+      <b-button class="ml-3" style="background-color: #FF9E80; color: black; border: none; width: 6rem; height: 40px; font-size: 16px; font-weight:bold;" name="beauty" @click="setFilter">Beauty</b-button>
     </b-row>
     <br>
 
