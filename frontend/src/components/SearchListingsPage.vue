@@ -4,8 +4,8 @@
           <h1 style="border-radius: 20px; padding: 16px 0px;" v-bind:class="business_info.category"><strong>{{ business_info.business_name }}</strong></h1>
         </div>
     <b-row>
-      <b-col>
-        <b-card title="Information">
+      <b-col cols="12" md="12" lg="6" style="margin-top: 24px;">
+        <b-card  title="Information" bg-variant="light">
         <hr>
           <div class="info-div">
             <h5>
@@ -52,9 +52,8 @@
           </div>
         </b-card>
       </b-col>
-      
-          <b-col style="text-align: left; " class="services-section">
-          <b-card title="Services">
+          <b-col cols="12" md="12" lg="6" style="text-align: left; margin-top:24px;" class="services-section" >
+          <b-card title="Services" bg-variant="light">
             <hr>
                    
 
