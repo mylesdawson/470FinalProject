@@ -130,6 +130,16 @@
         }
     },
     {
+        "model": "booking.Customer",
+        "pk": 2,
+        "fields": {
+            "user": 8,
+            "phone_number": "778-123-1234",
+            "updated_at": "2020-08-09",
+            "created_at": "2020-08-09"
+        }
+    },
+    {
         "model": "booking.Service",
         "pk": 1,
         "fields":
@@ -295,6 +305,38 @@
             "business": 6,
             "updated_at": "2020-08-09",
             "created_at": "2020-08-09"
+        }
+    },
+    {
+        "model": "booking.Appointment",
+        "pk": 1,
+        "fields":
+        {
+            "date": "2020-08-14",
+            "start_time": "10:00",
+            "end_time": "11:00",
+            "cancelled": false,
+            "cancelled_by_customer": false,
+            "cancelled_by_business": false,
+            "customer": 1,
+            "service": 2,
+            "business": 1
+        }
+    },
+    {
+        "model": "booking.Appointment",
+        "pk": 2,
+        "fields":
+        {
+            "date": "2020-08-12",
+            "start_time": "14:00",
+            "end_time": "15:00",
+            "cancelled": true,
+            "cancelled_by_customer": true,
+            "cancelled_by_business": false,
+            "customer": 1,
+            "service": 3,
+            "business": 2
         }
     }
 ]
