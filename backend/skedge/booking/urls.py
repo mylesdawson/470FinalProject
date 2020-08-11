@@ -7,8 +7,8 @@ from rest_framework.authtoken.views import obtain_auth_token
 router = routers.DefaultRouter()
 router.register(r'customers', views.CustomerViewSet, 'customers')
 router.register(r'businesses', views.BusinessViewSet, 'businesses')
-router.register(r'services', views.ServiceViewSet, 'services')
-router.register(r'appointments', views.AppointmentViewSet, 'appointments')
+# router.register(r'services', views.ServiceViewSet, 'services') # Deprecated, used for testing only
+# router.register(r'appointments', views.AppointmentViewSet, 'appointments') # Deprecated, used for testing only
 
 # app_name = 'booking'
 urlpatterns = [
@@ -20,7 +20,7 @@ urlpatterns = [
     # Logout of an account and destroy the token
     path('logout/', views.Logout.as_view()),
 
-    # CSRF token
+    # CSRF token for forms
     url(r'^get-token/$', views.get_csrf_token),
 
     # Get the information of a business

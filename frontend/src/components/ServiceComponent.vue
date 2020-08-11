@@ -25,16 +25,26 @@ export default {
     "service",
     "businessId"
   ],
+  data: function() {
+    return {
+      showModal: false,
+    }
+  },
   name: 'ServiceComponent',
   methods: {
     toBookAppointment: function() {
-      this.$router.push({
-        path: `/search-listing/${this.businessId}/book/${this.service.id}`,
-        params: {
-          service: this.service,
-          business: this.business
-        },
-      })
+      if(!localStorage.getItem("token")) {
+        this.$router.push("/login")
+      } else {
+        this.$router.push({
+          path: `/search-listing/${this.businessId}/book/${this.service.id}`,
+          params: {
+            service: this.service,
+            business: this.business
+          },
+        })
+      }
+
     }
   }
 }

@@ -1,37 +1,50 @@
 <template>
-  <b-container fluid>
+  <b-container fluid class="no-top-margin">
 
     <b-row>
       <b-col col style="text-align: left">
         <div>
           <h1 v-bind:class="business_info.category"><strong>{{ business_info.business_name }}</strong></h1>
         </div>
+
         <div class="info-div">
-          <h4>
+          <h5>
+            <b-icon-clock v-bind:class="business_info.category">
+            </b-icon-clock>
+            Hours of Operation
+          </h5>
+          <p>Closed: {{ closed_days }}</p>
+          <p>
+            Open: {{ open_hours }}
+          </p>
+        </div>
+
+        <div class="info-div">
+          <h5>
             <b-icon-map v-bind:class="business_info.category">
             </b-icon-map>
             Location
-          </h4>
+          </h5>
           <p>
             {{ business_info.address }}, {{ business_info.city }}, {{ business_info.province }}, {{ business_info.postal_code }}
           </p>
         </div>
 
         <div class="info-div">
-          <h4>
+          <h5>
             <b-icon-info-circle v-bind:class="business_info.category">
             </b-icon-info-circle>
             About
-          </h4>
+          </h5>
           <p>{{ business_info.long_description }}</p>
         </div>
 
         <div class="info-div">
-          <h4>
+          <h5>
             <b-icon-telephone v-bind:class="business_info.category">
             </b-icon-telephone>
             Contact
-          </h4>
+          </h5>
           <p>
             Email: {{ business_info.contact_email }}<br>
             Phone: {{ business_info.phone_number }}
@@ -72,6 +85,9 @@ export default {
     return {
       business_info: {},
       business_services: [],
+      open_days: null,
+      closed_days: null,
+      open_hours: null,
     }
   },
   mounted: async function() {
@@ -85,6 +101,18 @@ export default {
       const businessServices = await getServicesByBusiness(params.id)
       this.business_services = businessServices
       console.log(businessServices)
+
+      const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+
+      const closed = days.filter(day => this.business_info[day + "_open"] === false)
+      const open = days.filter(day => this.business_info[day + "_open"] === true)
+
+      this.closed_days = closed.join(", ")
+      this.open_days = open
+
+      // for now we assume that each day has same opening and closing hours
+      const firstOpenDay = days.find(day => this.business_info[day + "_open"] === true)
+      this.open_hours = this.business_info[`${firstOpenDay}_opening_time`] + " - " + this.business_info[`${firstOpenDay}_closing_time`]
     }
   }
 }
@@ -93,7 +121,7 @@ export default {
 <style scoped>
   h1 {
     text-align: center;
-    padding: 1rem;
+    padding: .5rem;
   }
   p {
     margin-bottom: 0;
@@ -105,26 +133,30 @@ export default {
     margin: 0 auto;
   }
   .fitness {
-    color: #0091EA;
+    color: #3471eb;
   }
   .wellness {
-    color: #00E676;
+    color: #169e1f;
   }
   .beauty {
-    color: #FF9E80;
+    color: #e8ba00;
   }
 
   h1.fitness {
     color: white;
-    background-color: #0091EA;
+    background-color: #3471eb;
   }
   h1.wellness {
     color: white;
 
-    background-color: #00E676;
+    background-color: #169e1f;
   }
   h1.beauty {
     color: black;
-    background-color: #FF9E80;
+    background-color: #e8ba00;
+  }
+
+  .no-top-margin {
+    margin-top: 0;
   }
 </style>
