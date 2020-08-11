@@ -1,19 +1,19 @@
 <template>
   <b-list-group-item>
     <b-row align-v="center">
-      <b-col cols="2">
+      <b-col sm lg="2" style="text-align: left">
         <strong>{{ service.name }}</strong>
         <br>
         {{ service.duration }} minutes
       </b-col>
-      <b-col cols="6">
+      <b-col sm lg="6" style="text-align: left">
         {{ service.description }}
       </b-col>
-      <b-col cols="2" style="font-size: 1.5rem;">
+      <b-col sm lg="2" style="font-size: 1.5rem; text-align: right">
         <strong>$ {{ service.price }}</strong>
       </b-col>
-      <b-col cols="2">
-        <b-button style="width: 6rem; height: 40px; font-size: 16px; font-weight:bold;" name="all" @click="toBookAppointment">Book</b-button>
+      <b-col sm lg="2" style="text-align: right">
+        <b-button variant="primary" style="font-size: 18px; width: 120px; height: 48px" name="all" @click="toBookAppointment">Book</b-button>
       </b-col>
     </b-row>
   </b-list-group-item>
