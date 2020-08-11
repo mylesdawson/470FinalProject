@@ -11,10 +11,11 @@
               :header="appointment.date"
             >
 
-                  <b-row>
+                  <b-row style="margin-bottom: 0">
                       <b-col>
                        <b-card-title>{{appointment.service.name}}</b-card-title>
                        <b-card-sub-title class="mb-2">{{appointment.service.description}}</b-card-sub-title>
+                       <p style="font-size: 1.25em;">{{appointment.business.business_name}} <b-button size="sm" style="width: 3rem; height: 2em; font-size: 0.6em; font-weight:bold; margin-left: 0.5em;" @click="toBusinessPage">View</b-button></p>
                       </b-col>
                   
                       <b-col style="text-align: right">
