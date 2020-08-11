@@ -249,7 +249,7 @@ export async function getCustomerAppointments() {
   })
 }
 
-export async function cancelCustomerAppointment(customerId, appointmentId) {
+export async function cancelCustomerAppointment(appointmentId) {
   const headers = new Headers()
   const token = tokenHeader()
   const custId = localStorage.getItem("account_id")
