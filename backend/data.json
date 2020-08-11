@@ -70,6 +70,66 @@
         }
     },
     {
+        "model": "booking.Business",
+        "pk": 4,
+        "fields":
+        {
+            "user": 5,
+            "business_name": "Carter's Cuts",
+            "short_description": "Great place to get your hair cut!",
+            "long_description": "A really really really really great place to get your hair cut!",
+            "contact_email": "carterscuts@gmail.com",
+            "phone_number": "778-997-4026",
+            "category": "beauty",
+            "address": "712 Riverside Dr",
+            "city": "Port Coquitlam",
+            "province": "British Columbia",
+            "postal_code": "V3B7T8",
+            "updated_at": "2020-08-09",
+            "created_at": "2020-08-09"
+        }
+    },
+    {
+        "model": "booking.Business",
+        "pk": 5,
+        "fields":
+        {
+            "user": 6,
+            "business_name": "Dawson Detox",
+            "short_description": "Great place to help you relax and wind down.",
+            "long_description": "A really really really really great place to help you relax and wind down.",
+            "contact_email": "dawsondetox@gmail.com",
+            "phone_number": "778-246-7523",
+            "category": "wellness",
+            "address": "5623 Commercial Dr",
+            "city": "Vancouver",
+            "province": "British Columbia",
+            "postal_code": "V9QP0S",
+            "updated_at": "2020-08-09",
+            "created_at": "2020-08-09"
+        }
+    },
+    {
+        "model": "booking.Business",
+        "pk": 6,
+        "fields":
+        {
+            "user": 7,
+            "business_name": "Greg's Gym",
+            "short_description": "Great place to get your workout in!",
+            "long_description": "A really really really really great place to get your workout in!",
+            "contact_email": "gregsgym@gmail.com",
+            "phone_number": "778-234-5412",
+            "category": "fitness",
+            "address": "7829 Gym St",
+            "city": "Burnaby",
+            "province": "British Columbia",
+            "postal_code": "V0A3F4",
+            "updated_at": "2020-08-09",
+            "created_at": "2020-08-09"
+        }
+    },
+    {
         "model": "booking.Service",
         "pk": 1,
         "fields":
@@ -152,6 +212,89 @@
             "updated_at": "2020-08-09",
             "created_at": "2020-08-09"
         }
+    },
+    {
+        "model": "booking.Service",
+        "pk": 7,
+        "fields":
+        {
+            "name": "Fade",
+            "description": "A nice simple fade",
+            "price": 15.00,
+            "duration": 30,
+            "business": 4,
+            "updated_at": "2020-08-09",
+            "created_at": "2020-08-09"
+        }
+    },
+    {
+        "model": "booking.Service",
+        "pk": 8,
+        "fields":
+        {
+            "name": "Fade & Shave",
+            "description": "A nice simple fade and a clean beard shaping.",
+            "price": 20.00,
+            "duration": 45,
+            "business": 4,
+            "updated_at": "2020-08-09",
+            "created_at": "2020-08-09"
+        }
+    },
+    {
+        "model": "booking.Service",
+        "pk": 9,
+        "fields":
+        {
+            "name": "Kombucha Brewing Class",
+            "description": "A class that teaches you the basics of kombucha brewing.",
+            "price": 20.00,
+            "duration": 30,
+            "business": 5,
+            "updated_at": "2020-08-09",
+            "created_at": "2020-08-09"
+        }
+    },
+    {
+        "model": "booking.Service",
+        "pk": 10,
+        "fields":
+        {
+            "name": "10-day Organic Juicing Cleanse Information Session",
+            "description": "The title says it all.",
+            "price": 10.00,
+            "duration": 30,
+            "business": 5,
+            "updated_at": "2020-08-09",
+            "created_at": "2020-08-09"
+        }
+    },
+    {
+        "model": "booking.Service",
+        "pk": 11,
+        "fields":
+        {
+            "name": "Drop-in Session",
+            "description": "A drop-in session with access to all gym equipment.",
+            "price": 10.00,
+            "duration": 45,
+            "business": 6,
+            "updated_at": "2020-08-09",
+            "created_at": "2020-08-09"
+        }
+    },
+    {
+        "model": "booking.Service",
+        "pk": 12,
+        "fields":
+        {
+            "name": "Fitness Assessment",
+            "description": "A full fitness assessment by one of our fitness professionals.",
+            "price": 30.00,
+            "duration": 60,
+            "business": 6,
+            "updated_at": "2020-08-09",
+            "created_at": "2020-08-09"
+        }
     }
-
 ]
