@@ -9,14 +9,13 @@
 
       <template v-if="account_type === 'business'">
         <b-navbar-nav>
-          <b-nav-item :active='$route.name =="HomePage"' to="/home">Home</b-nav-item>
           <b-nav-item :active='$route.name =="CalendarPage"' to="/calendar">Calendar</b-nav-item>
           <b-nav-item :active='$route.name =="ServicesPage"' to="/services">Services</b-nav-item>
           <b-nav-item :active='$route.name =="BusinessPage"' to="/business">Business</b-nav-item>
         </b-navbar-nav>
 
         <b-navbar-nav class="ml-auto">
-         
+
           <b-nav-item>
             <b-nav-item-dropdown
               class="profile-dropdown"
@@ -30,6 +29,10 @@
       </template>
 
       <template v-if="account_type === 'customer'">
+        <b-navbar-nav>
+          <b-nav-item :active='$route.name == "CustomerAppointmentsPage"' to="/appointments">Your Appointments</b-nav-item>
+        </b-navbar-nav>
+
         <b-navbar-nav class="ml-auto">
           <b-nav-item>
             <b-nav-item-dropdown
@@ -101,7 +104,7 @@ export default {
       try {
         const res = await logout()
         if (res === 200) {
-          this.$router.push('/home')
+          this.$router.push('/login')
         }
       } catch(err) {
         console.log(err)

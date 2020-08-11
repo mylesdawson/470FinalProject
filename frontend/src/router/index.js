@@ -13,6 +13,7 @@ import CreateAccountPage from '@/components/CreateAccountPage'
 import SearchListingsPage from '@/components/SearchListingsPage'
 import SearchPage from '@/components/SearchPage'
 import BookAppointmentPage from '@/components/BookAppointmentPage'
+import CustomerAppointmentsPage from '@/components/CustomerAppointmentsPage'
 
 import {
           BootstrapVue,
@@ -51,67 +52,126 @@ export default new Router({
       path: '/home',
       name: 'MainPage',
       component: MainPage,
-      alias: '/'
-    },
-    {
-      path: '/menu',
-      name: 'HomePage',
-      component: HomePage,
+      alias: '/',
+      beforeEnter(to, from, next) {
+        if (localStorage.getItem("account_type") == "customer") {
+          next()
+        } 
+        if (localStorage.getItem("account_type") == "business") {
+          next({name: 'CalendarPage'})
+        }
+        else {
+          next(false);
+        }
+      }
     },
     {
       path: '/search-listing/:id',
       name: 'SearchListingsPage',
       component: SearchListingsPage,
+      beforeEnter(to, from, next) {
+        if (localStorage.getItem("account_type") == "customer") {
+          next()
+        } else {
+          next(false);
+        }
+      }
     },
     {
       path: '/search-listing/:business_id/book/:service_id',
       name: 'BookAppointmentPage',
-      component: BookAppointmentPage
+      component: BookAppointmentPage,
+      beforeEnter(to, from, next) {
+        if (localStorage.getItem("account_type") == "customer") {
+          next()
+        } else {
+          next(false);
+        }
+      }
     },
     {
       path: '/search',
       name: 'SearchPage',
       component: SearchPage,
+      beforeEnter(to, from, next) {
+        if (localStorage.getItem("account_type") == "customer") {
+          next()
+        } else {
+          next(false);
+        }
+      }
     },
     {
       path: '/login',
       name: 'LoginPage',
-      component: LoginPage
-    },
-    {
-      path: '/team',
-      name: 'TeamPage',
-      component: TeamPage
+      component: LoginPage,
+      beforeEnter(to, from, next) {
+        if (localStorage.getItem("account_type") == "customer" || localStorage.getItem("account_type") == "business") {
+          next(false);
+        } else {
+          next();
+        }
+      }
     },
     {
       path: '/services',
       name: 'ServicesPage',
-      component: ServicesPage
+      component: ServicesPage,
+      beforeEnter(to, from, next) {
+        if (localStorage.getItem("account_type") == "business") {
+          next()
+        } else {
+          next(false);
+        }
+      }
     },
     {
       path: '/calendar',
       name: 'CalendarPage',
-      component: CalendarPage
-    },
-    {
-      path: '/listings',
-      name: 'ListingsPage',
-      component: ListingsPage
-    },
-    {
-      path: '/new-listing',
-      name: 'NewListingPage',
-      component: NewListingPage
+      component: CalendarPage,
+      beforeEnter(to, from, next) {
+        if (localStorage.getItem("account_type") == "business") {
+          next()
+        } else {
+          next(false);
+        }
+      }
     },
     {
       path: '/new-account',
       name: 'CreateAccountPage',
-      component: CreateAccountPage
+      component: CreateAccountPage,
+      beforeEnter(to, from, next) {
+        if (localStorage.getItem("account_type") == "customer" || localStorage.getItem("account_type") == "business") {
+          next(false);
+        } else {
+          next();
+        }
+      }
     },
     {
       path: '/business',
       name: 'BusinessPage',
-      component: BusinessPage
+      component: BusinessPage,
+      beforeEnter(to, from, next) {
+        if (localStorage.getItem("account_type") == "business") {
+          next()
+        } else {
+          next(false);
+        }
+      }
+    },
+    {
+      path: '/appointments',
+      name: 'CustomerAppointmentsPage',
+      component: CustomerAppointmentsPage,
+      beforeEnter(to, from, next) {
+        if (localStorage.getItem("account_type") == "customer") {
+          next()
+        } else {
+          next(false);
+        }
+      }
     }
   ],
   // turn this on if we want to get rid of # in url
