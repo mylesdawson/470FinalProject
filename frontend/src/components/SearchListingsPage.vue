@@ -1,18 +1,37 @@
 <template>
   <b-container fluid>
 
-    <hr class="my-3">
-
     <b-row>
       <b-col col style="text-align: left">
         <div>
-          <h1 style="margin-bottom: 0"><strong>{{ business_info.business_name }}</strong></h1>
-          <p style="margin-bottom: 0.5rem;">{{ business_info.address }}, {{ business_info.city }}, {{ business_info.province }}, {{ business_info.postal_code }}</p>
+          <h1 v-bind:class="business_info.category"><strong>{{ business_info.business_name }}</strong></h1>
+        </div>
+        <div class="info-div">
+          <h4>
+            <b-icon-map v-bind:class="business_info.category">
+            </b-icon-map>
+            Location
+          </h4>
+          <p>
+            {{ business_info.address }}, {{ business_info.city }}, {{ business_info.province }}, {{ business_info.postal_code }}
+          </p>
+        </div>
+
+        <div class="info-div">
+          <h4>
+            <b-icon-info-circle v-bind:class="business_info.category">
+            </b-icon-info-circle>
+            About
+          </h4>
           <p>{{ business_info.long_description }}</p>
         </div>
 
-        <div style="margin-top: 1rem;">
-          <h4>Contact</h4>
+        <div class="info-div">
+          <h4>
+            <b-icon-telephone v-bind:class="business_info.category">
+            </b-icon-telephone>
+            Contact
+          </h4>
           <p>
             Email: {{ business_info.contact_email }}<br>
             Phone: {{ business_info.phone_number }}
@@ -21,10 +40,8 @@
       </b-col>
     </b-row>
 
-    <hr class="my-3">
-
     <b-row>
-      <b-col cols="10" style="text-align: left; ">
+      <b-col cols="10" style="text-align: left; " class="services-section">
         <h1><strong>Services</strong></h1>
 
         <b-list-group>
@@ -54,7 +71,7 @@ export default {
   data: function() {
     return {
       business_info: {},
-      business_services: []
+      business_services: [],
     }
   },
   mounted: async function() {
@@ -74,7 +91,40 @@ export default {
 </script>
 
 <style scoped>
+  h1 {
+    text-align: center;
+    padding: 1rem;
+  }
   p {
     margin-bottom: 0;
+  }
+  .info-div {
+    margin-top: 1rem;
+  }
+  .services-section {
+    margin: 0 auto;
+  }
+  .fitness {
+    color: #0091EA;
+  }
+  .wellness {
+    color: #00E676;
+  }
+  .beauty {
+    color: #FF9E80;
+  }
+
+  h1.fitness {
+    color: white;
+    background-color: #0091EA;
+  }
+  h1.wellness {
+    color: white;
+
+    background-color: #00E676;
+  }
+  h1.beauty {
+    color: black;
+    background-color: #FF9E80;
   }
 </style>

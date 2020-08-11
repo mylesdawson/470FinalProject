@@ -23,7 +23,8 @@ import {
           CardPlugin,
           VBScrollspyPlugin,
           DropdownPlugin,
-          TablePlugin
+          TablePlugin,
+          BootstrapVueIcons
         } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -44,6 +45,7 @@ Vue.use(ModalPlugin)
 Vue.use(LayoutPlugin)
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
+Vue.use(BootstrapVueIcons)
 Vue.use(Router)
 
 export default new Router({
@@ -69,13 +71,6 @@ export default new Router({
       path: '/search-listing/:id',
       name: 'SearchListingsPage',
       component: SearchListingsPage,
-      beforeEnter(to, from, next) {
-        if (localStorage.getItem("account_type") == "customer") {
-          next()
-        } else {
-          next(false);
-        }
-      }
     },
     {
       path: '/search-listing/:business_id/book/:service_id',
@@ -93,13 +88,6 @@ export default new Router({
       path: '/search',
       name: 'SearchPage',
       component: SearchPage,
-      beforeEnter(to, from, next) {
-        if (localStorage.getItem("account_type") == "customer") {
-          next()
-        } else {
-          next(false);
-        }
-      }
     },
     {
       path: '/login',
