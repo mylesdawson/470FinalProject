@@ -9,7 +9,6 @@
 
       <template v-if="account_type === 'business'">
         <b-navbar-nav>
-          <b-nav-item :active='$route.name =="HomePage"' to="/home">Home</b-nav-item>
           <b-nav-item :active='$route.name =="CalendarPage"' to="/calendar">Calendar</b-nav-item>
           <b-nav-item :active='$route.name =="ServicesPage"' to="/services">Services</b-nav-item>
           <b-nav-item :active='$route.name =="BusinessPage"' to="/business">Business</b-nav-item>
