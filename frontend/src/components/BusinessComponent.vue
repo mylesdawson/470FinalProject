@@ -10,7 +10,7 @@
         {{ business.short_description }}
       </div>
       <div class="mt-2">
-        <b-button size="sm" style="background-color: #ebebeb; color: black; border: none; width: 4rem; height: 30px; font-size: 16px; font-weight:bold;" @click="toBusinessPage">View</b-button>
+        <b-button size="sm" style="width: 4rem; height: 30px; font-size: 16px; font-weight:bold;" @click="toBusinessPage">View</b-button>
       </div>
     </b-card-text>
     <template>
