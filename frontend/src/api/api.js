@@ -63,6 +63,9 @@ export async function login(username = '', password = '') {
     })
     .then(res => {
       console.log(res)
+      if(res.detail) {
+        throw new Error(res.details)
+      }
       localStorage.setItem('token', res.token)
       localStorage.setItem('account_type', res.account_type)
       localStorage.setItem('account_id', res.account_id)
@@ -191,6 +194,37 @@ export async function getBusinessInfo(business_id) {
 export async function getAvailableTimeSlots(business_id, year, month, day) {
 
   return fetch(`${host}/business/${business_id}/services/available/${year}/${month}/${day}/`)
+  .then(res => res.json())
+  .then(res => res)
+  .catch(e => {
+    console.log(e)
+  })
+}
+
+// date format: yyyy-mm-dd-hh-mm?
+export async function createCustomerAppointment(date, startTime, endTime, customerId, businessId, serviceId) {
+  const headers = new Headers()
+  headers.append("Content-Type", "application/json")
+
+  const token = tokenHeader()
+  headers.append(token[0], token[1])
+
+  const body = {
+    business_id: businessId,
+    customer_id: customerId,
+    service_id: serviceId,
+    date,
+    start_time: startTime,
+    end_time: endTime
+  }
+
+  const options = {
+    headers,
+    method: 'POST',
+    body: JSON.stringify(body)
+  }
+
+  return fetch(`${host}/customer/${customerId}/appointments/new/`, options)
   .then(res => res.json())
   .then(res => res)
   .catch(e => {

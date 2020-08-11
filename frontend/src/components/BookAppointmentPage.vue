@@ -33,7 +33,7 @@
 
     <b-row v-if="selectedTime" class="appointment-row">
       <b-col>
-        <b-button variant="outline-primary">Book an Appointment</b-button>
+        <b-button variant="outline-primary" @click="bookAppointment">Book an Appointment</b-button>
       </b-col>
     </b-row>
 
@@ -41,7 +41,11 @@
 </template>
 
 <script>
-import { getAvailableTimeSlots, getServicesByBusiness } from '../api/api'
+import {
+  getAvailableTimeSlots,
+  getServicesByBusiness,
+  createCustomerAppointment,
+} from '../api/api'
 
 export default {
   name: 'BookAppointmentPage',
@@ -77,7 +81,34 @@ export default {
 
         this.service_details = correctService
         this.service_availability = timeSlots.availability
-        console.log(this.service_details)
+        // console.log(this.service_details)
+      }
+    },
+    async bookAppointment() {
+      const ymd = this.context.activeYMD
+      const duration = this.service_details.duration
+      const startTime = this.selectedTime
+
+      const [startHour, startMin] = this.selectedTime.split(":")
+      let hours = 0
+      let minutes = 0
+      if(startMin !== '00') {
+        const total = parseInt(startMin) + duration
+        hours = Math.floor(total / 60)
+        minutes = Math.floor(total % 60)
+      } else {
+        minutes = duration
+      }
+
+      const endHours = parseInt(startHour) + hours
+      const endTime = endHours  + ':' + minutes
+      const accountId = localStorage.getItem("account_id")
+
+      try {
+        const res = await createCustomerAppointment(ymd, startTime, endTime, accountId, this.business_id, this.service_id)
+        console.log(res)
+      } catch(e) {
+        console.log(e)
       }
     }
   },
@@ -91,7 +122,7 @@ export default {
       const correctService = res.filter((item, index) => (res[index].id === parseInt(this.service_id)))[0]
 
       this.service = correctService
-      console.log(this.service)
+      // console.log(this.service)
     }
   }
 }
